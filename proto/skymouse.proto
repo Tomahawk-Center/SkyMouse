@@ -1,0 +1,38 @@
+syntax = "proto3"
+
+package skymouse;
+
+option go_package = "github.com/Tomahawk-Center/SkyMouse/proto;protoapi"
+
+option java_multiple_files = true;
+option java_package = "com.skymouse.skymouseclient.proto"
+
+enum MouseButton {
+    BUTTON_UNKNOWN = 0;
+    BUTTON_LEFT = 1;
+    BUTTON_RIGHT = 2;
+    BUTTON_MIDDLE = 3;
+}
+
+enum ButtonState {
+    STATE_UNKNOWN = 0;
+    STATE_DOWN = 1;
+    STATE_UP = 2;
+}
+
+message MouseEvent {
+    float delta_x = 1;
+    float delta_y = 2;
+    int64 timestamp_ms = 3;
+}
+
+message ClickEvent {
+    MouseButton button = 1;
+    ButtonState state = 2;
+    int64 timestamp_ms = 3;
+}
+
+message ScrollEvent {
+    int32 delta_y = 1;
+    int64 timestamp_ms = 2;
+}
