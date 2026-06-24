@@ -1,11 +1,11 @@
-syntax = "proto3"
+syntax = "proto3";
 
 package skymouse;
 
-option go_package = "github.com/Tomahawk-Center/SkyMouse/proto;protoapi"
+option go_package = "github.com/Tomahawk-Center/SkyMouse/proto;protoapi";
 
 option java_multiple_files = true;
-option java_package = "com.skymouse.skymouseclient.proto"
+option java_package = "com.skymouse.skymouseclient.proto";
 
 enum MouseButton {
     BUTTON_UNKNOWN = 0;
