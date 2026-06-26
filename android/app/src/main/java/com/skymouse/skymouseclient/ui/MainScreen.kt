@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.skymouse.skymouseclient.data.ConnectionState
+import com.skymouse.skymouseclient.data.TcpConnectionState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,7 +57,10 @@ fun MainScreen(viewModel: MainViewModel) {
                     .wrapContentSize()
                     .padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(16.dp)) {
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Text("TCP control", style = MaterialTheme.typography.titleLarge)
+                    TcpControlBlock(viewModel = viewModel)
 
                     when (connectionState) {
                         is ConnectionState.Disconnected, is ConnectionState.Error -> {
@@ -77,7 +81,7 @@ fun MainScreen(viewModel: MainViewModel) {
                                     modifier = Modifier.weight(2f)
                                 )
 
-                                // port
+                                // port UDP
                                 OutlinedTextField(
                                     value = viewModel.port,
                                     onValueChange = { input ->
@@ -149,6 +153,92 @@ fun MainScreen(viewModel: MainViewModel) {
                             }
                         }
                     }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun TcpControlBlock(viewModel: MainViewModel) {
+    val tcpState by viewModel.tcpConnectionState.collectAsState()
+
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+
+    ) {
+        when (tcpState) {
+            is TcpConnectionState.Disconnected, is TcpConnectionState.Error -> {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    OutlinedTextField(
+                        value = viewModel.tcpPort,
+                        onValueChange = { input ->
+                            if (input.all { it.isDigit() } && input.length <= 5) {
+                                viewModel.tcpPort = input
+                            }
+                        },
+                        label = {Text("TCP port")},
+                        placeholder = {Text("10000")},
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        shape = ShapeDefaults.Large,
+                        modifier = Modifier.weight(1f)
+                    )
+
+                    Button(
+                        onClick = {viewModel.onTcpConnectClicked()},
+                        shape = ShapeDefaults.Large
+                    ) {
+                        Text("Connect")
+                    }
+                }
+
+                if (tcpState is TcpConnectionState.Error) {
+                    Text(
+                        text = (tcpState as TcpConnectionState.Error).message,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+
+            }
+
+            TcpConnectionState.Connecting -> {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    CircularProgressIndicator(modifier = Modifier.padding(8.dp))
+                    Text("Connecting TCP")
+                }
+            }
+
+            TcpConnectionState.Connected -> {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    OutlinedTextField(
+                        value = viewModel.tcpMessageText,
+                        onValueChange = { viewModel.tcpMessageText = it},
+                        label = { Text("TCP message") },
+                        modifier = Modifier.weight(2f)
+                    )
+
+                    Button(
+                        onClick = {viewModel.onTcpSendMessage()}
+                    ) {
+                        Text("Send")
+                    }
+                }
+
+                TextButton(
+                    onClick = {viewModel.onTcpDisconnectClicked()}
+                ) {
+                    Text("Disconnect TCP", color = MaterialTheme.colorScheme.error)
                 }
             }
         }
