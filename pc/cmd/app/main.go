@@ -2,31 +2,42 @@ package main
 
 import (
 	"log"
-	"net"
+	"os"
+	"os/signal"
+	"syscall"
+
+	"github.com/Tomahawk-Center/SkyMouse/pc/internal/server/tcp"
+	"github.com/Tomahawk-Center/SkyMouse/pc/internal/server/udp"
 )
 
 func main() {
-	addr, err := net.ResolveUDPAddr("udp", ":9999")
+	udpServer, err := udp.NewServer(":9999")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	conn, err := net.ListenUDP("udp", addr)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer conn.Close()
+	tcpServer := tcp.NewServer(":10000")
 
-	log.Println("UDP Server started on :9999")
-
-	buf := make([]byte, 2048)
-	for {
-		n, remoteAddr, err := conn.ReadFromUDP(buf)
-		if err != nil {
-			log.Println("Error reading:", err)
-			continue
+	go func() {
+		if err := tcpServer.Start(); err != nil {
+			log.Fatalf("TCP server start failed: %v\n", err)
 		}
+	}()
 
-		log.Printf("Received %d bytes from %s: %s\n", n, remoteAddr, string(buf[:n]))
-	}
+	go func() {
+		if err := udpServer.Start(); err != nil {
+			log.Fatalf("UDP server start failed: %v\n", err)
+		}
+	}()
+
+	sigCh := make(chan os.Signal, 1)
+	signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
+	<-sigCh
+
+	log.Println("Shutting down UDP")
+	udpServer.Stop()
+
+	log.Println("Shutting down TCP")
+	tcpServer.Stop()
+
 }
