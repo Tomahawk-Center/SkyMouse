@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.skymouse.skymouseclient.data.TcpClientManager
 import com.skymouse.skymouseclient.data.UdpClientManager
 import kotlinx.coroutines.launch
 
@@ -39,4 +40,34 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             messageText = ""
         }
     }
+    private val tcpClientManager = TcpClientManager()
+
+    val tcpConnectionState = tcpClientManager.connectionState
+
+    var tcpPort by mutableStateOf("")
+    var tcpMessageText by mutableStateOf("")
+
+    fun onTcpConnectClicked() {
+        val portInt = tcpPort.toIntOrNull() ?: return
+
+        viewModelScope.launch {
+            tcpClientManager.connect(ipAddress, portInt)
+        }
+    }
+
+    fun onTcpDisconnectClicked() {
+        viewModelScope.launch {
+            tcpClientManager.disconnect()
+        }
+    }
+
+    fun onTcpSendMessage() {
+        if (tcpMessageText.isBlank()) return
+
+        viewModelScope.launch {
+            tcpClientManager.sendText(tcpMessageText)
+            tcpMessageText = ""
+        }
+    }
+
 }
