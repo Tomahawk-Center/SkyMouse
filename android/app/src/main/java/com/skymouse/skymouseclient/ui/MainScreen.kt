@@ -1,5 +1,7 @@
 package com.skymouse.skymouseclient.ui
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -29,10 +32,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.pointer.changedToDown
+import androidx.compose.ui.input.pointer.changedToUp
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.skymouse.skymouseclient.data.ConnectionState
 import com.skymouse.skymouseclient.data.TcpConnectionState
+import com.skymouse.skymouseclient.proto.MouseButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -151,6 +159,8 @@ fun MainScreen(viewModel: MainViewModel) {
                             TextButton(onClick = { viewModel.onDisconnectClicked() }) {
                                 Text("Disconnect", color = MaterialTheme.colorScheme.error)
                             }
+
+                            MouseComponents(viewModel = viewModel)
                         }
                     }
                 }
@@ -242,5 +252,55 @@ fun TcpControlBlock(viewModel: MainViewModel) {
                 }
             }
         }
+    }
+}
+
+@Composable
+fun MouseInteractionButton(
+    text: String,
+    onAction: (Boolean) -> Unit
+) {
+    Box(modifier = Modifier
+        .padding(8.dp)
+        .clip(ShapeDefaults.Large)
+        .background(MaterialTheme.colorScheme.primary)
+        .pointerInput(Unit){
+            awaitPointerEventScope {
+                while (true) {
+                    val event = awaitPointerEvent()
+                    if (event.changes.any {it.changedToDown()}) {
+                        onAction(true)
+                    }
+                    if (event.changes.any {it.changedToUp() || it.isConsumed}) {
+                        onAction(false)
+                    }
+                }
+            }
+        }
+        .padding(horizontal = 24.dp, vertical = 16.dp),
+        contentAlignment = Alignment.Center) {
+        Text(text, color = MaterialTheme.colorScheme.onPrimary)
+    }
+}
+
+@Composable
+fun MouseComponents(viewModel: MainViewModel){
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        MouseInteractionButton(
+            text = "Left Click",
+            onAction = {isPressed -> viewModel.onMouseButtonClicked(MouseButton.BUTTON_LEFT, isPressed)}
+        )
+        MouseInteractionButton(
+            text = "Right Click",
+            onAction = {isPressed -> viewModel.onMouseButtonClicked(MouseButton.BUTTON_RIGHT, isPressed)}
+        )
+    }
+
+    Row {
+        Button(onClick = { viewModel.onScrollUpClicked() }) { Text("Scroll Up") }
+        Button(onClick = { viewModel.onScrollDownClicked() }) { Text("Scroll Down") }
     }
 }

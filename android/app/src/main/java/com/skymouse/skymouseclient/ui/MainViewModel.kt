@@ -8,6 +8,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.skymouse.skymouseclient.data.TcpClientManager
 import com.skymouse.skymouseclient.data.UdpClientManager
+import com.skymouse.skymouseclient.proto.MouseButton
 import kotlinx.coroutines.launch
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
@@ -70,4 +71,35 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun onMouseButtonClicked(button: MouseButton, isPressed: Boolean) {
+        viewModelScope.launch {
+            val clickEvent = com.skymouse.skymouseclient.proto.clickEvent {
+                this.button = button
+                this.state = if (isPressed) {
+                    com.skymouse.skymouseclient.proto.ButtonState.STATE_DOWN // STATE_PRESSED
+                } else {
+                    com.skymouse.skymouseclient.proto.ButtonState.STATE_UP   // STATE_RELEASED
+                }
+            }
+            tcpClientManager.sendProto(clickEvent)
+        }
+    }
+
+    fun onScrollUpClicked() {
+        viewModelScope.launch {
+            val scrollEvent = com.skymouse.skymouseclient.proto.scrollEvent {
+                deltaY = 1
+            }
+            tcpClientManager.sendProto(scrollEvent)
+        }
+    }
+
+    fun onScrollDownClicked() {
+        viewModelScope.launch {
+            val scrollEvent = com.skymouse.skymouseclient.proto.scrollEvent {
+                deltaY = -1
+            }
+            tcpClientManager.sendProto(scrollEvent)
+        }
+    }
 }
