@@ -41,6 +41,11 @@ public final class Skymouse extends com.google.protobuf.GeneratedFile {
   static final 
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_skymouse_ScrollEvent_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_skymouse_MessageToServer_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_skymouse_MessageToServer_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -57,13 +62,17 @@ public final class Skymouse extends com.google.protobuf.GeneratedFile {
       "ouseButton\022$\n\005state\030\002 \001(\0162\025.skymouse.But" +
       "tonState\022\024\n\014timestamp_ms\030\003 \001(\003\"4\n\013Scroll" +
       "Event\022\017\n\007delta_y\030\001 \001(\005\022\024\n\014timestamp_ms\030\002" +
-      " \001(\003*W\n\013MouseButton\022\022\n\016BUTTON_UNKNOWN\020\000\022" +
-      "\017\n\013BUTTON_LEFT\020\001\022\020\n\014BUTTON_RIGHT\020\002\022\021\n\rBU" +
-      "TTON_MIDDLE\020\003*>\n\013ButtonState\022\021\n\rSTATE_UN" +
-      "KNOWN\020\000\022\016\n\nSTATE_DOWN\020\001\022\014\n\010STATE_UP\020\002BY\n" +
-      "!com.skymouse.skymouseclient.protoP\001Z2gi" +
-      "thub.com/Tomahawk-Center/SkyMouse/proto;" +
-      "protoapib\006proto3"
+      " \001(\003\"\221\001\n\017MessageToServer\022%\n\005mouse\030\001 \001(\0132" +
+      "\024.skymouse.MouseEventH\000\022%\n\005click\030\002 \001(\0132\024" +
+      ".skymouse.ClickEventH\000\022\'\n\006scroll\030\003 \001(\0132\025" +
+      ".skymouse.ScrollEventH\000B\007\n\005event*W\n\013Mous" +
+      "eButton\022\022\n\016BUTTON_UNKNOWN\020\000\022\017\n\013BUTTON_LE" +
+      "FT\020\001\022\020\n\014BUTTON_RIGHT\020\002\022\021\n\rBUTTON_MIDDLE\020" +
+      "\003*>\n\013ButtonState\022\021\n\rSTATE_UNKNOWN\020\000\022\016\n\nS" +
+      "TATE_DOWN\020\001\022\014\n\010STATE_UP\020\002BY\n!com.skymous" +
+      "e.skymouseclient.protoP\001Z2github.com/Tom" +
+      "ahawk-Center/SkyMouse/proto;protoapib\006pr" +
+      "oto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -87,6 +96,12 @@ public final class Skymouse extends com.google.protobuf.GeneratedFile {
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_skymouse_ScrollEvent_descriptor,
         new java.lang.String[] { "DeltaY", "TimestampMs", });
+    internal_static_skymouse_MessageToServer_descriptor =
+      getDescriptor().getMessageType(3);
+    internal_static_skymouse_MessageToServer_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_skymouse_MessageToServer_descriptor,
+        new java.lang.String[] { "Mouse", "Click", "Scroll", "Event", });
     descriptor.resolveAllFeaturesImmutable();
   }
 
