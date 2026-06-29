@@ -24,6 +24,7 @@ message MouseEvent {
     float delta_x = 1;
     float delta_y = 2;
     int64 timestamp_ms = 3;
+    uint32 sequence_id = 4;
 }
 
 message ClickEvent {
