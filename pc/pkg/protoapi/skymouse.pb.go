@@ -302,6 +302,104 @@ func (x *ScrollEvent) GetTimestampMs() int64 {
 	return 0
 }
 
+type MessageToServer struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// Types that are valid to be assigned to Event:
+	//
+	//	*MessageToServer_Mouse
+	//	*MessageToServer_Click
+	//	*MessageToServer_Scroll
+	Event         isMessageToServer_Event `protobuf_oneof:"event"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MessageToServer) Reset() {
+	*x = MessageToServer{}
+	mi := &file_skymouse_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MessageToServer) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MessageToServer) ProtoMessage() {}
+
+func (x *MessageToServer) ProtoReflect() protoreflect.Message {
+	mi := &file_skymouse_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MessageToServer.ProtoReflect.Descriptor instead.
+func (*MessageToServer) Descriptor() ([]byte, []int) {
+	return file_skymouse_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *MessageToServer) GetEvent() isMessageToServer_Event {
+	if x != nil {
+		return x.Event
+	}
+	return nil
+}
+
+func (x *MessageToServer) GetMouse() *MouseEvent {
+	if x != nil {
+		if x, ok := x.Event.(*MessageToServer_Mouse); ok {
+			return x.Mouse
+		}
+	}
+	return nil
+}
+
+func (x *MessageToServer) GetClick() *ClickEvent {
+	if x != nil {
+		if x, ok := x.Event.(*MessageToServer_Click); ok {
+			return x.Click
+		}
+	}
+	return nil
+}
+
+func (x *MessageToServer) GetScroll() *ScrollEvent {
+	if x != nil {
+		if x, ok := x.Event.(*MessageToServer_Scroll); ok {
+			return x.Scroll
+		}
+	}
+	return nil
+}
+
+type isMessageToServer_Event interface {
+	isMessageToServer_Event()
+}
+
+type MessageToServer_Mouse struct {
+	Mouse *MouseEvent `protobuf:"bytes,1,opt,name=mouse,proto3,oneof"`
+}
+
+type MessageToServer_Click struct {
+	Click *ClickEvent `protobuf:"bytes,2,opt,name=click,proto3,oneof"`
+}
+
+type MessageToServer_Scroll struct {
+	Scroll *ScrollEvent `protobuf:"bytes,3,opt,name=scroll,proto3,oneof"`
+}
+
+func (*MessageToServer_Mouse) isMessageToServer_Event() {}
+
+func (*MessageToServer_Click) isMessageToServer_Event() {}
+
+func (*MessageToServer_Scroll) isMessageToServer_Event() {}
+
 var File_skymouse_proto protoreflect.FileDescriptor
 
 const file_skymouse_proto_rawDesc = "" +
@@ -321,7 +419,12 @@ const file_skymouse_proto_rawDesc = "" +
 	"\ftimestamp_ms\x18\x03 \x01(\x03R\vtimestampMs\"I\n" +
 	"\vScrollEvent\x12\x17\n" +
 	"\adelta_y\x18\x01 \x01(\x05R\x06deltaY\x12!\n" +
-	"\ftimestamp_ms\x18\x02 \x01(\x03R\vtimestampMs*W\n" +
+	"\ftimestamp_ms\x18\x02 \x01(\x03R\vtimestampMs\"\xa7\x01\n" +
+	"\x0fMessageToServer\x12,\n" +
+	"\x05mouse\x18\x01 \x01(\v2\x14.skymouse.MouseEventH\x00R\x05mouse\x12,\n" +
+	"\x05click\x18\x02 \x01(\v2\x14.skymouse.ClickEventH\x00R\x05click\x12/\n" +
+	"\x06scroll\x18\x03 \x01(\v2\x15.skymouse.ScrollEventH\x00R\x06scrollB\a\n" +
+	"\x05event*W\n" +
 	"\vMouseButton\x12\x12\n" +
 	"\x0eBUTTON_UNKNOWN\x10\x00\x12\x0f\n" +
 	"\vBUTTON_LEFT\x10\x01\x12\x10\n" +
@@ -347,22 +450,26 @@ func file_skymouse_proto_rawDescGZIP() []byte {
 }
 
 var file_skymouse_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_skymouse_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_skymouse_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_skymouse_proto_goTypes = []any{
-	(MouseButton)(0),    // 0: skymouse.MouseButton
-	(ButtonState)(0),    // 1: skymouse.ButtonState
-	(*MouseEvent)(nil),  // 2: skymouse.MouseEvent
-	(*ClickEvent)(nil),  // 3: skymouse.ClickEvent
-	(*ScrollEvent)(nil), // 4: skymouse.ScrollEvent
+	(MouseButton)(0),        // 0: skymouse.MouseButton
+	(ButtonState)(0),        // 1: skymouse.ButtonState
+	(*MouseEvent)(nil),      // 2: skymouse.MouseEvent
+	(*ClickEvent)(nil),      // 3: skymouse.ClickEvent
+	(*ScrollEvent)(nil),     // 4: skymouse.ScrollEvent
+	(*MessageToServer)(nil), // 5: skymouse.MessageToServer
 }
 var file_skymouse_proto_depIdxs = []int32{
 	0, // 0: skymouse.ClickEvent.button:type_name -> skymouse.MouseButton
 	1, // 1: skymouse.ClickEvent.state:type_name -> skymouse.ButtonState
-	2, // [2:2] is the sub-list for method output_type
-	2, // [2:2] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	2, // 2: skymouse.MessageToServer.mouse:type_name -> skymouse.MouseEvent
+	3, // 3: skymouse.MessageToServer.click:type_name -> skymouse.ClickEvent
+	4, // 4: skymouse.MessageToServer.scroll:type_name -> skymouse.ScrollEvent
+	5, // [5:5] is the sub-list for method output_type
+	5, // [5:5] is the sub-list for method input_type
+	5, // [5:5] is the sub-list for extension type_name
+	5, // [5:5] is the sub-list for extension extendee
+	0, // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_skymouse_proto_init() }
@@ -370,13 +477,18 @@ func file_skymouse_proto_init() {
 	if File_skymouse_proto != nil {
 		return
 	}
+	file_skymouse_proto_msgTypes[3].OneofWrappers = []any{
+		(*MessageToServer_Mouse)(nil),
+		(*MessageToServer_Click)(nil),
+		(*MessageToServer_Scroll)(nil),
+	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_skymouse_proto_rawDesc), len(file_skymouse_proto_rawDesc)),
 			NumEnums:      2,
-			NumMessages:   3,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
