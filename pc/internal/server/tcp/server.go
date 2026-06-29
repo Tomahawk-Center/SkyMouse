@@ -12,12 +12,15 @@ type Server struct {
 	ln     net.Listener
 	quitCh chan struct{}
 	wg     sync.WaitGroup
+	mu     sync.Mutex
+	conns  map[net.Conn]struct{}
 }
 
 func NewServer(addr string) *Server {
 	return &Server{
 		addr:   addr,
 		quitCh: make(chan struct{}),
+		conns:  make(map[net.Conn]struct{}),
 	}
 }
 
@@ -45,6 +48,22 @@ func (s *Server) Stop() {
 	log.Println("Server TCP shut down successfully")
 }
 
+func (s *Server) StopForce() {
+	close(s.quitCh)
+	if s.ln != nil {
+		_ = s.ln.Close()
+	}
+
+	s.mu.Lock()
+	for conn := range s.conns {
+		_ = conn.Close()
+	}
+	s.mu.Unlock()
+
+	s.wg.Wait()
+	log.Println("Server TCP forcibly shut down")
+}
+
 func (s *Server) acceptLoop() {
 	defer s.wg.Done()
 
@@ -70,6 +89,16 @@ func (s *Server) handleConnection(conn net.Conn) {
 	defer func(conn net.Conn) {
 		_ = conn.Close()
 	}(conn)
+
+	s.mu.Lock()
+	s.conns[conn] = struct{}{}
+	s.mu.Unlock()
+
+	defer func() {
+		s.mu.Lock()
+		delete(s.conns, conn)
+		s.mu.Unlock()
+	}()
 
 	log.Printf("New connection from %s\n", conn.RemoteAddr().String())
 
