@@ -1,26 +1,32 @@
 package tcp
 
 import (
-	"fmt"
+	"encoding/binary"
+	"io"
 	"log"
 	"net"
 	"sync"
+
+	"github.com/Tomahawk-Center/SkyMouse/pc/pkg/protoapi"
+	"google.golang.org/protobuf/proto"
 )
 
 type Server struct {
-	addr   string
-	ln     net.Listener
-	quitCh chan struct{}
-	wg     sync.WaitGroup
-	mu     sync.Mutex
-	conns  map[net.Conn]struct{}
+	addr    string
+	ln      net.Listener
+	quitCh  chan struct{}
+	wg      sync.WaitGroup
+	mu      sync.Mutex
+	conns   map[net.Conn]struct{}
+	handler EventHandler
 }
 
-func NewServer(addr string) *Server {
+func NewServer(addr string, handler EventHandler) *Server {
 	return &Server{
-		addr:   addr,
-		quitCh: make(chan struct{}),
-		conns:  make(map[net.Conn]struct{}),
+		addr:    addr,
+		quitCh:  make(chan struct{}),
+		conns:   make(map[net.Conn]struct{}),
+		handler: handler,
 	}
 }
 
@@ -102,17 +108,37 @@ func (s *Server) handleConnection(conn net.Conn) {
 
 	log.Printf("New connection from %s\n", conn.RemoteAddr().String())
 
-	buf := make([]byte, 1024)
 	for {
-		n, err := conn.Read(buf)
+		var size int32
+		err := binary.Read(conn, binary.BigEndian, &size)
 		if err != nil {
-			log.Printf("Read failure with %s with error: %v\n", conn.RemoteAddr().String(), err)
+			if err != io.EOF {
+				log.Printf("Read size failed: %v\n", err)
+				return
+			}
+		}
+
+		buf := make([]byte, size)
+		_, err = io.ReadFull(conn, buf)
+
+		if err != nil {
+			log.Printf("Read body failed: %v\n", err)
 			return
 		}
 
-		msg := buf[:n]
-		fmt.Printf("TCP Received: %s\n", string(msg))
+		var msg protoapi.MessageToServer
+		err = proto.Unmarshal(buf, &msg)
+		if err != nil {
+			log.Printf("Unmarshal message failed: %v\n", err)
+			return
+		}
 
+		log.Println("Received message:")
+		log.Println(&msg)
+
+		if s.handler != nil {
+			s.handler.Handle(&msg)
+		}
 		_, err = conn.Write([]byte("ACK\n"))
 		if err != nil {
 			log.Printf("Send ACK failed with error: %v\n", err)
