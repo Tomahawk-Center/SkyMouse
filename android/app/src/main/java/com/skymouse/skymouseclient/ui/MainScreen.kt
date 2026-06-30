@@ -1,7 +1,6 @@
 package com.skymouse.skymouseclient.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -159,8 +158,6 @@ fun MainScreen(viewModel: MainViewModel) {
                             TextButton(onClick = { viewModel.onDisconnectClicked() }) {
                                 Text("Disconnect", color = MaterialTheme.colorScheme.error)
                             }
-
-                            MouseComponents(viewModel = viewModel)
                         }
                     }
                 }
@@ -250,6 +247,8 @@ fun TcpControlBlock(viewModel: MainViewModel) {
                 ) {
                     Text("Disconnect TCP", color = MaterialTheme.colorScheme.error)
                 }
+
+                MouseComponents(viewModel = viewModel)
             }
         }
     }
@@ -260,18 +259,25 @@ fun MouseInteractionButton(
     text: String,
     onAction: (Boolean) -> Unit
 ) {
+    var isPressed by remember { mutableStateOf(false) }
+
     Box(modifier = Modifier
         .padding(8.dp)
         .clip(ShapeDefaults.Large)
-        .background(MaterialTheme.colorScheme.primary)
+        .background(
+            if (isPressed) MaterialTheme.colorScheme.primaryContainer
+            else MaterialTheme.colorScheme.primary
+        )
         .pointerInput(Unit){
             awaitPointerEventScope {
                 while (true) {
                     val event = awaitPointerEvent()
                     if (event.changes.any {it.changedToDown()}) {
+                        isPressed = true
                         onAction(true)
                     }
                     if (event.changes.any {it.changedToUp() || it.isConsumed}) {
+                        isPressed = false
                         onAction(false)
                     }
                 }
@@ -287,20 +293,37 @@ fun MouseInteractionButton(
 fun MouseComponents(viewModel: MainViewModel){
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically
     ) {
+        // left mouse button
         MouseInteractionButton(
-            text = "Left Click",
+            text = "LMB",
             onAction = {isPressed -> viewModel.onMouseButtonClicked(MouseButton.BUTTON_LEFT, isPressed)}
         )
+
+        // vertical block with scrolls and middle button
+        Column (
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Button(onClick = { viewModel.onScrollUpClicked() },
+                modifier = Modifier.size(width = 110.dp, height = 48.dp),
+                shape = ShapeDefaults.Medium) { Text("SCRL+") }
+
+            MouseInteractionButton(
+                text = "MMB",
+                onAction = { isPressed -> viewModel.onMouseButtonClicked(MouseButton.BUTTON_MIDDLE, isPressed) }
+            )
+
+            Button(onClick = { viewModel.onScrollDownClicked() },
+                modifier = Modifier.size(width = 110.dp, height = 48.dp),
+                shape = ShapeDefaults.Medium) { Text("SCRL-") }
+        }
+
         MouseInteractionButton(
-            text = "Right Click",
+            text = "RMB",
             onAction = {isPressed -> viewModel.onMouseButtonClicked(MouseButton.BUTTON_RIGHT, isPressed)}
         )
-    }
-
-    Row {
-        Button(onClick = { viewModel.onScrollUpClicked() }) { Text("Scroll Up") }
-        Button(onClick = { viewModel.onScrollDownClicked() }) { Text("Scroll Down") }
     }
 }
