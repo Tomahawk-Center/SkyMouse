@@ -6,6 +6,7 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/Tomahawk-Center/SkyMouse/pc/internal/emulator"
 	"github.com/Tomahawk-Center/SkyMouse/pc/internal/server/tcp"
 	"github.com/Tomahawk-Center/SkyMouse/pc/internal/server/udp"
 )
@@ -16,7 +17,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	tcpServer := tcp.NewServer(":10000")
+	emu := emulator.NewEmulator()
+
+	tcpServer := tcp.NewServer(":10000", emu)
 
 	go func() {
 		if err := tcpServer.Start(); err != nil {
