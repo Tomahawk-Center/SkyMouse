@@ -47,20 +47,23 @@ class TcpClientManager {
     }
 
     suspend fun sendProto(message: com.google.protobuf.MessageLite) = withContext(Dispatchers.IO){
-        val os = outputStream
-        if (os == null || _connectionState.value !is TcpConnectionState.Connected) {
-            return@withContext
-        }
+        val os = outputStream ?: return@withContext
 
         try {
-            val size = message.serializedSize
-            os.write(size)
-            message.writeTo(os)
+            val bytes = message.toByteArray()
+            val size = bytes.size
+
+            val header = byteArrayOf(
+                (size shr 24).toByte(),
+                (size shr 16).toByte(),
+                (size shr 8).toByte(),
+                size.toByte()
+            )
+
+            os.write(header)
+            os.write(bytes)
             os.flush()
-        } catch (error: Exception){
-            _connectionState.value = TcpConnectionState.Error(error.localizedMessage ?: "Proto send failed")
-            disconnect()
-        }
+        } catch (e: Exception) { }
     }
 
      suspend fun disconnect() =withContext(Dispatchers.IO) {
