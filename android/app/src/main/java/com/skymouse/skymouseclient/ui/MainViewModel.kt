@@ -8,6 +8,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.skymouse.skymouseclient.data.TcpClientManager
 import com.skymouse.skymouseclient.data.UdpClientManager
+import com.skymouse.skymouseclient.proto.MouseButton
 import kotlinx.coroutines.launch
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
@@ -62,12 +63,49 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun onTcpSendMessage() {
-        if (tcpMessageText.isBlank()) return
+//        if (tcpMessageText.isBlank()) return
+//
+//        viewModelScope.launch {
+//            tcpClientManager.sendText(tcpMessageText)
+//            tcpMessageText = ""
+//        }
+    }
 
+    fun onMouseButtonClicked(button: MouseButton, isPressed: Boolean) {
         viewModelScope.launch {
-            tcpClientManager.sendText(tcpMessageText)
-            tcpMessageText = ""
+            val message = com.skymouse.skymouseclient.proto.messageToServer {
+                click = com.skymouse.skymouseclient.proto.clickEvent {
+                    this.button = button
+                    this.state = if (isPressed) {
+                        com.skymouse.skymouseclient.proto.ButtonState.STATE_DOWN // STATE_PRESSED
+                    } else {
+                        com.skymouse.skymouseclient.proto.ButtonState.STATE_UP   // STATE_RELEASED
+                    }
+                }
+            }
+            tcpClientManager.sendProto(message)
         }
     }
 
+    fun onScrollUpClicked() {
+        viewModelScope.launch {
+            val message = com.skymouse.skymouseclient.proto.messageToServer {
+                scroll = com.skymouse.skymouseclient.proto.scrollEvent {
+                    deltaY = 1
+                }
+            }
+            tcpClientManager.sendProto(message)
+        }
+    }
+
+    fun onScrollDownClicked() {
+        viewModelScope.launch {
+            val message = com.skymouse.skymouseclient.proto.messageToServer {
+                scroll = com.skymouse.skymouseclient.proto.scrollEvent {
+                    deltaY = -1
+                }
+            }
+            tcpClientManager.sendProto(message)
+        }
+    }
 }

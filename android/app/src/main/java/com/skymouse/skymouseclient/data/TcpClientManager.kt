@@ -46,8 +46,32 @@ class TcpClientManager {
         }
     }
 
+    suspend fun sendProto(message: com.google.protobuf.MessageLite) = withContext(Dispatchers.IO){
+        val os = outputStream ?: return@withContext
+
+        try {
+            val bytes = message.toByteArray()
+            val size = bytes.size
+
+            val header = byteArrayOf(
+                (size shr 24).toByte(),
+                (size shr 16).toByte(),
+                (size shr 8).toByte(),
+                size.toByte()
+            )
+
+            os.write(header)
+            os.write(bytes)
+            os.flush()
+        } catch (e: Exception) { }
+    }
+
      suspend fun disconnect() =withContext(Dispatchers.IO) {
         try {
+            socket?.shutdownOutput()
+        } catch (_: Exception) { }
+
+         try {
             outputStream?.close()
             socket?.close()
         } catch (_: Exception) {}
