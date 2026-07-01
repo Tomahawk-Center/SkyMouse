@@ -63,7 +63,10 @@ class TcpClientManager {
             os.write(header)
             os.write(bytes)
             os.flush()
-        } catch (e: Exception) { }
+        } catch (e: Exception) {
+            _connectionState.value = TcpConnectionState.Error(e.localizedMessage ?: "Tcp send failed")
+            disconnect()
+        }
     }
 
      suspend fun disconnect() =withContext(Dispatchers.IO) {
