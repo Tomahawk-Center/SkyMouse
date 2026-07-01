@@ -80,7 +80,7 @@ func (s *Server) acceptLoop() {
 			case <-s.quitCh:
 				return
 			default:
-				log.Printf("Copy connection failed: %v\n", err)
+				log.Printf("Accept connection failed: %v\n", err)
 				continue
 			}
 		}
