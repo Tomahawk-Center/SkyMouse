@@ -5,7 +5,6 @@ import (
 
 	"github.com/Tomahawk-Center/SkyMouse/pc/pkg/protoapi"
 	"github.com/go-vgo/robotgo"
-	_ "github.com/go-vgo/robotgo"
 )
 
 type Emulator struct{}
