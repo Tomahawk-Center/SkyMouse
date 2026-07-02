@@ -17,7 +17,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	emu := emulator.NewEmulator()
+	emu := emulator.NewEmulator(5)
 
 	tcpServer := tcp.NewServer(":10000", emu)
 
@@ -42,5 +42,4 @@ func main() {
 
 	log.Println("Shutting down TCP")
 	tcpServer.Stop()
-
 }
