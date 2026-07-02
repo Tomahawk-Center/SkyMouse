@@ -15,9 +15,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import com.skymouse.skymouseclient.ui.MainScreen
 import com.skymouse.skymouseclient.ui.MainViewModel
 
@@ -43,11 +46,15 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val darkTheme = isSystemInDarkTheme()
+            val context = LocalContext.current
 
-            val colorScheme = if (darkTheme){
-                darkColorScheme()
-            } else {
-                lightColorScheme()
+            val dynamicColor = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+
+            val colorScheme = when {
+                dynamicColor && darkTheme -> dynamicDarkColorScheme(context)
+                dynamicColor && !darkTheme -> dynamicLightColorScheme(context)
+                darkTheme -> darkColorScheme()
+                else -> lightColorScheme()
             }
 
             LaunchedEffect(darkTheme) {
