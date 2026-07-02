@@ -71,7 +71,7 @@ fun MainScreen(viewModel: MainViewModel) {
                     TcpControlBlock(viewModel = viewModel)
 
                     Text("UDP control", style = MaterialTheme.typography.titleLarge)
-                    UpdControlBlock(viewModel = viewModel)
+                    UdpControlBlock(viewModel = viewModel)
                 }
             }
         }
@@ -167,7 +167,7 @@ fun TcpControlBlock(viewModel: MainViewModel) {
 }
 
 @Composable
-fun UpdControlBlock(viewModel: MainViewModel) {
+fun UdpControlBlock(viewModel: MainViewModel) {
     val connectionState by viewModel.udpConnectionState.collectAsState()
 
     Column(
