@@ -44,7 +44,7 @@ import com.skymouse.skymouseclient.proto.MouseButton
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(viewModel: MainViewModel) {
-    val connectionState by viewModel.udpConnectionState.collectAsState()
+
 
     Scaffold(
         topBar = { TopAppBar(title = { Text("SkyMouse Client") }) }
@@ -69,97 +69,8 @@ fun MainScreen(viewModel: MainViewModel) {
                     Text("TCP control", style = MaterialTheme.typography.titleLarge)
                     TcpControlBlock(viewModel = viewModel)
 
-                    when (connectionState) {
-                        is UdpConnectionState.Disconnected, is UdpConnectionState.Error -> {
-
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                // ip
-                                OutlinedTextField(
-                                    value = viewModel.ipAddress,
-                                    onValueChange = { viewModel.ipAddress = it },
-                                    label = { Text("IP Address") },
-                                    placeholder = { Text("192.168.1.1") },
-                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                                    shape = ShapeDefaults.Large,
-                                    modifier = Modifier.weight(2f)
-                                )
-
-                                // port UDP
-                                OutlinedTextField(
-                                    value = viewModel.port,
-                                    onValueChange = { input ->
-                                        if (input.all { it.isDigit() } && input.length <= 5) {
-                                            viewModel.port = input
-                                        }
-                                    },
-                                    label = { Text("Port") },
-                                    placeholder = { Text("8080") },
-                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                    shape = ShapeDefaults.Large,
-                                    modifier = Modifier.weight(1f)
-                                )
-                            }
-
-                            if (connectionState is UdpConnectionState.Error) {
-                                Text((connectionState as UdpConnectionState.Error).message, color = MaterialTheme.colorScheme.error)
-                            }
-
-                            Button (onClick = { viewModel.onConnectClicked() },
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(56.dp),
-                                    shape = ShapeDefaults.ExtraLarge,
-                                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)) {
-                                Text(text = "Connect", style = MaterialTheme.typography.titleMedium)
-                            }
-                        }
-
-                        UdpConnectionState.Connecting -> {
-                            CircularProgressIndicator()
-                            Text("Connecting...")
-                        }
-
-                        UdpConnectionState.Connected -> {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                // text
-                                OutlinedTextField(
-                                    value = viewModel.messageText,
-                                    onValueChange = { viewModel.messageText = it },
-                                    label = { Text("Message") },
-                                    placeholder = { Text("Some text...") },
-                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                                    shape = ShapeDefaults.Large,
-                                    modifier = Modifier.weight(2f)
-                                )
-
-                                // send text
-                                Button(
-                                    onClick = { viewModel.onSendMessage() },
-                                    shape = ShapeDefaults.Large,
-                                    colors = ButtonDefaults.buttonColors(
-                                        containerColor = MaterialTheme.colorScheme.primary
-                                    )
-                                ) {
-                                    Text(
-                                        text = "Send",
-                                        style = MaterialTheme.typography.titleMedium
-                                    )
-                                }
-                            }
-
-                            TextButton(onClick = { viewModel.onDisconnectClicked() }) {
-                                Text("Disconnect", color = MaterialTheme.colorScheme.error)
-                            }
-                        }
-                    }
+                    Text("UDP control", style = MaterialTheme.typography.titleLarge)
+                    UpdControlBlock(viewModel = viewModel)
                 }
             }
         }
@@ -252,6 +163,116 @@ fun TcpControlBlock(viewModel: MainViewModel) {
             }
         }
     }
+}
+
+@Composable
+fun UpdControlBlock(viewModel: MainViewModel) {
+    val connectionState by viewModel.udpConnectionState.collectAsState()
+
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+
+        when (connectionState) {
+            is UdpConnectionState.Disconnected, is UdpConnectionState.Error -> {
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // ip
+                    OutlinedTextField(
+                        value = viewModel.ipAddress,
+                        onValueChange = { viewModel.ipAddress = it },
+                        label = { Text("IP Address") },
+                        placeholder = { Text("192.168.1.1") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                        shape = ShapeDefaults.Large,
+                        modifier = Modifier.weight(2f)
+                    )
+
+                    // port UDP
+                    OutlinedTextField(
+                        value = viewModel.port,
+                        onValueChange = { input ->
+                            if (input.all { it.isDigit() } && input.length <= 5) {
+                                viewModel.port = input
+                            }
+                        },
+                        label = { Text("Port") },
+                        placeholder = { Text("8080") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        shape = ShapeDefaults.Large,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+
+                if (connectionState is UdpConnectionState.Error) {
+                    Text(
+                        (connectionState as UdpConnectionState.Error).message,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+
+                Button(
+                    onClick = { viewModel.onConnectClicked() },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    shape = ShapeDefaults.ExtraLarge,
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                ) {
+                    Text(text = "Connect", style = MaterialTheme.typography.titleMedium)
+                }
+            }
+
+            UdpConnectionState.Connecting -> {
+                CircularProgressIndicator()
+                Text("Connecting...")
+            }
+
+            UdpConnectionState.Connected -> {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // text
+                    OutlinedTextField(
+                        value = viewModel.messageText,
+                        onValueChange = { viewModel.messageText = it },
+                        label = { Text("Message") },
+                        placeholder = { Text("Some text...") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                        shape = ShapeDefaults.Large,
+                        modifier = Modifier.weight(2f)
+                    )
+
+                    // send text
+                    Button(
+                        onClick = { viewModel.onSendMessage() },
+                        shape = ShapeDefaults.Large,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary
+                        )
+                    ) {
+                        Text(
+                            text = "Send",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
+                }
+
+                TextButton(onClick = { viewModel.onDisconnectClicked() }) {
+                    Text("Disconnect", color = MaterialTheme.colorScheme.error)
+                }
+            }
+        }
+
+    }
+
 }
 
 @Composable
