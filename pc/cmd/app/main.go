@@ -12,12 +12,11 @@ import (
 )
 
 func main() {
-	udpServer, err := udp.NewServer(":9999")
+	emu := emulator.NewEmulator(5)
+	udpServer, err := udp.NewServer(":9999", emu)
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	emu := emulator.NewEmulator(5)
 
 	tcpServer := tcp.NewServer(":10000", emu)
 

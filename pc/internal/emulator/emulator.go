@@ -30,7 +30,16 @@ func (e *Emulator) Handle(event *protoapi.MessageToServer) {
 }
 
 func (e *Emulator) handleMouse(ev *protoapi.MouseEvent) {
-	// TODO
+	if ev.DeltaX == 0 && ev.DeltaY == 0 {
+		return
+	}
+
+	x, y := robotgo.Location()
+
+	newX := x + int(ev.DeltaX)
+	newY := y + int(ev.DeltaY)
+
+	robotgo.Move(newX, newY)
 }
 
 func (e *Emulator) handleClick(ev *protoapi.ClickEvent) {
