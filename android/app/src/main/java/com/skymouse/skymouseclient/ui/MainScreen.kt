@@ -37,14 +37,14 @@ import androidx.compose.ui.input.pointer.changedToUp
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.skymouse.skymouseclient.data.ConnectionState
+import com.skymouse.skymouseclient.data.UdpConnectionState
 import com.skymouse.skymouseclient.data.TcpConnectionState
 import com.skymouse.skymouseclient.proto.MouseButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(viewModel: MainViewModel) {
-    val connectionState by viewModel.connectionState.collectAsState()
+    val connectionState by viewModel.udpConnectionState.collectAsState()
 
     Scaffold(
         topBar = { TopAppBar(title = { Text("SkyMouse Client") }) }
@@ -70,7 +70,7 @@ fun MainScreen(viewModel: MainViewModel) {
                     TcpControlBlock(viewModel = viewModel)
 
                     when (connectionState) {
-                        is ConnectionState.Disconnected, is ConnectionState.Error -> {
+                        is UdpConnectionState.Disconnected, is UdpConnectionState.Error -> {
 
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -104,8 +104,8 @@ fun MainScreen(viewModel: MainViewModel) {
                                 )
                             }
 
-                            if (connectionState is ConnectionState.Error) {
-                                Text((connectionState as ConnectionState.Error).message, color = MaterialTheme.colorScheme.error)
+                            if (connectionState is UdpConnectionState.Error) {
+                                Text((connectionState as UdpConnectionState.Error).message, color = MaterialTheme.colorScheme.error)
                             }
 
                             Button (onClick = { viewModel.onConnectClicked() },
@@ -118,12 +118,12 @@ fun MainScreen(viewModel: MainViewModel) {
                             }
                         }
 
-                        ConnectionState.Connecting -> {
+                        UdpConnectionState.Connecting -> {
                             CircularProgressIndicator()
                             Text("Connecting...")
                         }
 
-                        ConnectionState.Connected -> {
+                        UdpConnectionState.Connected -> {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.spacedBy(8.dp),

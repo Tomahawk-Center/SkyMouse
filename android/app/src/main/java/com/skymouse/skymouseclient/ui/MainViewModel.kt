@@ -15,7 +15,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val udpClientManager = UdpClientManager()
 
-    val connectionState = udpClientManager.connectionState
+    val udpConnectionState = udpClientManager.connectionState
 
     var ipAddress by mutableStateOf("")
     var port by mutableStateOf("")
