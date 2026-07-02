@@ -40,11 +40,12 @@ import androidx.compose.ui.unit.dp
 import com.skymouse.skymouseclient.data.UdpConnectionState
 import com.skymouse.skymouseclient.data.TcpConnectionState
 import com.skymouse.skymouseclient.proto.MouseButton
+import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.layout.Spacer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(viewModel: MainViewModel) {
-
 
     Scaffold(
         topBar = { TopAppBar(title = { Text("SkyMouse Client") }) }
@@ -265,9 +266,14 @@ fun UpdControlBlock(viewModel: MainViewModel) {
                     }
                 }
 
+
+
                 TextButton(onClick = { viewModel.onDisconnectClicked() }) {
                     Text("Disconnect", color = MaterialTheme.colorScheme.error)
                 }
+
+                Spacer(modifier = Modifier.height(16.dp))
+                Touchpad(viewModel = viewModel)
             }
         }
 
@@ -346,5 +352,29 @@ fun MouseComponents(viewModel: MainViewModel){
             text = "RMB",
             onAction = {isPressed -> viewModel.onMouseButtonClicked(MouseButton.BUTTON_RIGHT, isPressed)}
         )
+    }
+}
+
+
+@Composable
+fun Touchpad(viewModel: MainViewModel) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .height(250.dp)
+            .clip(ShapeDefaults.Large)
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .pointerInput(Unit) {
+                detectDragGestures { change, dragAmount ->
+                    change.consume()
+                    viewModel.onMouseMove(dragAmount.x, dragAmount.y)
+                }
+            },
+        contentAlignment = Alignment.Center
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text("Touchpad", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f))
+            Text("Move finger to control mouse", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f))
+        }
     }
 }
