@@ -7,10 +7,14 @@ import (
 	"github.com/go-vgo/robotgo"
 )
 
-type Emulator struct{}
+type Emulator struct {
+	scrollMultiplier int
+}
 
-func NewEmulator() *Emulator {
-	return &Emulator{}
+func NewEmulator(scrollMultiplier int) *Emulator {
+	return &Emulator{
+		scrollMultiplier: scrollMultiplier,
+	}
 }
 
 func (e *Emulator) Handle(event *protoapi.MessageToServer) {
@@ -26,7 +30,16 @@ func (e *Emulator) Handle(event *protoapi.MessageToServer) {
 }
 
 func (e *Emulator) handleMouse(ev *protoapi.MouseEvent) {
-	// TODO
+	if ev.DeltaX == 0.0 && ev.DeltaY == 0.0 {
+		return
+	}
+
+	x, y := robotgo.Location()
+
+	newX := x + int(ev.DeltaX)
+	newY := y + int(ev.DeltaY)
+
+	robotgo.Move(newX, newY)
 }
 
 func (e *Emulator) handleClick(ev *protoapi.ClickEvent) {
@@ -56,5 +69,15 @@ func (e *Emulator) handleClick(ev *protoapi.ClickEvent) {
 }
 
 func (e *Emulator) handleScroll(ev *protoapi.ScrollEvent) {
-	// TODO
+	delta := int(ev.DeltaY) * e.scrollMultiplier
+	log.Println("DeltaY:", ev.DeltaY)
+
+	switch {
+	case ev.DeltaY > 0:
+		robotgo.ScrollDir(delta, "up")
+	case ev.DeltaY < 0:
+		robotgo.ScrollDir(delta*-1, "down")
+	default:
+		return
+	}
 }

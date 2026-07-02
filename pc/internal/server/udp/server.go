@@ -5,23 +5,33 @@ import (
 	"log"
 	"net"
 	"sync"
+
+	"github.com/Tomahawk-Center/SkyMouse/pc/internal/emulator"
+	"github.com/Tomahawk-Center/SkyMouse/pc/pkg/protoapi"
+	"google.golang.org/protobuf/proto"
 )
 
 type Server struct {
-	addr   *net.UDPAddr
-	conn   *net.UDPConn
-	quitCh chan struct{}
-	wg     sync.WaitGroup
+	addr     *net.UDPAddr
+	conn     *net.UDPConn
+	quitCh   chan struct{}
+	wg       sync.WaitGroup
+	emulator *emulator.Emulator
 }
 
-func NewServer(addr string) (*Server, error) {
+func NewServer(addr string, emu *emulator.Emulator) (*Server, error) {
+	if emu == nil {
+		return nil, errors.New("emulator cannot be nil")
+	}
+
 	ad, err := net.ResolveUDPAddr("udp", addr)
 	if err != nil {
 		return nil, err
 	}
 	return &Server{
-		addr:   ad,
-		quitCh: make(chan struct{}),
+		addr:     ad,
+		quitCh:   make(chan struct{}),
+		emulator: emu,
 	}, nil
 
 }
@@ -71,6 +81,13 @@ func (s *Server) acceptLoop() {
 			log.Printf("UDP ReadFromUDP error: %s\n", err)
 			continue
 		}
-		log.Printf("UDP Received %d bytes from %s: %s\n", n, remoteAddr, string(buf[:n]))
+		// log.Printf("UDP Received %d bytes from %s: %s\n", n, remoteAddr, string(buf[:n]))
+		var msg protoapi.MessageToServer
+		if err := proto.Unmarshal(buf[:n], &msg); err != nil {
+			log.Printf("UDP Protobuf unmarshal error from %s: %v\n", remoteAddr, err)
+			continue
+		}
+
+		s.emulator.Handle(&msg)
 	}
 }
