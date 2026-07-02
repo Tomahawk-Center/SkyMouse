@@ -108,4 +108,20 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             tcpClientManager.sendProto(message)
         }
     }
+
+    private var mouseSequenceId = 0
+
+    fun onMouseMove(deltaX: Float, deltaY: Float) {
+        viewModelScope.launch {
+            val msg = com.skymouse.skymouseclient.proto.messageToServer {
+                mouse = com.skymouse.skymouseclient.proto.mouseEvent {
+                    this.deltaX = deltaX
+                    this.deltaY = deltaY
+                    this.sequenceId = mouseSequenceId++
+                    this.timestampMs = System.currentTimeMillis()
+                }
+            }
+            udpClientManager.sendProto(msg)
+        }
+    }
 }
