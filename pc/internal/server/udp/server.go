@@ -20,6 +20,10 @@ type Server struct {
 }
 
 func NewServer(addr string, emu *emulator.Emulator) (*Server, error) {
+	if emu == nil {
+		return nil, errors.New("emulator cannot be nil")
+	}
+
 	ad, err := net.ResolveUDPAddr("udp", addr)
 	if err != nil {
 		return nil, err
