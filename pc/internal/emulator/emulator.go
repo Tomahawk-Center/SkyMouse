@@ -30,7 +30,7 @@ func (e *Emulator) Handle(event *protoapi.MessageToServer) {
 }
 
 func (e *Emulator) handleMouse(ev *protoapi.MouseEvent) {
-	if ev.DeltaX == 0 && ev.DeltaY == 0 {
+	if ev.DeltaX == 0.0 && ev.DeltaY == 0.0 {
 		return
 	}
 
