@@ -37,14 +37,15 @@ import androidx.compose.ui.input.pointer.changedToUp
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import com.skymouse.skymouseclient.data.ConnectionState
+import com.skymouse.skymouseclient.data.UdpConnectionState
 import com.skymouse.skymouseclient.data.TcpConnectionState
 import com.skymouse.skymouseclient.proto.MouseButton
+import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.layout.Spacer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(viewModel: MainViewModel) {
-    val connectionState by viewModel.connectionState.collectAsState()
 
     Scaffold(
         topBar = { TopAppBar(title = { Text("SkyMouse Client") }) }
@@ -69,97 +70,8 @@ fun MainScreen(viewModel: MainViewModel) {
                     Text("TCP control", style = MaterialTheme.typography.titleLarge)
                     TcpControlBlock(viewModel = viewModel)
 
-                    when (connectionState) {
-                        is ConnectionState.Disconnected, is ConnectionState.Error -> {
-
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                // ip
-                                OutlinedTextField(
-                                    value = viewModel.ipAddress,
-                                    onValueChange = { viewModel.ipAddress = it },
-                                    label = { Text("IP Address") },
-                                    placeholder = { Text("192.168.1.1") },
-                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                                    shape = ShapeDefaults.Large,
-                                    modifier = Modifier.weight(2f)
-                                )
-
-                                // port UDP
-                                OutlinedTextField(
-                                    value = viewModel.port,
-                                    onValueChange = { input ->
-                                        if (input.all { it.isDigit() } && input.length <= 5) {
-                                            viewModel.port = input
-                                        }
-                                    },
-                                    label = { Text("Port") },
-                                    placeholder = { Text("8080") },
-                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                                    shape = ShapeDefaults.Large,
-                                    modifier = Modifier.weight(1f)
-                                )
-                            }
-
-                            if (connectionState is ConnectionState.Error) {
-                                Text((connectionState as ConnectionState.Error).message, color = MaterialTheme.colorScheme.error)
-                            }
-
-                            Button (onClick = { viewModel.onConnectClicked() },
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .height(56.dp),
-                                    shape = ShapeDefaults.ExtraLarge,
-                                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)) {
-                                Text(text = "Connect", style = MaterialTheme.typography.titleMedium)
-                            }
-                        }
-
-                        ConnectionState.Connecting -> {
-                            CircularProgressIndicator()
-                            Text("Connecting...")
-                        }
-
-                        ConnectionState.Connected -> {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                // text
-                                OutlinedTextField(
-                                    value = viewModel.messageText,
-                                    onValueChange = { viewModel.messageText = it },
-                                    label = { Text("Message") },
-                                    placeholder = { Text("Some text...") },
-                                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
-                                    shape = ShapeDefaults.Large,
-                                    modifier = Modifier.weight(2f)
-                                )
-
-                                // send text
-                                Button(
-                                    onClick = { viewModel.onSendMessage() },
-                                    shape = ShapeDefaults.Large,
-                                    colors = ButtonDefaults.buttonColors(
-                                        containerColor = MaterialTheme.colorScheme.primary
-                                    )
-                                ) {
-                                    Text(
-                                        text = "Send",
-                                        style = MaterialTheme.typography.titleMedium
-                                    )
-                                }
-                            }
-
-                            TextButton(onClick = { viewModel.onDisconnectClicked() }) {
-                                Text("Disconnect", color = MaterialTheme.colorScheme.error)
-                            }
-                        }
-                    }
+                    Text("UDP control", style = MaterialTheme.typography.titleLarge)
+                    UpdControlBlock(viewModel = viewModel)
                 }
             }
         }
@@ -255,6 +167,121 @@ fun TcpControlBlock(viewModel: MainViewModel) {
 }
 
 @Composable
+fun UpdControlBlock(viewModel: MainViewModel) {
+    val connectionState by viewModel.udpConnectionState.collectAsState()
+
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+
+        when (connectionState) {
+            is UdpConnectionState.Disconnected, is UdpConnectionState.Error -> {
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // ip
+                    OutlinedTextField(
+                        value = viewModel.ipAddress,
+                        onValueChange = { viewModel.ipAddress = it },
+                        label = { Text("IP Address") },
+                        placeholder = { Text("192.168.1.1") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                        shape = ShapeDefaults.Large,
+                        modifier = Modifier.weight(2f)
+                    )
+
+                    // port UDP
+                    OutlinedTextField(
+                        value = viewModel.port,
+                        onValueChange = { input ->
+                            if (input.all { it.isDigit() } && input.length <= 5) {
+                                viewModel.port = input
+                            }
+                        },
+                        label = { Text("Port") },
+                        placeholder = { Text("8080") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        shape = ShapeDefaults.Large,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+
+                if (connectionState is UdpConnectionState.Error) {
+                    Text(
+                        (connectionState as UdpConnectionState.Error).message,
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+
+                Button(
+                    onClick = { viewModel.onConnectClicked() },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    shape = ShapeDefaults.ExtraLarge,
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                ) {
+                    Text(text = "Connect", style = MaterialTheme.typography.titleMedium)
+                }
+            }
+
+            UdpConnectionState.Connecting -> {
+                CircularProgressIndicator()
+                Text("Connecting...")
+            }
+
+            UdpConnectionState.Connected -> {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    // text
+                    OutlinedTextField(
+                        value = viewModel.messageText,
+                        onValueChange = { viewModel.messageText = it },
+                        label = { Text("Message") },
+                        placeholder = { Text("Some text...") },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                        shape = ShapeDefaults.Large,
+                        modifier = Modifier.weight(2f)
+                    )
+
+                    // send text
+                    Button(
+                        onClick = { viewModel.onSendMessage() },
+                        shape = ShapeDefaults.Large,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary
+                        )
+                    ) {
+                        Text(
+                            text = "Send",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    }
+                }
+
+
+
+                TextButton(onClick = { viewModel.onDisconnectClicked() }) {
+                    Text("Disconnect", color = MaterialTheme.colorScheme.error)
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+                Touchpad(viewModel = viewModel)
+            }
+        }
+
+    }
+
+}
+
+@Composable
 fun MouseInteractionButton(
     text: String,
     onAction: (Boolean) -> Unit
@@ -325,5 +352,29 @@ fun MouseComponents(viewModel: MainViewModel){
             text = "RMB",
             onAction = {isPressed -> viewModel.onMouseButtonClicked(MouseButton.BUTTON_RIGHT, isPressed)}
         )
+    }
+}
+
+
+@Composable
+fun Touchpad(viewModel: MainViewModel) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .height(250.dp)
+            .clip(ShapeDefaults.Large)
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .pointerInput(Unit) {
+                detectDragGestures { change, dragAmount ->
+                    change.consume()
+                    viewModel.onMouseMove(dragAmount.x, dragAmount.y)
+                }
+            },
+        contentAlignment = Alignment.Center
+    ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text("Touchpad", style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f))
+            Text("Move finger to control mouse", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f))
+        }
     }
 }
