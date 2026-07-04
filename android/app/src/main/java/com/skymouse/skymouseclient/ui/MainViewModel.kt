@@ -25,51 +25,21 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         val portInt = port.toIntOrNull() ?: return
 
         viewModelScope.launch {
-            udpClientManager.connect(ipAddress, portInt)
-        }
-    }
-
-    fun onDisconnectClicked() {
-        udpClientManager.disconnect()
-    }
-
-    fun onSendMessage() {
-        if (messageText.isBlank()) return
-
-        viewModelScope.launch {
-            udpClientManager.sendText(messageText)
-            messageText = ""
-        }
-    }
-    private val tcpClientManager = TcpClientManager()
-
-    val tcpConnectionState = tcpClientManager.connectionState
-
-    var tcpPort by mutableStateOf("")
-    var tcpMessageText by mutableStateOf("")
-
-    fun onTcpConnectClicked() {
-        val portInt = tcpPort.toIntOrNull() ?: return
-
-        viewModelScope.launch {
+            udpClientManager.connect(ipAddress, portInt-1) //TODO: remove hardcoded port
             tcpClientManager.connect(ipAddress, portInt)
         }
     }
 
-    fun onTcpDisconnectClicked() {
+    fun onDisconnectClicked() {
         viewModelScope.launch {
+            udpClientManager.disconnect()
             tcpClientManager.disconnect()
         }
     }
 
-    fun onTcpSendMessage() {
-//        if (tcpMessageText.isBlank()) return
-//
-//        viewModelScope.launch {
-//            tcpClientManager.sendText(tcpMessageText)
-//            tcpMessageText = ""
-//        }
-    }
+    private val tcpClientManager = TcpClientManager()
+
+    val tcpConnectionState = tcpClientManager.connectionState
 
     fun onMouseButtonClicked(button: MouseButton, isPressed: Boolean) {
         viewModelScope.launch {
