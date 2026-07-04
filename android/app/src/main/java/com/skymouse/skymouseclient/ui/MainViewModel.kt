@@ -1,9 +1,11 @@
 package com.skymouse.skymouseclient.ui
 
 import android.app.Application
+import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.content.edit
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.skymouse.skymouseclient.data.TcpClientManager
@@ -13,16 +15,22 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
+    private val prefs = application.getSharedPreferences("settings", Context.MODE_PRIVATE)
+
     private val udpClientManager = UdpClientManager()
 
     val udpConnectionState = udpClientManager.connectionState
 
-    var ipAddress by mutableStateOf("")
-    var port by mutableStateOf("")
-    var messageText by mutableStateOf("")
+    var ipAddress by mutableStateOf(prefs.getString("ip_address", "") ?: "")
+    var port by mutableStateOf(prefs.getString("port", "10000") ?: "10000")
 
     fun onConnectClicked() {
         val portInt = port.toIntOrNull() ?: return
+
+        prefs.edit {
+            putString("ip_address", ipAddress)
+            putString("port", port)
+        }
 
         viewModelScope.launch {
             udpClientManager.connect(ipAddress, portInt-1) //TODO: remove hardcoded port
