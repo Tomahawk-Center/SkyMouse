@@ -30,22 +30,6 @@ class UdpClientManager {
         }
     }
 
-    suspend fun sendText(text: String) = withContext(Dispatchers.IO) {
-        val s = socket
-        val address = serverAddress
-        if (s == null || address == null || _connectionState.value != UdpConnectionState.Connected) return@withContext
-
-        try {
-            val bytes = text.toByteArray(Charsets.UTF_8)
-            val packet = DatagramPacket(bytes, bytes.size, address, serverPort)
-            s.send(packet)
-        } catch (e: Exception) {
-            _connectionState.value = UdpConnectionState.Error(e.localizedMessage ?: "Send Failed")
-        }
-    }
-
-
-
     suspend fun sendProto(proto: com.google.protobuf.MessageLite) = withContext(Dispatchers.IO) {
         val s = socket
         val address = serverAddress

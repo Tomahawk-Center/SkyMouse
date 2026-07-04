@@ -1,9 +1,11 @@
 package com.skymouse.skymouseclient.ui
 
 import android.app.Application
+import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.content.edit
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.skymouse.skymouseclient.data.TcpClientManager
@@ -13,63 +15,39 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
+    private val prefs = application.getSharedPreferences("settings", Context.MODE_PRIVATE)
+
     private val udpClientManager = UdpClientManager()
 
     val udpConnectionState = udpClientManager.connectionState
 
-    var ipAddress by mutableStateOf("")
-    var port by mutableStateOf("")
-    var messageText by mutableStateOf("")
+    var ipAddress by mutableStateOf(prefs.getString("ip_address", "") ?: "")
+    var port by mutableStateOf(prefs.getString("port", "10000") ?: "10000")
 
     fun onConnectClicked() {
         val portInt = port.toIntOrNull() ?: return
 
-        viewModelScope.launch {
-            udpClientManager.connect(ipAddress, portInt)
+        prefs.edit {
+            putString("ip_address", ipAddress)
+            putString("port", port)
         }
-    }
-
-    fun onDisconnectClicked() {
-        udpClientManager.disconnect()
-    }
-
-    fun onSendMessage() {
-        if (messageText.isBlank()) return
 
         viewModelScope.launch {
-            udpClientManager.sendText(messageText)
-            messageText = ""
-        }
-    }
-    private val tcpClientManager = TcpClientManager()
-
-    val tcpConnectionState = tcpClientManager.connectionState
-
-    var tcpPort by mutableStateOf("")
-    var tcpMessageText by mutableStateOf("")
-
-    fun onTcpConnectClicked() {
-        val portInt = tcpPort.toIntOrNull() ?: return
-
-        viewModelScope.launch {
+            udpClientManager.connect(ipAddress, portInt-1) //TODO: remove hardcoded port
             tcpClientManager.connect(ipAddress, portInt)
         }
     }
 
-    fun onTcpDisconnectClicked() {
+    fun onDisconnectClicked() {
         viewModelScope.launch {
+            udpClientManager.disconnect()
             tcpClientManager.disconnect()
         }
     }
 
-    fun onTcpSendMessage() {
-//        if (tcpMessageText.isBlank()) return
-//
-//        viewModelScope.launch {
-//            tcpClientManager.sendText(tcpMessageText)
-//            tcpMessageText = ""
-//        }
-    }
+    private val tcpClientManager = TcpClientManager()
+
+    val tcpConnectionState = tcpClientManager.connectionState
 
     fun onMouseButtonClicked(button: MouseButton, isPressed: Boolean) {
         viewModelScope.launch {

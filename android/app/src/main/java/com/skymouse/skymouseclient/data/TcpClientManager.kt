@@ -30,22 +30,6 @@ class TcpClientManager {
         }
     }
 
-    suspend fun sendText(text: String) = withContext(Dispatchers.IO) {
-        val os = outputStream
-        if (os==null || _connectionState.value != TcpConnectionState.Connected) {
-            return@withContext
-        }
-
-        try {
-            val bytes = text.toByteArray(Charsets.UTF_8)
-            os.write(bytes)
-            os.flush()
-        } catch (error: Exception) {
-            _connectionState.value = TcpConnectionState.Error(error.localizedMessage ?: "Tcp send failed")
-            disconnect()
-        }
-    }
-
     suspend fun sendProto(message: com.google.protobuf.MessageLite) = withContext(Dispatchers.IO){
         val os = outputStream ?: return@withContext
 
