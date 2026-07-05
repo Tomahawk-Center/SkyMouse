@@ -2,31 +2,35 @@ package tcp
 
 import (
 	"encoding/binary"
+	"errors"
 	"io"
 	"log"
 	"net"
 	"sync"
+	"time"
 
 	"github.com/Tomahawk-Center/SkyMouse/pc/pkg/protoapi"
 	"google.golang.org/protobuf/proto"
 )
 
 type Server struct {
-	addr    string
-	ln      net.Listener
-	quitCh  chan struct{}
-	wg      sync.WaitGroup
-	mu      sync.Mutex
-	conns   map[net.Conn]struct{}
-	handler EventHandler
+	addr       string
+	ln         net.Listener
+	quitCh     chan struct{}
+	wg         sync.WaitGroup
+	handler    EventHandler
+	getUdpPort func() (int, error)
+	mu         sync.Mutex
+	conns      map[net.Conn]*clientSession
 }
 
-func NewServer(addr string, handler EventHandler) *Server {
+func NewServer(addr string, handler EventHandler, udpPortProvider func() (int, error)) *Server {
 	return &Server{
-		addr:    addr,
-		quitCh:  make(chan struct{}),
-		conns:   make(map[net.Conn]struct{}),
-		handler: handler,
+		addr:       addr,
+		quitCh:     make(chan struct{}),
+		conns:      make(map[net.Conn]*clientSession),
+		handler:    handler,
+		getUdpPort: udpPortProvider,
 	}
 }
 
@@ -96,8 +100,10 @@ func (s *Server) handleConnection(conn net.Conn) {
 		_ = conn.Close()
 	}(conn)
 
+	session := &clientSession{conn: conn, lastActive: time.Now()}
+
 	s.mu.Lock()
-	s.conns[conn] = struct{}{}
+	s.conns[conn] = session
 	s.mu.Unlock()
 
 	defer func() {
@@ -127,6 +133,8 @@ func (s *Server) handleConnection(conn net.Conn) {
 			return
 		}
 
+		s.conns[conn].lastActive = time.Now()
+
 		var msg protoapi.MessageToServer
 		err = proto.Unmarshal(buf, &msg)
 		if err != nil {
@@ -137,13 +145,76 @@ func (s *Server) handleConnection(conn net.Conn) {
 		log.Println("Received message:")
 		log.Println(&msg)
 
-		if s.handler != nil {
-			s.handler.Handle(&msg)
-		}
-		_, err = conn.Write([]byte("ACK\n"))
+		s.routeMessage(session, &msg)
+	}
+}
+
+func (s *Server) handlePing(sess *clientSession) error {
+	//TODO
+	return errors.New("ping-pong not implemented yet")
+
+	//pong := &protoapi.Pong{}
+	//
+	////TODO wrap pong in MessageToClient
+	//
+	//b, err := proto.Marshal(pong)
+	//if err != nil {
+	//	return err
+	//}
+	//
+	//_, err = sess.conn.Write(b)
+	//if err != nil {
+	//	return err
+	//}
+	//return nil
+}
+
+func (s *Server) handleClientHello(sess *clientSession, m *protoapi.MessageToServer) error {
+	serverHello := &protoapi.ServerHello{}
+	serverHello.ServerVersion = "1" // TODO remove hardcoded server version
+	udpPort, err := s.getUdpPort()
+	if err != nil {
+		udpPort = 0
+	}
+	serverHello.UdpPort = int32(udpPort)
+
+	msg := &protoapi.MessageToClient{
+		Event: &protoapi.MessageToClient_ServerHello{
+			ServerHello: serverHello,
+		},
+	}
+
+	b, err := proto.Marshal(msg)
+	if err != nil {
+		return err
+	}
+
+	packet := make([]byte, 4+len(b))
+
+	binary.BigEndian.PutUint32(packet[0:4], uint32(len(b))) // TODO perf may be improved
+	copy(packet[4:], b)
+	_, err = sess.conn.Write(packet)
+	return err
+}
+
+func (s *Server) routeMessage(sess *clientSession, m *protoapi.MessageToServer) {
+	// TODO separate event for emulator messages in .proto
+	switch m.Event.(type) {
+	case *protoapi.MessageToServer_Mouse:
+		s.handler.Handle(m)
+	case *protoapi.MessageToServer_Click:
+		s.handler.Handle(m)
+	case *protoapi.MessageToServer_Scroll:
+		s.handler.Handle(m)
+	case *protoapi.MessageToServer_Ping:
+		err := s.handlePing(sess)
 		if err != nil {
-			log.Printf("Send ACK failed with error: %v\n", err)
-			return
+			log.Printf("Send pong failed: %v\n", err)
+		}
+	case *protoapi.MessageToServer_ClientHello:
+		err := s.handleClientHello(sess, m)
+		if err != nil {
+			log.Printf("Send client hello failed: %v\n", err)
 		}
 	}
 }

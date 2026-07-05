@@ -18,7 +18,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	tcpServer := tcp.NewServer(":10000", emu)
+	tcpServer := tcp.NewServer(":10000", emu, udpServer.Port)
 
 	go func() {
 		if err := tcpServer.Start(); err != nil {
