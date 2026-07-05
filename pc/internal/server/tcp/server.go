@@ -116,6 +116,7 @@ func (s *Server) handleConnection(conn net.Conn) {
 				log.Printf("Read size failed: %v\n", err)
 				return
 			}
+			return
 		}
 
 		buf := make([]byte, size)
