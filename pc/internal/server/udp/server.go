@@ -2,6 +2,7 @@ package udp
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"net"
 	"sync"
@@ -58,6 +59,14 @@ func (s *Server) Stop() {
 	}
 	s.wg.Wait()
 	log.Println("Server UDP shut down successfully")
+}
+
+func (s *Server) Port() (int, error) {
+	if s.conn == nil {
+		return 0, fmt.Errorf("UDP Server not started")
+	}
+	addr := s.conn.LocalAddr().(*net.UDPAddr)
+	return addr.Port, nil
 }
 
 func (s *Server) acceptLoop() {
