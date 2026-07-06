@@ -9,6 +9,7 @@ import androidx.compose.runtime.setValue
 import androidx.core.content.edit
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.skymouse.skymouseclient.data.GyroscopeProvider
 import com.skymouse.skymouseclient.data.TcpClientManager
 import com.skymouse.skymouseclient.data.TcpConnectionState
 import com.skymouse.skymouseclient.data.UdpClientManager
@@ -27,6 +28,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         prefs.edit {
             putBoolean("gyro_enabled", isGyroEnabled)
         }
+
+        if (isGyroEnabled) {
+            gyroscopeProvider.start()
+        } else {
+            gyroscopeProvider.stop()
+        }
+    }
+
+    override fun onCleared() {
+        gyroscopeProvider.stop()
     }
 
     private val udpClientManager = UdpClientManager()
@@ -144,4 +155,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             udpClientManager.sendProto(msg)
         }
     }
+
+    private val gyroscopeProvider = GyroscopeProvider(application) { dx, dy ->
+        onMouseMove(dx, dy)
+    }
+
+    init {
+        if (isGyroEnabled) {
+            gyroscopeProvider.start()
+        }
+    }
+
 }
