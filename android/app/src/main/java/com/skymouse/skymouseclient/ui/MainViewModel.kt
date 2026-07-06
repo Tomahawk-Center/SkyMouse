@@ -2,6 +2,7 @@ package com.skymouse.skymouseclient.ui
 
 import android.app.Application
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -13,11 +14,20 @@ import com.skymouse.skymouseclient.data.TcpConnectionState
 import com.skymouse.skymouseclient.data.UdpClientManager
 import com.skymouse.skymouseclient.proto.MouseButton
 import kotlinx.coroutines.launch
-import android.widget.Toast
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val prefs = application.getSharedPreferences("settings", Context.MODE_PRIVATE)
+
+    var isGyroEnabled by mutableStateOf(prefs.getBoolean("gyro_enabled", false))
+        private set
+
+    fun toggleControlMode() {
+        isGyroEnabled = !isGyroEnabled
+        prefs.edit {
+            putBoolean("gyro_enabled", isGyroEnabled)
+        }
+    }
 
     private val udpClientManager = UdpClientManager()
 
