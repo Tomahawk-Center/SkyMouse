@@ -53,6 +53,48 @@ class TcpClientManager {
         }
     }
 
+    suspend fun receiveProto(): com.skymouse.skymouseclient.proto.MessageToClient? = withContext(
+        Dispatchers.IO) {
+        val s = socket ?: return@withContext null
+        try {
+            val inputStream = s.getInputStream()
+
+            val header = ByteArray(4)
+            var totalReadHeader = 0
+            while (totalReadHeader<4) {
+                val read = inputStream.read(header, totalReadHeader, 4-totalReadHeader)
+                if (read == -1) {
+                    return@withContext null
+                }
+                totalReadHeader += read
+            }
+
+            val size = ((header[0].toInt() and 0xFF) shl 24) or
+                    ((header[1].toInt() and 0xFF) shl 16) or
+                    ((header[2].toInt() and 0xFF) shl 8) or
+                    (header[3].toInt() and 0xFF)
+
+            if (size <= 0 || size > 1024 * 1024) return@withContext null // Too big packets protection
+
+            val body = ByteArray(size)
+            var totalReadBody = 0
+            while (totalReadBody < size) {
+                val read = inputStream.read(body, totalReadBody, size - totalReadBody)
+                if (read == -1) {
+                    return@withContext null
+                }
+                totalReadBody += read
+            }
+
+            return@withContext com.skymouse.skymouseclient.proto.MessageToClient.parseFrom(body)
+        } catch (e: Exception) {
+            if (!s.isClosed) {
+                _connectionState.value = TcpConnectionState.Error(e.localizedMessage ?: "Tcp receive failed")
+            }
+            null
+        }
+    }
+
      suspend fun disconnect() =withContext(Dispatchers.IO) {
         try {
             socket?.shutdownOutput()

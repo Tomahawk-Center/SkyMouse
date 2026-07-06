@@ -38,10 +38,32 @@ message ScrollEvent {
     int64 timestamp_ms = 2;
 }
 
+message Ping {}
+
+message Pong {}
+
+message ClientHello {
+    string client_version = 1;
+}
+
+message ServerHello {
+    string server_version = 1;
+    int32 udp_port = 2;
+}
+
 message MessageToServer {
     oneof event {
         MouseEvent mouse = 1;
         ClickEvent click = 2;
         ScrollEvent scroll = 3;
+        ClientHello client_hello = 4;
+        Ping ping = 5;
+        Pong pong = 6;
+    }
+}
+
+message MessageToClient {
+    oneof event {
+        ServerHello server_hello = 1;
     }
 }

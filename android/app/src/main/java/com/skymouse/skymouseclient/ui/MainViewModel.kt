@@ -9,9 +9,11 @@ import androidx.core.content.edit
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.skymouse.skymouseclient.data.TcpClientManager
+import com.skymouse.skymouseclient.data.TcpConnectionState
 import com.skymouse.skymouseclient.data.UdpClientManager
 import com.skymouse.skymouseclient.proto.MouseButton
 import kotlinx.coroutines.launch
+import android.widget.Toast
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -26,6 +28,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun onConnectClicked() {
         val portInt = port.toIntOrNull() ?: return
+        val clientVersionStr = "1"
 
         prefs.edit {
             putString("ip_address", ipAddress)
@@ -33,8 +36,37 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
 
         viewModelScope.launch {
-            udpClientManager.connect(ipAddress, portInt-1) //TODO: remove hardcoded port
             tcpClientManager.connect(ipAddress, portInt)
+
+            if (tcpClientManager.connectionState.value is TcpConnectionState.Connected) {
+                val helloMsg = com.skymouse.skymouseclient.proto.messageToServer {
+                    clientHello = com.skymouse.skymouseclient.proto.clientHello {
+                        clientVersion = clientVersionStr
+                    }
+                }
+
+                tcpClientManager.sendProto(helloMsg)
+
+                val response = tcpClientManager.receiveProto()
+                if (response != null && response.hasServerHello()) {
+                    val serverVersion = response.serverHello.serverVersion
+                    if (serverVersion != clientVersionStr) {
+                        Toast.makeText(
+                            getApplication(),
+                            "Server version mismatch: $serverVersion, client version: $clientVersionStr",
+                            Toast.LENGTH_LONG
+                        ).show()
+
+                        tcpClientManager.disconnect()
+                        return@launch
+                    }
+
+                    val udpPortFromServer = response.serverHello.udpPort
+                    udpClientManager.connect(ipAddress, udpPortFromServer)
+                } else {
+                    tcpClientManager.disconnect()
+                }
+            }
         }
     }
 

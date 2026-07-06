@@ -55,5 +55,50 @@ public interface MessageToServerOrBuilder extends
    */
   com.skymouse.skymouseclient.proto.ScrollEventOrBuilder getScrollOrBuilder();
 
+  /**
+   * <code>.skymouse.ClientHello client_hello = 4;</code>
+   * @return Whether the clientHello field is set.
+   */
+  boolean hasClientHello();
+  /**
+   * <code>.skymouse.ClientHello client_hello = 4;</code>
+   * @return The clientHello.
+   */
+  com.skymouse.skymouseclient.proto.ClientHello getClientHello();
+  /**
+   * <code>.skymouse.ClientHello client_hello = 4;</code>
+   */
+  com.skymouse.skymouseclient.proto.ClientHelloOrBuilder getClientHelloOrBuilder();
+
+  /**
+   * <code>.skymouse.Ping ping = 5;</code>
+   * @return Whether the ping field is set.
+   */
+  boolean hasPing();
+  /**
+   * <code>.skymouse.Ping ping = 5;</code>
+   * @return The ping.
+   */
+  com.skymouse.skymouseclient.proto.Ping getPing();
+  /**
+   * <code>.skymouse.Ping ping = 5;</code>
+   */
+  com.skymouse.skymouseclient.proto.PingOrBuilder getPingOrBuilder();
+
+  /**
+   * <code>.skymouse.Pong pong = 6;</code>
+   * @return Whether the pong field is set.
+   */
+  boolean hasPong();
+  /**
+   * <code>.skymouse.Pong pong = 6;</code>
+   * @return The pong.
+   */
+  com.skymouse.skymouseclient.proto.Pong getPong();
+  /**
+   * <code>.skymouse.Pong pong = 6;</code>
+   */
+  com.skymouse.skymouseclient.proto.PongOrBuilder getPongOrBuilder();
+
   com.skymouse.skymouseclient.proto.MessageToServer.EventCase getEventCase();
 }

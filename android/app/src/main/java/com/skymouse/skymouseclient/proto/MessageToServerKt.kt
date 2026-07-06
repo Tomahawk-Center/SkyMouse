@@ -100,6 +100,78 @@ public object MessageToServerKt {
     public fun hasScroll(): kotlin.Boolean {
       return _builder.hasScroll()
     }
+
+    /**
+     * `.skymouse.ClientHello client_hello = 4;`
+     */
+    public var clientHello: com.skymouse.skymouseclient.proto.ClientHello
+      @kotlin.jvm.JvmName("getClientHello")
+        get() = _builder.clientHello
+      @kotlin.jvm.JvmName("setClientHello")
+        set(value) {
+        _builder.clientHello = value
+      }
+    /**
+     * `.skymouse.ClientHello client_hello = 4;`
+     */
+    public fun clearClientHello() {
+      _builder.clearClientHello()
+    }
+    /**
+     * `.skymouse.ClientHello client_hello = 4;`
+     * @return Whether the clientHello field is set.
+     */
+    public fun hasClientHello(): kotlin.Boolean {
+      return _builder.hasClientHello()
+    }
+
+    /**
+     * `.skymouse.Ping ping = 5;`
+     */
+    public var ping: com.skymouse.skymouseclient.proto.Ping
+      @kotlin.jvm.JvmName("getPing")
+        get() = _builder.ping
+      @kotlin.jvm.JvmName("setPing")
+        set(value) {
+        _builder.ping = value
+      }
+    /**
+     * `.skymouse.Ping ping = 5;`
+     */
+    public fun clearPing() {
+      _builder.clearPing()
+    }
+    /**
+     * `.skymouse.Ping ping = 5;`
+     * @return Whether the ping field is set.
+     */
+    public fun hasPing(): kotlin.Boolean {
+      return _builder.hasPing()
+    }
+
+    /**
+     * `.skymouse.Pong pong = 6;`
+     */
+    public var pong: com.skymouse.skymouseclient.proto.Pong
+      @kotlin.jvm.JvmName("getPong")
+        get() = _builder.pong
+      @kotlin.jvm.JvmName("setPong")
+        set(value) {
+        _builder.pong = value
+      }
+    /**
+     * `.skymouse.Pong pong = 6;`
+     */
+    public fun clearPong() {
+      _builder.clearPong()
+    }
+    /**
+     * `.skymouse.Pong pong = 6;`
+     * @return Whether the pong field is set.
+     */
+    public fun hasPong(): kotlin.Boolean {
+      return _builder.hasPong()
+    }
     public val eventCase: com.skymouse.skymouseclient.proto.MessageToServer.EventCase
     @kotlin.jvm.JvmName("getEventCase")
       get() = _builder.getEventCase()
@@ -121,4 +193,13 @@ public val com.skymouse.skymouseclient.proto.MessageToServerOrBuilder.clickOrNul
 
 public val com.skymouse.skymouseclient.proto.MessageToServerOrBuilder.scrollOrNull: com.skymouse.skymouseclient.proto.ScrollEvent?
   get() = if (hasScroll()) getScroll() else null
+
+public val com.skymouse.skymouseclient.proto.MessageToServerOrBuilder.clientHelloOrNull: com.skymouse.skymouseclient.proto.ClientHello?
+  get() = if (hasClientHello()) getClientHello() else null
+
+public val com.skymouse.skymouseclient.proto.MessageToServerOrBuilder.pingOrNull: com.skymouse.skymouseclient.proto.Ping?
+  get() = if (hasPing()) getPing() else null
+
+public val com.skymouse.skymouseclient.proto.MessageToServerOrBuilder.pongOrNull: com.skymouse.skymouseclient.proto.Pong?
+  get() = if (hasPong()) getPong() else null
 

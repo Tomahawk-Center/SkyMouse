@@ -42,7 +42,7 @@ func (e *Emulator) handleMouse(ev *protoapi.MouseEvent) {
 	if i > e.lastSequenceId {
 		e.lastSequenceId = i
 	} else {
-		return
+		//return // TODO this fix is temporary, now sequence id will be ignored
 	}
 
 	x, y := robotgo.Location()
