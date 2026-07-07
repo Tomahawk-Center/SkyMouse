@@ -37,7 +37,7 @@ func (e *Emulator) handleMouse(ev *protoapi.MouseEvent) {
 	}
 
 	i := int(ev.SequenceId)
-	log.Println("ID:", i, e.lastSequenceId)
+	//log.Println("ID:", i, e.lastSequenceId)
 
 	if i > e.lastSequenceId {
 		e.lastSequenceId = i
