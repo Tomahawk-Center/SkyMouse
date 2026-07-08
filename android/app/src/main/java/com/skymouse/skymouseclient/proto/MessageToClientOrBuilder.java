@@ -25,5 +25,20 @@ public interface MessageToClientOrBuilder extends
    */
   com.skymouse.skymouseclient.proto.ServerHelloOrBuilder getServerHelloOrBuilder();
 
+  /**
+   * <code>.skymouse.ServerEvent server_event = 2;</code>
+   * @return Whether the serverEvent field is set.
+   */
+  boolean hasServerEvent();
+  /**
+   * <code>.skymouse.ServerEvent server_event = 2;</code>
+   * @return The serverEvent.
+   */
+  com.skymouse.skymouseclient.proto.ServerEvent getServerEvent();
+  /**
+   * <code>.skymouse.ServerEvent server_event = 2;</code>
+   */
+  com.skymouse.skymouseclient.proto.ServerEventOrBuilder getServerEventOrBuilder();
+
   com.skymouse.skymouseclient.proto.MessageToClient.EventCase getEventCase();
 }

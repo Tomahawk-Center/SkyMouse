@@ -52,6 +52,30 @@ public object MessageToClientKt {
     public fun hasServerHello(): kotlin.Boolean {
       return _builder.hasServerHello()
     }
+
+    /**
+     * `.skymouse.ServerEvent server_event = 2;`
+     */
+    public var serverEvent: com.skymouse.skymouseclient.proto.ServerEvent
+      @kotlin.jvm.JvmName("getServerEvent")
+        get() = _builder.serverEvent
+      @kotlin.jvm.JvmName("setServerEvent")
+        set(value) {
+        _builder.serverEvent = value
+      }
+    /**
+     * `.skymouse.ServerEvent server_event = 2;`
+     */
+    public fun clearServerEvent() {
+      _builder.clearServerEvent()
+    }
+    /**
+     * `.skymouse.ServerEvent server_event = 2;`
+     * @return Whether the serverEvent field is set.
+     */
+    public fun hasServerEvent(): kotlin.Boolean {
+      return _builder.hasServerEvent()
+    }
     public val eventCase: com.skymouse.skymouseclient.proto.MessageToClient.EventCase
     @kotlin.jvm.JvmName("getEventCase")
       get() = _builder.getEventCase()
@@ -67,4 +91,7 @@ public inline fun com.skymouse.skymouseclient.proto.MessageToClient.copy(block: 
 
 public val com.skymouse.skymouseclient.proto.MessageToClientOrBuilder.serverHelloOrNull: com.skymouse.skymouseclient.proto.ServerHello?
   get() = if (hasServerHello()) getServerHello() else null
+
+public val com.skymouse.skymouseclient.proto.MessageToClientOrBuilder.serverEventOrNull: com.skymouse.skymouseclient.proto.ServerEvent?
+  get() = if (hasServerEvent()) getServerEvent() else null
 
