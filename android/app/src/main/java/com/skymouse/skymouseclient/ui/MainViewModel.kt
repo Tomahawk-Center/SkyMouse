@@ -2,22 +2,43 @@ package com.skymouse.skymouseclient.ui
 
 import android.app.Application
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.content.edit
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.skymouse.skymouseclient.data.GyroscopeProvider
 import com.skymouse.skymouseclient.data.TcpClientManager
 import com.skymouse.skymouseclient.data.TcpConnectionState
 import com.skymouse.skymouseclient.data.UdpClientManager
 import com.skymouse.skymouseclient.proto.MouseButton
 import kotlinx.coroutines.launch
-import android.widget.Toast
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val prefs = application.getSharedPreferences("settings", Context.MODE_PRIVATE)
+
+    var isGyroEnabled by mutableStateOf(prefs.getBoolean("gyro_enabled", false))
+        private set
+
+    fun toggleControlMode() {
+        isGyroEnabled = !isGyroEnabled
+        prefs.edit {
+            putBoolean("gyro_enabled", isGyroEnabled)
+        }
+
+        if (isGyroEnabled) {
+            gyroscopeProvider.start()
+        } else {
+            gyroscopeProvider.stop()
+        }
+    }
+
+    override fun onCleared() {
+        gyroscopeProvider.stop()
+    }
 
     private val udpClientManager = UdpClientManager()
 
@@ -134,4 +155,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             udpClientManager.sendProto(msg)
         }
     }
+
+    private val gyroscopeProvider = GyroscopeProvider(application) { dx, dy ->
+        onMouseMove(dx, dy)
+    }
+
+    init {
+        if (isGyroEnabled) {
+            gyroscopeProvider.start()
+        }
+    }
+
 }

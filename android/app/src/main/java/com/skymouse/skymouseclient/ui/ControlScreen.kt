@@ -50,30 +50,47 @@ fun ControlScreen(viewModel: MainViewModel) {
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             // touchpad
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight()
-                    .clip(ShapeDefaults.Large)
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
-                    .pointerInput(Unit) {
-                        detectDragGestures { change, dragAmount ->
-                            change.consume()
-                            viewModel.onMouseMove(dragAmount.x, dragAmount.y)
-                        }
-                    },
-                contentAlignment = Alignment.Center
-            ) {
-                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            if (!viewModel.isGyroEnabled){
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .clip(ShapeDefaults.Large)
+                        .background(MaterialTheme.colorScheme.surfaceVariant)
+                        .pointerInput(Unit) {
+                            detectDragGestures { change, dragAmount ->
+                                change.consume()
+                                viewModel.onMouseMove(dragAmount.x, dragAmount.y)
+                            }
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(
+                            "Touchpad",
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                        )
+                        Text(
+                            "Move finger to control mouse",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                        )
+                    }
+                }
+            } else {
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .clip(ShapeDefaults.Large)
+                        .background(MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.1f)),
+                    contentAlignment = Alignment.Center
+                ) {
                     Text(
-                        "Touchpad",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
-                    )
-                    Text(
-                        "Move finger to control mouse",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
+                        "Gyroscope Active",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.secondary
                     )
                 }
             }
@@ -136,6 +153,25 @@ fun ControlScreen(viewModel: MainViewModel) {
         }
 
         Spacer(modifier = Modifier.height(24.dp))
+
+        Button(
+            onClick = { viewModel.toggleControlMode() },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+            ),
+            shape = MaterialTheme.shapes.medium
+        ) {
+            Text(
+                if (viewModel.isGyroEnabled) "Switch to Touchpad"
+                else "Switch to Gyroscope and Accelerometer"
+            )
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
 
         // disconnect button
         Button(
