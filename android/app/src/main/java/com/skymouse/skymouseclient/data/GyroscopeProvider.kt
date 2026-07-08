@@ -19,6 +19,10 @@ class GyroscopeProvider(
 
     private var sensitivity = 4f
     private var acceleration = 2f
+    private var smoothing = 0.12f // 0.15f // less val - more smooth
+
+    private var currDx = 0f
+    private var currDy = 0f
 
     private val deadZoneThreshold = 0.02f
 
@@ -46,15 +50,20 @@ class GyroscopeProvider(
             val rawX = if (abs(axisZ) > deadZoneThreshold) -axisZ * sensitivity else 0f
             val rawY = if (abs(axisX) > deadZoneThreshold) -axisX * sensitivity else 0f
 
-            if (rawX != 0f || rawY != 0f) {
-                val magnitude = sqrt(rawX * rawX + rawY * rawY)
+            val magnitude = sqrt(rawX * rawX + rawY * rawY)
+            val accMul = 1f + (magnitude * acceleration)
 
-                val accMul = 1f + (magnitude * acceleration)
+            val targetDx = rawX * sensitivity * accMul
+            val targetDy = rawY * sensitivity * accMul
 
-                val dx = rawX * sensitivity * accMul
-                val dy = rawY * sensitivity * accMul
+            currDx += (targetDx - currDx) * smoothing
+            currDy += (targetDy - currDy) * smoothing
 
-                onMove(dx, dy)
+            if (currDx != 0f || currDy != 0f) {
+                onMove(currDx, currDy)
+            } else {
+                currDx = 0f
+                currDy = 0f
             }
         }
     }
