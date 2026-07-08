@@ -24,7 +24,8 @@ class GyroscopeProvider(
     private var currDx = 0f
     private var currDy = 0f
 
-    private val deadZoneThreshold = 0.02f
+    private val deadZoneThresholdLow = 0.01f
+    private val deadZoneThresholdHigh = 0.03f
 
     fun start() {
         if (isRunning) return
@@ -47,8 +48,8 @@ class GyroscopeProvider(
             val axisX = event.values[0]
             val axisZ = event.values[2]
 
-            val rawX = if (abs(axisZ) > deadZoneThreshold) -axisZ * sensitivity else 0f
-            val rawY = if (abs(axisX) > deadZoneThreshold) -axisX * sensitivity else 0f
+            val rawX = -axisZ * sensitivity * getDeadZoneFactor(axisZ)
+            val rawY = -axisX * sensitivity * getDeadZoneFactor(axisX)
 
             val magnitude = sqrt(rawX * rawX + rawY * rawY)
             val accMul = 1f + (magnitude * acceleration)
@@ -69,4 +70,13 @@ class GyroscopeProvider(
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+
+    private fun getDeadZoneFactor(value: Float): Float {
+        val absVal = abs(value)
+        return when {
+            absVal < deadZoneThresholdLow -> 0f
+            absVal >= deadZoneThresholdHigh -> 1f
+            else -> (absVal - deadZoneThresholdLow) / (deadZoneThresholdHigh - deadZoneThresholdLow)
+        }
+    }
 }
