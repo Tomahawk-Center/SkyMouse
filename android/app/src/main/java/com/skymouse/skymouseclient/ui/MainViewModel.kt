@@ -17,7 +17,10 @@ import com.skymouse.skymouseclient.data.GyroscopeProvider
 import com.skymouse.skymouseclient.data.TcpClientManager
 import com.skymouse.skymouseclient.data.TcpConnectionState
 import com.skymouse.skymouseclient.data.UdpClientManager
+import com.skymouse.skymouseclient.data.UdpConnectionState
+import com.skymouse.skymouseclient.proto.HapticEventType
 import com.skymouse.skymouseclient.proto.MouseButton
+import com.skymouse.skymouseclient.proto.ServerEvent
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -40,6 +43,43 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val pressedButtons = mutableSetOf<MouseButton>()
     private var holdVibrationJob: Job? = null
+
+    private fun startReceivingServerEvents() {
+        viewModelScope.launch {
+            while (udpClientManager.connectionState.value is UdpConnectionState.Connected) {
+                val msg = udpClientManager.receiveProto() ?: break
+                if (msg.hasServerEvent()) {
+                    triggerHaptic(msg.serverEvent)
+                }
+            }
+        }
+    }
+
+    private fun triggerHaptic(event: ServerEvent) {
+        val effect = when (event.type) {
+            HapticEventType.EVENT_BORDER_CROSSING -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && vibrator.areAllPrimitivesSupported(VibrationEffect.Composition.PRIMITIVE_TICK)) {
+                    VibrationEffect.startComposition()
+                        .addPrimitive(VibrationEffect.Composition.PRIMITIVE_TICK, 0.5f)
+                        .compose()
+                } else {
+                    VibrationEffect.createPredefined(VibrationEffect.EFFECT_TICK)
+                }
+            }
+
+            HapticEventType.EVENT_EDGE_HIT -> {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && vibrator.areAllPrimitivesSupported(VibrationEffect.Composition.PRIMITIVE_CLICK)) {
+                    VibrationEffect.startComposition()
+                        .addPrimitive(VibrationEffect.Composition.PRIMITIVE_CLICK, 1.0f)
+                        .compose()
+                } else {
+                    VibrationEffect.createPredefined(VibrationEffect.EFFECT_HEAVY_CLICK)
+                }
+            }
+            else -> null
+        }
+        effect?.let { vibrator.vibrate(it) }
+    }
 
     private fun vibrateLocal(effectId: Int, primitiveId: Int, intensity: Float = 0.6f) {
         val effect = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
@@ -122,6 +162,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
                     val udpPortFromServer = response.serverHello.udpPort
                     udpClientManager.connect(ipAddress, udpPortFromServer)
+                    startReceivingServerEvents()
                 } else {
                     tcpClientManager.disconnect()
                 }
