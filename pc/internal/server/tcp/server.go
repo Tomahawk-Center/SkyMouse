@@ -25,14 +25,17 @@ type Server struct {
 	conns      map[net.Conn]*clientSession
 }
 
-func NewServer(addr string, handler server.EventHandler, udpPortProvider func() (int, error)) *Server {
+func NewServer(addr string, handler server.EventHandler, udpPortProvider func() (int, error)) (*Server, error) {
+	if handler == nil {
+		return nil, errors.New("handler cannot be nil")
+	}
 	return &Server{
 		addr:       addr,
 		quitCh:     make(chan struct{}),
 		conns:      make(map[net.Conn]*clientSession),
 		handler:    handler,
 		getUdpPort: udpPortProvider,
-	}
+	}, nil
 }
 
 func (s *Server) Start() error {
