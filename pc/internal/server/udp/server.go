@@ -18,6 +18,8 @@ type Server struct {
 	quitCh  chan struct{}
 	wg      sync.WaitGroup
 	handler server.EventHandler
+	mu      sync.RWMutex
+	lastIp  *net.UDPAddr
 }
 
 func NewServer(addr string, handler server.EventHandler) (*Server, error) {
@@ -69,6 +71,26 @@ func (s *Server) Port() (int, error) {
 	return addr.Port, nil
 }
 
+// SendProto sends protobuf message to last connected IP addr
+// TODO: fix this bodge solution... by using session manager maybe
+func (s *Server) SendProto(msg proto.Message) error {
+	if s.conn == nil {
+		return fmt.Errorf("UDP Server not started")
+	}
+	data, err := proto.Marshal(msg)
+	if err != nil {
+		return fmt.Errorf("could not marshal proto: %v", err)
+	}
+	s.mu.RLock()
+	a := s.lastIp
+	s.mu.RUnlock()
+	_, err = s.conn.WriteToUDP(data, a)
+	if err != nil {
+		return fmt.Errorf("could not send proto: %v", err)
+	}
+	return nil
+}
+
 func (s *Server) acceptLoop() {
 	defer s.wg.Done()
 
@@ -96,6 +118,10 @@ func (s *Server) acceptLoop() {
 			log.Printf("UDP Protobuf unmarshal error from %s: %v\n", remoteAddr, err)
 			continue
 		}
+
+		s.mu.Lock()
+		s.lastIp = remoteAddr
+		s.mu.Unlock()
 
 		s.handler.Handle(&msg)
 	}
