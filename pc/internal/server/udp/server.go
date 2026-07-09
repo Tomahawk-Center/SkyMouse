@@ -7,22 +7,22 @@ import (
 	"net"
 	"sync"
 
-	"github.com/Tomahawk-Center/SkyMouse/pc/internal/emulator"
+	"github.com/Tomahawk-Center/SkyMouse/pc/internal/server"
 	"github.com/Tomahawk-Center/SkyMouse/pc/pkg/protoapi"
 	"google.golang.org/protobuf/proto"
 )
 
 type Server struct {
-	addr     *net.UDPAddr
-	conn     *net.UDPConn
-	quitCh   chan struct{}
-	wg       sync.WaitGroup
-	emulator *emulator.Emulator
+	addr    *net.UDPAddr
+	conn    *net.UDPConn
+	quitCh  chan struct{}
+	wg      sync.WaitGroup
+	handler server.EventHandler
 }
 
-func NewServer(addr string, emu *emulator.Emulator) (*Server, error) {
-	if emu == nil {
-		return nil, errors.New("emulator cannot be nil")
+func NewServer(addr string, handler server.EventHandler) (*Server, error) {
+	if handler == nil {
+		return nil, errors.New("handler cannot be nil")
 	}
 
 	ad, err := net.ResolveUDPAddr("udp", addr)
@@ -30,9 +30,9 @@ func NewServer(addr string, emu *emulator.Emulator) (*Server, error) {
 		return nil, err
 	}
 	return &Server{
-		addr:     ad,
-		quitCh:   make(chan struct{}),
-		emulator: emu,
+		addr:    ad,
+		quitCh:  make(chan struct{}),
+		handler: handler,
 	}, nil
 
 }
@@ -97,6 +97,6 @@ func (s *Server) acceptLoop() {
 			continue
 		}
 
-		s.emulator.Handle(&msg)
+		s.handler.Handle(&msg)
 	}
 }
