@@ -2,6 +2,10 @@ package com.skymouse.skymouseclient.ui
 
 import android.app.Application
 import android.content.Context
+import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
+import android.os.VibratorManager
 import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -14,7 +18,10 @@ import com.skymouse.skymouseclient.data.TcpClientManager
 import com.skymouse.skymouseclient.data.TcpConnectionState
 import com.skymouse.skymouseclient.data.UdpClientManager
 import com.skymouse.skymouseclient.proto.MouseButton
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.milliseconds
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -22,6 +29,37 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     var isGyroEnabled by mutableStateOf(prefs.getBoolean("gyro_enabled", false))
         private set
+
+    private val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        val vibratorManager = application.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+        vibratorManager.defaultVibrator
+    } else {
+        @Suppress("DEPRECATION")
+        application.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+    }
+
+    private val pressedButtons = mutableSetOf<MouseButton>()
+    private var holdVibrationJob: Job? = null
+
+    private fun vibrateLocal(effectId: Int, primitiveId: Int, intensity: Float = 0.6f) {
+        val effect = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
+            vibrator.areAllPrimitivesSupported(primitiveId)) {
+            VibrationEffect.startComposition()
+                .addPrimitive(primitiveId, intensity)
+                .compose()
+        } else {
+            VibrationEffect.createPredefined(effectId)
+        }
+        vibrator.vibrate(effect)
+    }
+
+    private fun startHoldVibration() {
+        val timings = longArrayOf(0, 100)
+        val amplitudes = intArrayOf(0, 1)
+        val effect = VibrationEffect.createWaveform(timings, amplitudes, 1)
+        vibrator.vibrate(effect)
+    }
+
 
     fun toggleControlMode() {
         isGyroEnabled = !isGyroEnabled
@@ -103,6 +141,32 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val tcpConnectionState = tcpClientManager.connectionState
 
     fun onMouseButtonClicked(button: MouseButton, isPressed: Boolean) {
+        if (isPressed) {
+            val isFirstButton = pressedButtons.isEmpty()
+            pressedButtons.add(button)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
+                vibrateLocal(VibrationEffect.EFFECT_CLICK, VibrationEffect.Composition.DELAY_TYPE_RELATIVE_START_OFFSET, 0.7f)
+            } else {
+                vibrateLocal(VibrationEffect.EFFECT_CLICK, 0, 0.8f)
+            }
+
+            if (isFirstButton) {
+                holdVibrationJob?.cancel()
+                holdVibrationJob = viewModelScope.launch {
+                    delay(150.milliseconds)
+                    startHoldVibration()
+                }
+
+            }
+        } else {
+            pressedButtons.remove(button)
+            if (pressedButtons.isEmpty()) {
+                holdVibrationJob?.cancel()
+                vibrator.cancel()
+            }
+        }
+
         viewModelScope.launch {
             val message = com.skymouse.skymouseclient.proto.messageToServer {
                 click = com.skymouse.skymouseclient.proto.clickEvent {
@@ -119,6 +183,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun onScrollUpClicked() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            vibrateLocal(VibrationEffect.EFFECT_TICK, VibrationEffect.Composition.PRIMITIVE_LOW_TICK, 1f)
+        } else {
+            vibrateLocal(VibrationEffect.EFFECT_TICK, 0, 1f)
+        }
         viewModelScope.launch {
             val message = com.skymouse.skymouseclient.proto.messageToServer {
                 scroll = com.skymouse.skymouseclient.proto.scrollEvent {
@@ -130,6 +199,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun onScrollDownClicked() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            vibrateLocal(VibrationEffect.EFFECT_TICK, VibrationEffect.Composition.PRIMITIVE_LOW_TICK, 1f)
+        } else {
+            vibrateLocal(VibrationEffect.EFFECT_TICK, 0, 1f)
+        }
         viewModelScope.launch {
             val message = com.skymouse.skymouseclient.proto.messageToServer {
                 scroll = com.skymouse.skymouseclient.proto.scrollEvent {
