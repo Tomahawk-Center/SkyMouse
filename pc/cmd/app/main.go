@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"os/signal"
@@ -9,16 +10,23 @@ import (
 	"github.com/Tomahawk-Center/SkyMouse/pc/internal/emulator"
 	"github.com/Tomahawk-Center/SkyMouse/pc/internal/server/tcp"
 	"github.com/Tomahawk-Center/SkyMouse/pc/internal/server/udp"
+	"github.com/Tomahawk-Center/SkyMouse/pc/pkg/protoapi"
+	"github.com/go-vgo/robotgo"
 )
 
 func main() {
-	emu := emulator.NewEmulator(5)
+	emuEventsCh := make(chan *protoapi.ServerEvent, 20)
+	emu := emulator.NewEmulator(5, emuEventsCh)
+
 	udpServer, err := udp.NewServer(":9999", emu)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	tcpServer := tcp.NewServer(":10000", emu, udpServer.Port)
+	tcpServer, err := tcp.NewServer(":10000", emu, udpServer.Port)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	go func() {
 		if err := tcpServer.Start(); err != nil {
@@ -32,6 +40,20 @@ func main() {
 		}
 	}()
 
+	go func() {
+		for ev := range emuEventsCh {
+			msgToClient := &protoapi.MessageToClient{
+				Event: &protoapi.MessageToClient_ServerEvent{
+					ServerEvent: ev,
+				},
+			}
+			err := udpServer.SendProto(msgToClient)
+			if err != nil {
+				log.Printf("Error sending message to client: %v\n", err)
+			}
+		}
+	}()
+
 	sigCh := make(chan os.Signal, 1)
 	signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
 	<-sigCh
@@ -41,4 +63,12 @@ func main() {
 
 	log.Println("Shutting down TCP")
 	tcpServer.Stop()
+}
+
+func printDisplays() {
+	cnt := robotgo.DisplaysNum()
+	for i := range cnt {
+		x, y, w, h := robotgo.GetDisplayBounds(i)
+		fmt.Println(x, y, w, h)
+	}
 }

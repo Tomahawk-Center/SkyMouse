@@ -7,22 +7,24 @@ import (
 	"net"
 	"sync"
 
-	"github.com/Tomahawk-Center/SkyMouse/pc/internal/emulator"
+	"github.com/Tomahawk-Center/SkyMouse/pc/internal/server"
 	"github.com/Tomahawk-Center/SkyMouse/pc/pkg/protoapi"
 	"google.golang.org/protobuf/proto"
 )
 
 type Server struct {
-	addr     *net.UDPAddr
-	conn     *net.UDPConn
-	quitCh   chan struct{}
-	wg       sync.WaitGroup
-	emulator *emulator.Emulator
+	addr    *net.UDPAddr
+	conn    *net.UDPConn
+	quitCh  chan struct{}
+	wg      sync.WaitGroup
+	handler server.EventHandler
+	mu      sync.RWMutex
+	lastIp  *net.UDPAddr
 }
 
-func NewServer(addr string, emu *emulator.Emulator) (*Server, error) {
-	if emu == nil {
-		return nil, errors.New("emulator cannot be nil")
+func NewServer(addr string, handler server.EventHandler) (*Server, error) {
+	if handler == nil {
+		return nil, errors.New("handler cannot be nil")
 	}
 
 	ad, err := net.ResolveUDPAddr("udp", addr)
@@ -30,9 +32,9 @@ func NewServer(addr string, emu *emulator.Emulator) (*Server, error) {
 		return nil, err
 	}
 	return &Server{
-		addr:     ad,
-		quitCh:   make(chan struct{}),
-		emulator: emu,
+		addr:    ad,
+		quitCh:  make(chan struct{}),
+		handler: handler,
 	}, nil
 
 }
@@ -69,6 +71,26 @@ func (s *Server) Port() (int, error) {
 	return addr.Port, nil
 }
 
+// SendProto sends protobuf message to last connected IP addr
+// TODO: fix this bodge solution... by using session manager maybe
+func (s *Server) SendProto(msg proto.Message) error {
+	if s.conn == nil {
+		return fmt.Errorf("UDP Server not started")
+	}
+	data, err := proto.Marshal(msg)
+	if err != nil {
+		return fmt.Errorf("could not marshal proto: %v", err)
+	}
+	s.mu.RLock()
+	a := s.lastIp
+	s.mu.RUnlock()
+	_, err = s.conn.WriteToUDP(data, a)
+	if err != nil {
+		return fmt.Errorf("could not send proto: %v", err)
+	}
+	return nil
+}
+
 func (s *Server) acceptLoop() {
 	defer s.wg.Done()
 
@@ -97,6 +119,10 @@ func (s *Server) acceptLoop() {
 			continue
 		}
 
-		s.emulator.Handle(&msg)
+		s.mu.Lock()
+		s.lastIp = remoteAddr
+		s.mu.Unlock()
+
+		s.handler.Handle(&msg)
 	}
 }

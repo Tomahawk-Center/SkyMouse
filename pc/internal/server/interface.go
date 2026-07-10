@@ -1,4 +1,4 @@
-package tcp
+package server
 
 import "github.com/Tomahawk-Center/SkyMouse/pc/pkg/protoapi"
 

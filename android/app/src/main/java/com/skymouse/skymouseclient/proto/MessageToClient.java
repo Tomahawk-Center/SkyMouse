@@ -55,6 +55,7 @@ private static final long serialVersionUID = 0L;
       implements com.google.protobuf.Internal.EnumLite,
           com.google.protobuf.AbstractMessage.InternalOneOfEnum {
     SERVER_HELLO(1),
+    SERVER_EVENT(2),
     EVENT_NOT_SET(0);
     private final int value;
     private EventCase(int value) {
@@ -73,6 +74,7 @@ private static final long serialVersionUID = 0L;
     public static EventCase forNumber(int value) {
       switch (value) {
         case 1: return SERVER_HELLO;
+        case 2: return SERVER_EVENT;
         case 0: return EVENT_NOT_SET;
         default: return null;
       }
@@ -119,6 +121,37 @@ private static final long serialVersionUID = 0L;
     return com.skymouse.skymouseclient.proto.ServerHello.getDefaultInstance();
   }
 
+  public static final int SERVER_EVENT_FIELD_NUMBER = 2;
+  /**
+   * <code>.skymouse.ServerEvent server_event = 2;</code>
+   * @return Whether the serverEvent field is set.
+   */
+  @java.lang.Override
+  public boolean hasServerEvent() {
+    return eventCase_ == 2;
+  }
+  /**
+   * <code>.skymouse.ServerEvent server_event = 2;</code>
+   * @return The serverEvent.
+   */
+  @java.lang.Override
+  public com.skymouse.skymouseclient.proto.ServerEvent getServerEvent() {
+    if (eventCase_ == 2) {
+       return (com.skymouse.skymouseclient.proto.ServerEvent) event_;
+    }
+    return com.skymouse.skymouseclient.proto.ServerEvent.getDefaultInstance();
+  }
+  /**
+   * <code>.skymouse.ServerEvent server_event = 2;</code>
+   */
+  @java.lang.Override
+  public com.skymouse.skymouseclient.proto.ServerEventOrBuilder getServerEventOrBuilder() {
+    if (eventCase_ == 2) {
+       return (com.skymouse.skymouseclient.proto.ServerEvent) event_;
+    }
+    return com.skymouse.skymouseclient.proto.ServerEvent.getDefaultInstance();
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -136,6 +169,9 @@ private static final long serialVersionUID = 0L;
     if (eventCase_ == 1) {
       output.writeMessage(1, (com.skymouse.skymouseclient.proto.ServerHello) event_);
     }
+    if (eventCase_ == 2) {
+      output.writeMessage(2, (com.skymouse.skymouseclient.proto.ServerEvent) event_);
+    }
     getUnknownFields().writeTo(output);
   }
   private int computeSerializedSize_0() {
@@ -143,6 +179,10 @@ private static final long serialVersionUID = 0L;
     if (eventCase_ == 1) {
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(1, (com.skymouse.skymouseclient.proto.ServerHello) event_);
+    }
+    if (eventCase_ == 2) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(2, (com.skymouse.skymouseclient.proto.ServerEvent) event_);
     }
     return size;
   }
@@ -174,6 +214,10 @@ private static final long serialVersionUID = 0L;
         if (!getServerHello()
             .equals(other.getServerHello())) return false;
         break;
+      case 2:
+        if (!getServerEvent()
+            .equals(other.getServerEvent())) return false;
+        break;
       case 0:
       default:
     }
@@ -192,6 +236,10 @@ private static final long serialVersionUID = 0L;
       case 1:
         hash = (37 * hash) + SERVER_HELLO_FIELD_NUMBER;
         hash = (53 * hash) + getServerHello().hashCode();
+        break;
+      case 2:
+        hash = (37 * hash) + SERVER_EVENT_FIELD_NUMBER;
+        hash = (53 * hash) + getServerEvent().hashCode();
         break;
       case 0:
       default:
@@ -330,6 +378,9 @@ private static final long serialVersionUID = 0L;
       if (serverHelloBuilder_ != null) {
         serverHelloBuilder_.clear();
       }
+      if (serverEventBuilder_ != null) {
+        serverEventBuilder_.clear();
+      }
       eventCase_ = 0;
       event_ = null;
       return this;
@@ -375,6 +426,10 @@ private static final long serialVersionUID = 0L;
           serverHelloBuilder_ != null) {
         result.event_ = serverHelloBuilder_.build();
       }
+      if (eventCase_ == 2 &&
+          serverEventBuilder_ != null) {
+        result.event_ = serverEventBuilder_.build();
+      }
     }
 
     @java.lang.Override
@@ -392,6 +447,10 @@ private static final long serialVersionUID = 0L;
       switch (other.getEventCase()) {
         case SERVER_HELLO: {
           mergeServerHello(other.getServerHello());
+          break;
+        }
+        case SERVER_EVENT: {
+          mergeServerEvent(other.getServerEvent());
           break;
         }
         case EVENT_NOT_SET: {
@@ -431,6 +490,13 @@ private static final long serialVersionUID = 0L;
               eventCase_ = 1;
               break;
             } // case 10
+            case 18: {
+              input.readMessage(
+                  internalGetServerEventFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              eventCase_ = 2;
+              break;
+            } // case 18
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -603,6 +669,148 @@ private static final long serialVersionUID = 0L;
       eventCase_ = 1;
       onChanged();
       return serverHelloBuilder_;
+    }
+
+    private com.google.protobuf.SingleFieldBuilder<
+        com.skymouse.skymouseclient.proto.ServerEvent, com.skymouse.skymouseclient.proto.ServerEvent.Builder, com.skymouse.skymouseclient.proto.ServerEventOrBuilder> serverEventBuilder_;
+    /**
+     * <code>.skymouse.ServerEvent server_event = 2;</code>
+     * @return Whether the serverEvent field is set.
+     */
+    @java.lang.Override
+    public boolean hasServerEvent() {
+      return eventCase_ == 2;
+    }
+    /**
+     * <code>.skymouse.ServerEvent server_event = 2;</code>
+     * @return The serverEvent.
+     */
+    @java.lang.Override
+    public com.skymouse.skymouseclient.proto.ServerEvent getServerEvent() {
+      if (serverEventBuilder_ == null) {
+        if (eventCase_ == 2) {
+          return (com.skymouse.skymouseclient.proto.ServerEvent) event_;
+        }
+        return com.skymouse.skymouseclient.proto.ServerEvent.getDefaultInstance();
+      } else {
+        if (eventCase_ == 2) {
+          return serverEventBuilder_.getMessage();
+        }
+        return com.skymouse.skymouseclient.proto.ServerEvent.getDefaultInstance();
+      }
+    }
+    /**
+     * <code>.skymouse.ServerEvent server_event = 2;</code>
+     */
+    public Builder setServerEvent(com.skymouse.skymouseclient.proto.ServerEvent value) {
+      if (serverEventBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        event_ = value;
+        onChanged();
+      } else {
+        serverEventBuilder_.setMessage(value);
+      }
+      eventCase_ = 2;
+      return this;
+    }
+    /**
+     * <code>.skymouse.ServerEvent server_event = 2;</code>
+     */
+    public Builder setServerEvent(
+        com.skymouse.skymouseclient.proto.ServerEvent.Builder builderForValue) {
+      if (serverEventBuilder_ == null) {
+        event_ = builderForValue.build();
+        onChanged();
+      } else {
+        serverEventBuilder_.setMessage(builderForValue.build());
+      }
+      eventCase_ = 2;
+      return this;
+    }
+    /**
+     * <code>.skymouse.ServerEvent server_event = 2;</code>
+     */
+    public Builder mergeServerEvent(com.skymouse.skymouseclient.proto.ServerEvent value) {
+      if (serverEventBuilder_ == null) {
+        if (eventCase_ == 2 &&
+            event_ != com.skymouse.skymouseclient.proto.ServerEvent.getDefaultInstance()) {
+          event_ = com.skymouse.skymouseclient.proto.ServerEvent.newBuilder((com.skymouse.skymouseclient.proto.ServerEvent) event_)
+              .mergeFrom(value).buildPartial();
+        } else {
+          event_ = value;
+        }
+        onChanged();
+      } else {
+        if (eventCase_ == 2) {
+          serverEventBuilder_.mergeFrom(value);
+        } else {
+          serverEventBuilder_.setMessage(value);
+        }
+      }
+      eventCase_ = 2;
+      return this;
+    }
+    /**
+     * <code>.skymouse.ServerEvent server_event = 2;</code>
+     */
+    public Builder clearServerEvent() {
+      if (serverEventBuilder_ == null) {
+        if (eventCase_ == 2) {
+          eventCase_ = 0;
+          event_ = null;
+          onChanged();
+        }
+      } else {
+        if (eventCase_ == 2) {
+          eventCase_ = 0;
+          event_ = null;
+        }
+        serverEventBuilder_.clear();
+      }
+      return this;
+    }
+    /**
+     * <code>.skymouse.ServerEvent server_event = 2;</code>
+     */
+    public com.skymouse.skymouseclient.proto.ServerEvent.Builder getServerEventBuilder() {
+      return internalGetServerEventFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.skymouse.ServerEvent server_event = 2;</code>
+     */
+    @java.lang.Override
+    public com.skymouse.skymouseclient.proto.ServerEventOrBuilder getServerEventOrBuilder() {
+      if ((eventCase_ == 2) && (serverEventBuilder_ != null)) {
+        return serverEventBuilder_.getMessageOrBuilder();
+      } else {
+        if (eventCase_ == 2) {
+          return (com.skymouse.skymouseclient.proto.ServerEvent) event_;
+        }
+        return com.skymouse.skymouseclient.proto.ServerEvent.getDefaultInstance();
+      }
+    }
+    /**
+     * <code>.skymouse.ServerEvent server_event = 2;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilder<
+        com.skymouse.skymouseclient.proto.ServerEvent, com.skymouse.skymouseclient.proto.ServerEvent.Builder, com.skymouse.skymouseclient.proto.ServerEventOrBuilder> 
+        internalGetServerEventFieldBuilder() {
+      if (serverEventBuilder_ == null) {
+        if (!(eventCase_ == 2)) {
+          event_ = com.skymouse.skymouseclient.proto.ServerEvent.getDefaultInstance();
+        }
+        serverEventBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+            com.skymouse.skymouseclient.proto.ServerEvent, com.skymouse.skymouseclient.proto.ServerEvent.Builder, com.skymouse.skymouseclient.proto.ServerEventOrBuilder>(
+                (com.skymouse.skymouseclient.proto.ServerEvent) event_,
+                getParentForChildren(),
+                isClean());
+        event_ = null;
+      }
+      eventCase_ = 2;
+      onChanged();
+      return serverEventBuilder_;
     }
 
     // @@protoc_insertion_point(builder_scope:skymouse.MessageToClient)

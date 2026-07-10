@@ -2,6 +2,7 @@ package emulator
 
 import (
 	"log"
+	"time"
 
 	"github.com/Tomahawk-Center/SkyMouse/pc/pkg/protoapi"
 	"github.com/go-vgo/robotgo"
@@ -10,13 +11,36 @@ import (
 type Emulator struct {
 	scrollMultiplier int
 	lastSequenceId   int
+	eventsChan       chan *protoapi.ServerEvent
+	displaysBounds   []screenBounds
+	isBorderHit      bool
 }
 
-func NewEmulator(scrollMultiplier int) *Emulator {
+func NewEmulator(scrollMultiplier int, ch chan *protoapi.ServerEvent) *Emulator {
+	var d []screenBounds
+	for i := range robotgo.DisplaysNum() {
+		x, y, w, h := robotgo.GetDisplayBounds(i)
+		d = append(d, screenBounds{x, y, w, h})
+	}
+
 	return &Emulator{
 		scrollMultiplier: scrollMultiplier,
 		lastSequenceId:   -1,
+		eventsChan:       ch,
+		displaysBounds:   d,
 	}
+}
+
+// getDisplayIndex returns the index of the display where the cursor is located;
+// if the cursor is outside the bounds of all displays, it returns -1
+func (e *Emulator) getDisplayIndex(x, y int) int {
+	for i, d := range e.displaysBounds {
+		sx, sy, sw, sh := d.x, d.y, d.w, d.h
+		if x >= sx && x < sx+sw && y >= sy && y < sy+sh {
+			return i
+		}
+	}
+	return -1
 }
 
 func (e *Emulator) Handle(event *protoapi.MessageToServer) {
@@ -49,6 +73,34 @@ func (e *Emulator) handleMouse(ev *protoapi.MouseEvent) {
 
 	newX := x + int(ev.DeltaX)
 	newY := y + int(ev.DeltaY)
+
+	iOld := e.getDisplayIndex(x, y)
+	iNew := e.getDisplayIndex(newX, newY)
+	if iOld != iNew {
+		select {
+		case e.eventsChan <- &protoapi.ServerEvent{
+			Type:        protoapi.HapticEventType_EVENT_BORDER_CROSSING,
+			TimestampMs: time.Now().UnixMilli(),
+		}:
+		default:
+		}
+	}
+
+	if iNew == -1 {
+		if !e.isBorderHit {
+			select {
+			case e.eventsChan <- &protoapi.ServerEvent{
+				Type:        protoapi.HapticEventType_EVENT_EDGE_HIT,
+				TimestampMs: time.Now().UnixMilli(),
+			}:
+			default:
+			}
+		}
+
+		e.isBorderHit = true
+	} else {
+		e.isBorderHit = false
+	}
 
 	robotgo.Move(newX, newY)
 }

@@ -44,6 +44,25 @@ class UdpClientManager {
         }
     }
 
+    suspend fun receiveProto(): com.skymouse.skymouseclient.proto.MessageToClient? = withContext(Dispatchers.IO) {
+        val s = socket ?: return@withContext null
+        try {
+            val buffer = ByteArray(4096)
+            val packet = DatagramPacket(buffer, buffer.size)
+            s.receive(packet)
+
+            val data = ByteArray(packet.length)
+            System.arraycopy(packet.data, packet.offset, data, 0, packet.length)
+
+            com.skymouse.skymouseclient.proto.MessageToClient.parseFrom(data)
+        } catch (e: Exception) {
+            if (!s.isClosed) {
+                _connectionState.value = UdpConnectionState.Error(e.localizedMessage ?: "UDP Receive Failed")
+            }
+            null
+        }
+    }
+
     fun disconnect() {
         socket?.close()
         socket = null

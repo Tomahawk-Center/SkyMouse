@@ -9,6 +9,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/Tomahawk-Center/SkyMouse/pc/internal/server"
 	"github.com/Tomahawk-Center/SkyMouse/pc/pkg/protoapi"
 	"google.golang.org/protobuf/proto"
 )
@@ -18,20 +19,23 @@ type Server struct {
 	ln         net.Listener
 	quitCh     chan struct{}
 	wg         sync.WaitGroup
-	handler    EventHandler
+	handler    server.EventHandler
 	getUdpPort func() (int, error)
 	mu         sync.Mutex
 	conns      map[net.Conn]*clientSession
 }
 
-func NewServer(addr string, handler EventHandler, udpPortProvider func() (int, error)) *Server {
+func NewServer(addr string, handler server.EventHandler, udpPortProvider func() (int, error)) (*Server, error) {
+	if handler == nil {
+		return nil, errors.New("handler cannot be nil")
+	}
 	return &Server{
 		addr:       addr,
 		quitCh:     make(chan struct{}),
 		conns:      make(map[net.Conn]*clientSession),
 		handler:    handler,
 		getUdpPort: udpPortProvider,
-	}
+	}, nil
 }
 
 func (s *Server) Start() error {

@@ -51,6 +51,19 @@ message ServerHello {
     int32 udp_port = 2;
 }
 
+
+enum HapticEventType {
+    EVENT_UNKNOWN = 0;
+    EVENT_BORDER_CROSSING = 1;
+    EVENT_EDGE_HIT = 2;
+
+}
+
+message ServerEvent {
+    HapticEventType type = 1;
+    int64 timestamp_ms = 2;
+}
+
 message MessageToServer {
     oneof event {
         MouseEvent mouse = 1;
@@ -65,5 +78,6 @@ message MessageToServer {
 message MessageToClient {
     oneof event {
         ServerHello server_hello = 1;
+        ServerEvent server_event = 2;
     }
 }
