@@ -2,6 +2,7 @@ package com.skymouse.skymouseclient.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -57,6 +58,14 @@ fun ControlScreen(viewModel: MainViewModel) {
                         .fillMaxHeight()
                         .clip(ShapeDefaults.Large)
                         .background(MaterialTheme.colorScheme.surfaceVariant)
+                        .pointerInput(Unit) {
+                            detectTapGestures (
+                                onTap = {
+                                    viewModel.onMouseButtonClicked(MouseButton.BUTTON_LEFT, true)
+                                    viewModel.onMouseButtonClicked(MouseButton.BUTTON_LEFT, false)
+                                }
+                            )
+                        }
                         .pointerInput(Unit) {
                             detectDragGestures { change, dragAmount ->
                                 change.consume()
