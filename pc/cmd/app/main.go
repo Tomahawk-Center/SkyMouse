@@ -11,6 +11,7 @@ import (
 	"github.com/Tomahawk-Center/SkyMouse/pc/internal/server/tcp"
 	"github.com/Tomahawk-Center/SkyMouse/pc/internal/server/udp"
 	"github.com/Tomahawk-Center/SkyMouse/pc/pkg/protoapi"
+	"github.com/go-vgo/robotgo"
 )
 
 func main() {
@@ -62,4 +63,12 @@ func main() {
 
 	log.Println("Shutting down TCP")
 	tcpServer.Stop()
+}
+
+func printDisplays() {
+	cnt := robotgo.DisplaysNum()
+	for i := range cnt {
+		x, y, w, h := robotgo.GetDisplayBounds(i)
+		fmt.Println(x, y, w, h)
+	}
 }
