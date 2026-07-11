@@ -76,15 +76,6 @@ func (e *Emulator) handleMouse(ev *protoapi.MouseEvent) {
 
 	iOld := e.getDisplayIndex(x, y)
 	iNew := e.getDisplayIndex(newX, newY)
-	if iOld != iNew {
-		select {
-		case e.eventsChan <- &protoapi.ServerEvent{
-			Type:        protoapi.HapticEventType_EVENT_BORDER_CROSSING,
-			TimestampMs: time.Now().UnixMilli(),
-		}:
-		default:
-		}
-	}
 
 	if iNew == -1 {
 		if !e.isBorderHit {
@@ -98,6 +89,14 @@ func (e *Emulator) handleMouse(ev *protoapi.MouseEvent) {
 		}
 
 		e.isBorderHit = true
+	} else if iOld != iNew {
+		select {
+		case e.eventsChan <- &protoapi.ServerEvent{
+			Type:        protoapi.HapticEventType_EVENT_BORDER_CROSSING,
+			TimestampMs: time.Now().UnixMilli(),
+		}:
+		default:
+		}
 	} else {
 		e.isBorderHit = false
 	}
