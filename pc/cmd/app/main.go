@@ -16,7 +16,7 @@ import (
 
 func main() {
 	emuEventsCh := make(chan *protoapi.ServerEvent, 20)
-	emu := emulator.NewEmulator(5, emuEventsCh)
+	emu := emulator.NewEmulator(emuEventsCh)
 
 	udpServer, err := udp.NewServer(":9999", emu)
 	if err != nil {

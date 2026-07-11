@@ -9,13 +9,12 @@ import (
 )
 
 type Emulator struct {
-	scrollMultiplier int
-	eventsChan       chan *protoapi.ServerEvent
-	displaysBounds   []screenBounds
-	isBorderHit      bool
+	eventsChan     chan *protoapi.ServerEvent
+	displaysBounds []screenBounds
+	isBorderHit    bool
 }
 
-func NewEmulator(scrollMultiplier int, ch chan *protoapi.ServerEvent) *Emulator {
+func NewEmulator(ch chan *protoapi.ServerEvent) *Emulator {
 	var d []screenBounds
 	for i := range robotgo.DisplaysNum() {
 		x, y, w, h := robotgo.GetDisplayBounds(i)
@@ -23,9 +22,8 @@ func NewEmulator(scrollMultiplier int, ch chan *protoapi.ServerEvent) *Emulator 
 	}
 
 	return &Emulator{
-		scrollMultiplier: scrollMultiplier,
-		eventsChan:       ch,
-		displaysBounds:   d,
+		eventsChan:     ch,
+		displaysBounds: d,
 	}
 }
 
@@ -120,7 +118,7 @@ func (e *Emulator) handleClick(ev *protoapi.ClickEvent) {
 }
 
 func (e *Emulator) handleScroll(ev *protoapi.ScrollEvent) {
-	delta := int(ev.DeltaY) * e.scrollMultiplier
+	delta := int(ev.DeltaY)
 	log.Println("DeltaY:", ev.DeltaY)
 
 	switch {
