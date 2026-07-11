@@ -10,7 +10,6 @@ import (
 
 type Emulator struct {
 	scrollMultiplier int
-	lastSequenceId   int
 	eventsChan       chan *protoapi.ServerEvent
 	displaysBounds   []screenBounds
 	isBorderHit      bool
@@ -25,7 +24,6 @@ func NewEmulator(scrollMultiplier int, ch chan *protoapi.ServerEvent) *Emulator 
 
 	return &Emulator{
 		scrollMultiplier: scrollMultiplier,
-		lastSequenceId:   -1,
 		eventsChan:       ch,
 		displaysBounds:   d,
 	}
@@ -58,15 +56,6 @@ func (e *Emulator) Handle(event *protoapi.MessageToServer) {
 func (e *Emulator) handleMouse(ev *protoapi.MouseEvent) {
 	if ev.DeltaX == 0 && ev.DeltaY == 0 {
 		return
-	}
-
-	i := int(ev.SequenceId)
-	//log.Println("ID:", i, e.lastSequenceId)
-
-	if i > e.lastSequenceId {
-		e.lastSequenceId = i
-	} else {
-		//return // TODO this fix is temporary, now sequence id will be ignored
 	}
 
 	x, y := robotgo.Location()
