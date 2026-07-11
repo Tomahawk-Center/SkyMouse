@@ -15,6 +15,8 @@ import (
 )
 
 func main() {
+	log.SetOutput(os.Stdout)
+
 	emuEventsCh := make(chan *protoapi.ServerEvent, 20)
 	emu := emulator.NewEmulator(emuEventsCh)
 
