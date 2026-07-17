@@ -99,6 +99,17 @@ private static final long serialVersionUID = 0L;
     return udpPort_;
   }
 
+  public static final int UDP_TOKEN_FIELD_NUMBER = 3;
+  private int udpToken_ = 0;
+  /**
+   * <code>uint32 udp_token = 3;</code>
+   * @return The udpToken.
+   */
+  @java.lang.Override
+  public int getUdpToken() {
+    return udpToken_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -119,6 +130,9 @@ private static final long serialVersionUID = 0L;
     if (udpPort_ != 0) {
       output.writeInt32(2, udpPort_);
     }
+    if (udpToken_ != 0) {
+      output.writeUInt32(3, udpToken_);
+    }
     getUnknownFields().writeTo(output);
   }
   private int computeSerializedSize_0() {
@@ -129,6 +143,10 @@ private static final long serialVersionUID = 0L;
     if (udpPort_ != 0) {
       size += com.google.protobuf.CodedOutputStream
         .computeInt32Size(2, udpPort_);
+    }
+    if (udpToken_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeUInt32Size(3, udpToken_);
     }
     return size;
   }
@@ -158,6 +176,8 @@ private static final long serialVersionUID = 0L;
         .equals(other.getServerVersion())) return false;
     if (getUdpPort()
         != other.getUdpPort()) return false;
+    if (getUdpToken()
+        != other.getUdpToken()) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -173,6 +193,8 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getServerVersion().hashCode();
     hash = (37 * hash) + UDP_PORT_FIELD_NUMBER;
     hash = (53 * hash) + getUdpPort();
+    hash = (37 * hash) + UDP_TOKEN_FIELD_NUMBER;
+    hash = (53 * hash) + getUdpToken();
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -306,6 +328,7 @@ private static final long serialVersionUID = 0L;
       bitField0_ = 0;
       serverVersion_ = "";
       udpPort_ = 0;
+      udpToken_ = 0;
       return this;
     }
 
@@ -345,6 +368,9 @@ private static final long serialVersionUID = 0L;
       if (((from_bitField0_ & 0x00000002) != 0)) {
         result.udpPort_ = udpPort_;
       }
+      if (((from_bitField0_ & 0x00000004) != 0)) {
+        result.udpToken_ = udpToken_;
+      }
     }
 
     @java.lang.Override
@@ -366,6 +392,9 @@ private static final long serialVersionUID = 0L;
       }
       if (other.getUdpPort() != 0) {
         setUdpPort(other.getUdpPort());
+      }
+      if (other.getUdpToken() != 0) {
+        setUdpToken(other.getUdpToken());
       }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
@@ -403,6 +432,11 @@ private static final long serialVersionUID = 0L;
               bitField0_ |= 0x00000002;
               break;
             } // case 16
+            case 24: {
+              udpToken_ = input.readUInt32();
+              bitField0_ |= 0x00000004;
+              break;
+            } // case 24
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -520,6 +554,38 @@ private static final long serialVersionUID = 0L;
     public Builder clearUdpPort() {
       bitField0_ = (bitField0_ & ~0x00000002);
       udpPort_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private int udpToken_ ;
+    /**
+     * <code>uint32 udp_token = 3;</code>
+     * @return The udpToken.
+     */
+    @java.lang.Override
+    public int getUdpToken() {
+      return udpToken_;
+    }
+    /**
+     * <code>uint32 udp_token = 3;</code>
+     * @param value The udpToken to set.
+     * @return This builder for chaining.
+     */
+    public Builder setUdpToken(int value) {
+
+      udpToken_ = value;
+      bitField0_ |= 0x00000004;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>uint32 udp_token = 3;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearUdpToken() {
+      bitField0_ = (bitField0_ & ~0x00000004);
+      udpToken_ = 0;
       onChanged();
       return this;
     }

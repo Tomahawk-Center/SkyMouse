@@ -27,4 +27,10 @@ public interface ServerHelloOrBuilder extends
    * @return The udpPort.
    */
   int getUdpPort();
+
+  /**
+   * <code>uint32 udp_token = 3;</code>
+   * @return The udpToken.
+   */
+  int getUdpToken();
 }

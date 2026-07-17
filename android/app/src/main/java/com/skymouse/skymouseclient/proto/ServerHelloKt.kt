@@ -62,6 +62,23 @@ public object ServerHelloKt {
     public fun clearUdpPort() {
       _builder.clearUdpPort()
     }
+
+    /**
+     * `uint32 udp_token = 3;`
+     */
+    public var udpToken: kotlin.Int
+      @kotlin.jvm.JvmName("getUdpToken")
+        get() = _builder.udpToken
+      @kotlin.jvm.JvmName("setUdpToken")
+        set(value) {
+        _builder.udpToken = value
+      }
+    /**
+     * `uint32 udp_token = 3;`
+     */
+    public fun clearUdpToken() {
+      _builder.clearUdpToken()
+    }
   }
 }
 @kotlin.jvm.JvmSynthetic
