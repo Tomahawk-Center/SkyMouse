@@ -49,6 +49,7 @@ message ClientHello {
 message ServerHello {
     string server_version = 1;
     int32 udp_port = 2;
+    uint32 udp_token = 3;
 }
 
 
@@ -72,6 +73,13 @@ message MessageToServer {
         ClientHello client_hello = 4;
         Ping ping = 5;
         Pong pong = 6;
+    }
+}
+
+message UdpMessageToServer {
+    uint32 udp_token = 1;
+    oneof event {
+        MouseEvent mouse = 2;
     }
 }
 
