@@ -471,6 +471,7 @@ type ServerHello struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ServerVersion string                 `protobuf:"bytes,1,opt,name=server_version,json=serverVersion,proto3" json:"server_version,omitempty"`
 	UdpPort       int32                  `protobuf:"varint,2,opt,name=udp_port,json=udpPort,proto3" json:"udp_port,omitempty"`
+	UdpToken      uint32                 `protobuf:"varint,3,opt,name=udp_token,json=udpToken,proto3" json:"udp_token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -515,6 +516,13 @@ func (x *ServerHello) GetServerVersion() string {
 func (x *ServerHello) GetUdpPort() int32 {
 	if x != nil {
 		return x.UdpPort
+	}
+	return 0
+}
+
+func (x *ServerHello) GetUdpToken() uint32 {
+	if x != nil {
+		return x.UdpToken
 	}
 	return 0
 }
@@ -717,6 +725,80 @@ func (*MessageToServer_Ping) isMessageToServer_Event() {}
 
 func (*MessageToServer_Pong) isMessageToServer_Event() {}
 
+type UdpMessageToServer struct {
+	state    protoimpl.MessageState `protogen:"open.v1"`
+	UdpToken uint32                 `protobuf:"varint,1,opt,name=udp_token,json=udpToken,proto3" json:"udp_token,omitempty"`
+	// Types that are valid to be assigned to Event:
+	//
+	//	*UdpMessageToServer_Mouse
+	Event         isUdpMessageToServer_Event `protobuf_oneof:"event"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *UdpMessageToServer) Reset() {
+	*x = UdpMessageToServer{}
+	mi := &file_skymouse_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UdpMessageToServer) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UdpMessageToServer) ProtoMessage() {}
+
+func (x *UdpMessageToServer) ProtoReflect() protoreflect.Message {
+	mi := &file_skymouse_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UdpMessageToServer.ProtoReflect.Descriptor instead.
+func (*UdpMessageToServer) Descriptor() ([]byte, []int) {
+	return file_skymouse_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *UdpMessageToServer) GetUdpToken() uint32 {
+	if x != nil {
+		return x.UdpToken
+	}
+	return 0
+}
+
+func (x *UdpMessageToServer) GetEvent() isUdpMessageToServer_Event {
+	if x != nil {
+		return x.Event
+	}
+	return nil
+}
+
+func (x *UdpMessageToServer) GetMouse() *MouseEvent {
+	if x != nil {
+		if x, ok := x.Event.(*UdpMessageToServer_Mouse); ok {
+			return x.Mouse
+		}
+	}
+	return nil
+}
+
+type isUdpMessageToServer_Event interface {
+	isUdpMessageToServer_Event()
+}
+
+type UdpMessageToServer_Mouse struct {
+	Mouse *MouseEvent `protobuf:"bytes,2,opt,name=mouse,proto3,oneof"`
+}
+
+func (*UdpMessageToServer_Mouse) isUdpMessageToServer_Event() {}
+
 type MessageToClient struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Types that are valid to be assigned to Event:
@@ -730,7 +812,7 @@ type MessageToClient struct {
 
 func (x *MessageToClient) Reset() {
 	*x = MessageToClient{}
-	mi := &file_skymouse_proto_msgTypes[9]
+	mi := &file_skymouse_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -742,7 +824,7 @@ func (x *MessageToClient) String() string {
 func (*MessageToClient) ProtoMessage() {}
 
 func (x *MessageToClient) ProtoReflect() protoreflect.Message {
-	mi := &file_skymouse_proto_msgTypes[9]
+	mi := &file_skymouse_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -755,7 +837,7 @@ func (x *MessageToClient) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MessageToClient.ProtoReflect.Descriptor instead.
 func (*MessageToClient) Descriptor() ([]byte, []int) {
-	return file_skymouse_proto_rawDescGZIP(), []int{9}
+	return file_skymouse_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *MessageToClient) GetEvent() isMessageToClient_Event {
@@ -822,10 +904,11 @@ const file_skymouse_proto_rawDesc = "" +
 	"\x04Ping\"\x06\n" +
 	"\x04Pong\"4\n" +
 	"\vClientHello\x12%\n" +
-	"\x0eclient_version\x18\x01 \x01(\tR\rclientVersion\"O\n" +
+	"\x0eclient_version\x18\x01 \x01(\tR\rclientVersion\"l\n" +
 	"\vServerHello\x12%\n" +
 	"\x0eserver_version\x18\x01 \x01(\tR\rserverVersion\x12\x19\n" +
-	"\budp_port\x18\x02 \x01(\x05R\audpPort\"_\n" +
+	"\budp_port\x18\x02 \x01(\x05R\audpPort\x12\x1b\n" +
+	"\tudp_token\x18\x03 \x01(\rR\budpToken\"_\n" +
 	"\vServerEvent\x12-\n" +
 	"\x04type\x18\x01 \x01(\x0e2\x19.skymouse.HapticEventTypeR\x04type\x12!\n" +
 	"\ftimestamp_ms\x18\x02 \x01(\x03R\vtimestampMs\"\xaf\x02\n" +
@@ -836,6 +919,10 @@ const file_skymouse_proto_rawDesc = "" +
 	"\fclient_hello\x18\x04 \x01(\v2\x15.skymouse.ClientHelloH\x00R\vclientHello\x12$\n" +
 	"\x04ping\x18\x05 \x01(\v2\x0e.skymouse.PingH\x00R\x04ping\x12$\n" +
 	"\x04pong\x18\x06 \x01(\v2\x0e.skymouse.PongH\x00R\x04pongB\a\n" +
+	"\x05event\"h\n" +
+	"\x12UdpMessageToServer\x12\x1b\n" +
+	"\tudp_token\x18\x01 \x01(\rR\budpToken\x12,\n" +
+	"\x05mouse\x18\x02 \x01(\v2\x14.skymouse.MouseEventH\x00R\x05mouseB\a\n" +
 	"\x05event\"\x92\x01\n" +
 	"\x0fMessageToClient\x12:\n" +
 	"\fserver_hello\x18\x01 \x01(\v2\x15.skymouse.ServerHelloH\x00R\vserverHello\x12:\n" +
@@ -870,21 +957,22 @@ func file_skymouse_proto_rawDescGZIP() []byte {
 }
 
 var file_skymouse_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_skymouse_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_skymouse_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_skymouse_proto_goTypes = []any{
-	(MouseButton)(0),        // 0: skymouse.MouseButton
-	(ButtonState)(0),        // 1: skymouse.ButtonState
-	(HapticEventType)(0),    // 2: skymouse.HapticEventType
-	(*MouseEvent)(nil),      // 3: skymouse.MouseEvent
-	(*ClickEvent)(nil),      // 4: skymouse.ClickEvent
-	(*ScrollEvent)(nil),     // 5: skymouse.ScrollEvent
-	(*Ping)(nil),            // 6: skymouse.Ping
-	(*Pong)(nil),            // 7: skymouse.Pong
-	(*ClientHello)(nil),     // 8: skymouse.ClientHello
-	(*ServerHello)(nil),     // 9: skymouse.ServerHello
-	(*ServerEvent)(nil),     // 10: skymouse.ServerEvent
-	(*MessageToServer)(nil), // 11: skymouse.MessageToServer
-	(*MessageToClient)(nil), // 12: skymouse.MessageToClient
+	(MouseButton)(0),           // 0: skymouse.MouseButton
+	(ButtonState)(0),           // 1: skymouse.ButtonState
+	(HapticEventType)(0),       // 2: skymouse.HapticEventType
+	(*MouseEvent)(nil),         // 3: skymouse.MouseEvent
+	(*ClickEvent)(nil),         // 4: skymouse.ClickEvent
+	(*ScrollEvent)(nil),        // 5: skymouse.ScrollEvent
+	(*Ping)(nil),               // 6: skymouse.Ping
+	(*Pong)(nil),               // 7: skymouse.Pong
+	(*ClientHello)(nil),        // 8: skymouse.ClientHello
+	(*ServerHello)(nil),        // 9: skymouse.ServerHello
+	(*ServerEvent)(nil),        // 10: skymouse.ServerEvent
+	(*MessageToServer)(nil),    // 11: skymouse.MessageToServer
+	(*UdpMessageToServer)(nil), // 12: skymouse.UdpMessageToServer
+	(*MessageToClient)(nil),    // 13: skymouse.MessageToClient
 }
 var file_skymouse_proto_depIdxs = []int32{
 	0,  // 0: skymouse.ClickEvent.button:type_name -> skymouse.MouseButton
@@ -896,13 +984,14 @@ var file_skymouse_proto_depIdxs = []int32{
 	8,  // 6: skymouse.MessageToServer.client_hello:type_name -> skymouse.ClientHello
 	6,  // 7: skymouse.MessageToServer.ping:type_name -> skymouse.Ping
 	7,  // 8: skymouse.MessageToServer.pong:type_name -> skymouse.Pong
-	9,  // 9: skymouse.MessageToClient.server_hello:type_name -> skymouse.ServerHello
-	10, // 10: skymouse.MessageToClient.server_event:type_name -> skymouse.ServerEvent
-	11, // [11:11] is the sub-list for method output_type
-	11, // [11:11] is the sub-list for method input_type
-	11, // [11:11] is the sub-list for extension type_name
-	11, // [11:11] is the sub-list for extension extendee
-	0,  // [0:11] is the sub-list for field type_name
+	3,  // 9: skymouse.UdpMessageToServer.mouse:type_name -> skymouse.MouseEvent
+	9,  // 10: skymouse.MessageToClient.server_hello:type_name -> skymouse.ServerHello
+	10, // 11: skymouse.MessageToClient.server_event:type_name -> skymouse.ServerEvent
+	12, // [12:12] is the sub-list for method output_type
+	12, // [12:12] is the sub-list for method input_type
+	12, // [12:12] is the sub-list for extension type_name
+	12, // [12:12] is the sub-list for extension extendee
+	0,  // [0:12] is the sub-list for field type_name
 }
 
 func init() { file_skymouse_proto_init() }
@@ -919,6 +1008,9 @@ func file_skymouse_proto_init() {
 		(*MessageToServer_Pong)(nil),
 	}
 	file_skymouse_proto_msgTypes[9].OneofWrappers = []any{
+		(*UdpMessageToServer_Mouse)(nil),
+	}
+	file_skymouse_proto_msgTypes[10].OneofWrappers = []any{
 		(*MessageToClient_ServerHello)(nil),
 		(*MessageToClient_ServerEvent)(nil),
 	}
@@ -928,7 +1020,7 @@ func file_skymouse_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_skymouse_proto_rawDesc), len(file_skymouse_proto_rawDesc)),
 			NumEnums:      3,
-			NumMessages:   10,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
