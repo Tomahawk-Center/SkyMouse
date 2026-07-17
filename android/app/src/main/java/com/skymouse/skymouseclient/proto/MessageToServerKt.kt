@@ -30,79 +30,7 @@ public object MessageToServerKt {
     internal fun _build(): com.skymouse.skymouseclient.proto.MessageToServer = _builder.build()
 
     /**
-     * `.skymouse.MouseEvent mouse = 1;`
-     */
-    public var mouse: com.skymouse.skymouseclient.proto.MouseEvent
-      @kotlin.jvm.JvmName("getMouse")
-        get() = _builder.mouse
-      @kotlin.jvm.JvmName("setMouse")
-        set(value) {
-        _builder.mouse = value
-      }
-    /**
-     * `.skymouse.MouseEvent mouse = 1;`
-     */
-    public fun clearMouse() {
-      _builder.clearMouse()
-    }
-    /**
-     * `.skymouse.MouseEvent mouse = 1;`
-     * @return Whether the mouse field is set.
-     */
-    public fun hasMouse(): kotlin.Boolean {
-      return _builder.hasMouse()
-    }
-
-    /**
-     * `.skymouse.ClickEvent click = 2;`
-     */
-    public var click: com.skymouse.skymouseclient.proto.ClickEvent
-      @kotlin.jvm.JvmName("getClick")
-        get() = _builder.click
-      @kotlin.jvm.JvmName("setClick")
-        set(value) {
-        _builder.click = value
-      }
-    /**
-     * `.skymouse.ClickEvent click = 2;`
-     */
-    public fun clearClick() {
-      _builder.clearClick()
-    }
-    /**
-     * `.skymouse.ClickEvent click = 2;`
-     * @return Whether the click field is set.
-     */
-    public fun hasClick(): kotlin.Boolean {
-      return _builder.hasClick()
-    }
-
-    /**
-     * `.skymouse.ScrollEvent scroll = 3;`
-     */
-    public var scroll: com.skymouse.skymouseclient.proto.ScrollEvent
-      @kotlin.jvm.JvmName("getScroll")
-        get() = _builder.scroll
-      @kotlin.jvm.JvmName("setScroll")
-        set(value) {
-        _builder.scroll = value
-      }
-    /**
-     * `.skymouse.ScrollEvent scroll = 3;`
-     */
-    public fun clearScroll() {
-      _builder.clearScroll()
-    }
-    /**
-     * `.skymouse.ScrollEvent scroll = 3;`
-     * @return Whether the scroll field is set.
-     */
-    public fun hasScroll(): kotlin.Boolean {
-      return _builder.hasScroll()
-    }
-
-    /**
-     * `.skymouse.ClientHello client_hello = 4;`
+     * `.skymouse.ClientHello client_hello = 1;`
      */
     public var clientHello: com.skymouse.skymouseclient.proto.ClientHello
       @kotlin.jvm.JvmName("getClientHello")
@@ -112,13 +40,13 @@ public object MessageToServerKt {
         _builder.clientHello = value
       }
     /**
-     * `.skymouse.ClientHello client_hello = 4;`
+     * `.skymouse.ClientHello client_hello = 1;`
      */
     public fun clearClientHello() {
       _builder.clearClientHello()
     }
     /**
-     * `.skymouse.ClientHello client_hello = 4;`
+     * `.skymouse.ClientHello client_hello = 1;`
      * @return Whether the clientHello field is set.
      */
     public fun hasClientHello(): kotlin.Boolean {
@@ -126,7 +54,31 @@ public object MessageToServerKt {
     }
 
     /**
-     * `.skymouse.Ping ping = 5;`
+     * `.skymouse.EmulatorEvent emulator_event = 2;`
+     */
+    public var emulatorEvent: com.skymouse.skymouseclient.proto.EmulatorEvent
+      @kotlin.jvm.JvmName("getEmulatorEvent")
+        get() = _builder.emulatorEvent
+      @kotlin.jvm.JvmName("setEmulatorEvent")
+        set(value) {
+        _builder.emulatorEvent = value
+      }
+    /**
+     * `.skymouse.EmulatorEvent emulator_event = 2;`
+     */
+    public fun clearEmulatorEvent() {
+      _builder.clearEmulatorEvent()
+    }
+    /**
+     * `.skymouse.EmulatorEvent emulator_event = 2;`
+     * @return Whether the emulatorEvent field is set.
+     */
+    public fun hasEmulatorEvent(): kotlin.Boolean {
+      return _builder.hasEmulatorEvent()
+    }
+
+    /**
+     * `.skymouse.Ping ping = 3;`
      */
     public var ping: com.skymouse.skymouseclient.proto.Ping
       @kotlin.jvm.JvmName("getPing")
@@ -136,13 +88,13 @@ public object MessageToServerKt {
         _builder.ping = value
       }
     /**
-     * `.skymouse.Ping ping = 5;`
+     * `.skymouse.Ping ping = 3;`
      */
     public fun clearPing() {
       _builder.clearPing()
     }
     /**
-     * `.skymouse.Ping ping = 5;`
+     * `.skymouse.Ping ping = 3;`
      * @return Whether the ping field is set.
      */
     public fun hasPing(): kotlin.Boolean {
@@ -150,7 +102,7 @@ public object MessageToServerKt {
     }
 
     /**
-     * `.skymouse.Pong pong = 6;`
+     * `.skymouse.Pong pong = 4;`
      */
     public var pong: com.skymouse.skymouseclient.proto.Pong
       @kotlin.jvm.JvmName("getPong")
@@ -160,13 +112,13 @@ public object MessageToServerKt {
         _builder.pong = value
       }
     /**
-     * `.skymouse.Pong pong = 6;`
+     * `.skymouse.Pong pong = 4;`
      */
     public fun clearPong() {
       _builder.clearPong()
     }
     /**
-     * `.skymouse.Pong pong = 6;`
+     * `.skymouse.Pong pong = 4;`
      * @return Whether the pong field is set.
      */
     public fun hasPong(): kotlin.Boolean {
@@ -185,17 +137,11 @@ public object MessageToServerKt {
 public inline fun com.skymouse.skymouseclient.proto.MessageToServer.copy(block: `com.skymouse.skymouseclient.proto`.MessageToServerKt.Dsl.() -> kotlin.Unit): com.skymouse.skymouseclient.proto.MessageToServer =
   `com.skymouse.skymouseclient.proto`.MessageToServerKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 
-public val com.skymouse.skymouseclient.proto.MessageToServerOrBuilder.mouseOrNull: com.skymouse.skymouseclient.proto.MouseEvent?
-  get() = if (hasMouse()) getMouse() else null
-
-public val com.skymouse.skymouseclient.proto.MessageToServerOrBuilder.clickOrNull: com.skymouse.skymouseclient.proto.ClickEvent?
-  get() = if (hasClick()) getClick() else null
-
-public val com.skymouse.skymouseclient.proto.MessageToServerOrBuilder.scrollOrNull: com.skymouse.skymouseclient.proto.ScrollEvent?
-  get() = if (hasScroll()) getScroll() else null
-
 public val com.skymouse.skymouseclient.proto.MessageToServerOrBuilder.clientHelloOrNull: com.skymouse.skymouseclient.proto.ClientHello?
   get() = if (hasClientHello()) getClientHello() else null
+
+public val com.skymouse.skymouseclient.proto.MessageToServerOrBuilder.emulatorEventOrNull: com.skymouse.skymouseclient.proto.EmulatorEvent?
+  get() = if (hasEmulatorEvent()) getEmulatorEvent() else null
 
 public val com.skymouse.skymouseclient.proto.MessageToServerOrBuilder.pingOrNull: com.skymouse.skymouseclient.proto.Ping?
   get() = if (hasPing()) getPing() else null

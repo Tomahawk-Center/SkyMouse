@@ -47,27 +47,27 @@ public object UdpMessageToServerKt {
     }
 
     /**
-     * `.skymouse.MouseEvent mouse = 2;`
+     * `.skymouse.EmulatorEvent emulator_event = 2;`
      */
-    public var mouse: com.skymouse.skymouseclient.proto.MouseEvent
-      @kotlin.jvm.JvmName("getMouse")
-        get() = _builder.mouse
-      @kotlin.jvm.JvmName("setMouse")
+    public var emulatorEvent: com.skymouse.skymouseclient.proto.EmulatorEvent
+      @kotlin.jvm.JvmName("getEmulatorEvent")
+        get() = _builder.emulatorEvent
+      @kotlin.jvm.JvmName("setEmulatorEvent")
         set(value) {
-        _builder.mouse = value
+        _builder.emulatorEvent = value
       }
     /**
-     * `.skymouse.MouseEvent mouse = 2;`
+     * `.skymouse.EmulatorEvent emulator_event = 2;`
      */
-    public fun clearMouse() {
-      _builder.clearMouse()
+    public fun clearEmulatorEvent() {
+      _builder.clearEmulatorEvent()
     }
     /**
-     * `.skymouse.MouseEvent mouse = 2;`
-     * @return Whether the mouse field is set.
+     * `.skymouse.EmulatorEvent emulator_event = 2;`
+     * @return Whether the emulatorEvent field is set.
      */
-    public fun hasMouse(): kotlin.Boolean {
-      return _builder.hasMouse()
+    public fun hasEmulatorEvent(): kotlin.Boolean {
+      return _builder.hasEmulatorEvent()
     }
     public val eventCase: com.skymouse.skymouseclient.proto.UdpMessageToServer.EventCase
     @kotlin.jvm.JvmName("getEventCase")
@@ -82,6 +82,6 @@ public object UdpMessageToServerKt {
 public inline fun com.skymouse.skymouseclient.proto.UdpMessageToServer.copy(block: `com.skymouse.skymouseclient.proto`.UdpMessageToServerKt.Dsl.() -> kotlin.Unit): com.skymouse.skymouseclient.proto.UdpMessageToServer =
   `com.skymouse.skymouseclient.proto`.UdpMessageToServerKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 
-public val com.skymouse.skymouseclient.proto.UdpMessageToServerOrBuilder.mouseOrNull: com.skymouse.skymouseclient.proto.MouseEvent?
-  get() = if (hasMouse()) getMouse() else null
+public val com.skymouse.skymouseclient.proto.UdpMessageToServerOrBuilder.emulatorEventOrNull: com.skymouse.skymouseclient.proto.EmulatorEvent?
+  get() = if (hasEmulatorEvent()) getEmulatorEvent() else null
 

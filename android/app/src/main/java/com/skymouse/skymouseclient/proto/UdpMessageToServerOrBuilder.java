@@ -17,19 +17,19 @@ public interface UdpMessageToServerOrBuilder extends
   int getUdpToken();
 
   /**
-   * <code>.skymouse.MouseEvent mouse = 2;</code>
-   * @return Whether the mouse field is set.
+   * <code>.skymouse.EmulatorEvent emulator_event = 2;</code>
+   * @return Whether the emulatorEvent field is set.
    */
-  boolean hasMouse();
+  boolean hasEmulatorEvent();
   /**
-   * <code>.skymouse.MouseEvent mouse = 2;</code>
-   * @return The mouse.
+   * <code>.skymouse.EmulatorEvent emulator_event = 2;</code>
+   * @return The emulatorEvent.
    */
-  com.skymouse.skymouseclient.proto.MouseEvent getMouse();
+  com.skymouse.skymouseclient.proto.EmulatorEvent getEmulatorEvent();
   /**
-   * <code>.skymouse.MouseEvent mouse = 2;</code>
+   * <code>.skymouse.EmulatorEvent emulator_event = 2;</code>
    */
-  com.skymouse.skymouseclient.proto.MouseEventOrBuilder getMouseOrBuilder();
+  com.skymouse.skymouseclient.proto.EmulatorEventOrBuilder getEmulatorEventOrBuilder();
 
   com.skymouse.skymouseclient.proto.UdpMessageToServer.EventCase getEventCase();
 }

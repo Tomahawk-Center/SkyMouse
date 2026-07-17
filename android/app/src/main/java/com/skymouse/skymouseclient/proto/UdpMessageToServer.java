@@ -54,7 +54,7 @@ private static final long serialVersionUID = 0L;
   public enum EventCase
       implements com.google.protobuf.Internal.EnumLite,
           com.google.protobuf.AbstractMessage.InternalOneOfEnum {
-    MOUSE(2),
+    EMULATOR_EVENT(2),
     EVENT_NOT_SET(0);
     private final int value;
     private EventCase(int value) {
@@ -72,7 +72,7 @@ private static final long serialVersionUID = 0L;
 
     public static EventCase forNumber(int value) {
       switch (value) {
-        case 2: return MOUSE;
+        case 2: return EMULATOR_EVENT;
         case 0: return EVENT_NOT_SET;
         default: return null;
       }
@@ -99,35 +99,35 @@ private static final long serialVersionUID = 0L;
     return udpToken_;
   }
 
-  public static final int MOUSE_FIELD_NUMBER = 2;
+  public static final int EMULATOR_EVENT_FIELD_NUMBER = 2;
   /**
-   * <code>.skymouse.MouseEvent mouse = 2;</code>
-   * @return Whether the mouse field is set.
+   * <code>.skymouse.EmulatorEvent emulator_event = 2;</code>
+   * @return Whether the emulatorEvent field is set.
    */
   @java.lang.Override
-  public boolean hasMouse() {
+  public boolean hasEmulatorEvent() {
     return eventCase_ == 2;
   }
   /**
-   * <code>.skymouse.MouseEvent mouse = 2;</code>
-   * @return The mouse.
+   * <code>.skymouse.EmulatorEvent emulator_event = 2;</code>
+   * @return The emulatorEvent.
    */
   @java.lang.Override
-  public com.skymouse.skymouseclient.proto.MouseEvent getMouse() {
+  public com.skymouse.skymouseclient.proto.EmulatorEvent getEmulatorEvent() {
     if (eventCase_ == 2) {
-       return (com.skymouse.skymouseclient.proto.MouseEvent) event_;
+       return (com.skymouse.skymouseclient.proto.EmulatorEvent) event_;
     }
-    return com.skymouse.skymouseclient.proto.MouseEvent.getDefaultInstance();
+    return com.skymouse.skymouseclient.proto.EmulatorEvent.getDefaultInstance();
   }
   /**
-   * <code>.skymouse.MouseEvent mouse = 2;</code>
+   * <code>.skymouse.EmulatorEvent emulator_event = 2;</code>
    */
   @java.lang.Override
-  public com.skymouse.skymouseclient.proto.MouseEventOrBuilder getMouseOrBuilder() {
+  public com.skymouse.skymouseclient.proto.EmulatorEventOrBuilder getEmulatorEventOrBuilder() {
     if (eventCase_ == 2) {
-       return (com.skymouse.skymouseclient.proto.MouseEvent) event_;
+       return (com.skymouse.skymouseclient.proto.EmulatorEvent) event_;
     }
-    return com.skymouse.skymouseclient.proto.MouseEvent.getDefaultInstance();
+    return com.skymouse.skymouseclient.proto.EmulatorEvent.getDefaultInstance();
   }
 
   private byte memoizedIsInitialized = -1;
@@ -148,7 +148,7 @@ private static final long serialVersionUID = 0L;
       output.writeUInt32(1, udpToken_);
     }
     if (eventCase_ == 2) {
-      output.writeMessage(2, (com.skymouse.skymouseclient.proto.MouseEvent) event_);
+      output.writeMessage(2, (com.skymouse.skymouseclient.proto.EmulatorEvent) event_);
     }
     getUnknownFields().writeTo(output);
   }
@@ -160,7 +160,7 @@ private static final long serialVersionUID = 0L;
     }
     if (eventCase_ == 2) {
       size += com.google.protobuf.CodedOutputStream
-        .computeMessageSize(2, (com.skymouse.skymouseclient.proto.MouseEvent) event_);
+        .computeMessageSize(2, (com.skymouse.skymouseclient.proto.EmulatorEvent) event_);
     }
     return size;
   }
@@ -191,8 +191,8 @@ private static final long serialVersionUID = 0L;
     if (!getEventCase().equals(other.getEventCase())) return false;
     switch (eventCase_) {
       case 2:
-        if (!getMouse()
-            .equals(other.getMouse())) return false;
+        if (!getEmulatorEvent()
+            .equals(other.getEmulatorEvent())) return false;
         break;
       case 0:
       default:
@@ -212,8 +212,8 @@ private static final long serialVersionUID = 0L;
     hash = (53 * hash) + getUdpToken();
     switch (eventCase_) {
       case 2:
-        hash = (37 * hash) + MOUSE_FIELD_NUMBER;
-        hash = (53 * hash) + getMouse().hashCode();
+        hash = (37 * hash) + EMULATOR_EVENT_FIELD_NUMBER;
+        hash = (53 * hash) + getEmulatorEvent().hashCode();
         break;
       case 0:
       default:
@@ -350,8 +350,8 @@ private static final long serialVersionUID = 0L;
       super.clear();
       bitField0_ = 0;
       udpToken_ = 0;
-      if (mouseBuilder_ != null) {
-        mouseBuilder_.clear();
+      if (emulatorEventBuilder_ != null) {
+        emulatorEventBuilder_.clear();
       }
       eventCase_ = 0;
       event_ = null;
@@ -398,8 +398,8 @@ private static final long serialVersionUID = 0L;
       result.eventCase_ = eventCase_;
       result.event_ = this.event_;
       if (eventCase_ == 2 &&
-          mouseBuilder_ != null) {
-        result.event_ = mouseBuilder_.build();
+          emulatorEventBuilder_ != null) {
+        result.event_ = emulatorEventBuilder_.build();
       }
     }
 
@@ -419,8 +419,8 @@ private static final long serialVersionUID = 0L;
         setUdpToken(other.getUdpToken());
       }
       switch (other.getEventCase()) {
-        case MOUSE: {
-          mergeMouse(other.getMouse());
+        case EMULATOR_EVENT: {
+          mergeEmulatorEvent(other.getEmulatorEvent());
           break;
         }
         case EVENT_NOT_SET: {
@@ -460,7 +460,7 @@ private static final long serialVersionUID = 0L;
             } // case 8
             case 18: {
               input.readMessage(
-                  internalGetMouseFieldBuilder().getBuilder(),
+                  internalGetEmulatorEventFieldBuilder().getBuilder(),
                   extensionRegistry);
               eventCase_ = 2;
               break;
@@ -530,71 +530,71 @@ private static final long serialVersionUID = 0L;
     }
 
     private com.google.protobuf.SingleFieldBuilder<
-        com.skymouse.skymouseclient.proto.MouseEvent, com.skymouse.skymouseclient.proto.MouseEvent.Builder, com.skymouse.skymouseclient.proto.MouseEventOrBuilder> mouseBuilder_;
+        com.skymouse.skymouseclient.proto.EmulatorEvent, com.skymouse.skymouseclient.proto.EmulatorEvent.Builder, com.skymouse.skymouseclient.proto.EmulatorEventOrBuilder> emulatorEventBuilder_;
     /**
-     * <code>.skymouse.MouseEvent mouse = 2;</code>
-     * @return Whether the mouse field is set.
+     * <code>.skymouse.EmulatorEvent emulator_event = 2;</code>
+     * @return Whether the emulatorEvent field is set.
      */
     @java.lang.Override
-    public boolean hasMouse() {
+    public boolean hasEmulatorEvent() {
       return eventCase_ == 2;
     }
     /**
-     * <code>.skymouse.MouseEvent mouse = 2;</code>
-     * @return The mouse.
+     * <code>.skymouse.EmulatorEvent emulator_event = 2;</code>
+     * @return The emulatorEvent.
      */
     @java.lang.Override
-    public com.skymouse.skymouseclient.proto.MouseEvent getMouse() {
-      if (mouseBuilder_ == null) {
+    public com.skymouse.skymouseclient.proto.EmulatorEvent getEmulatorEvent() {
+      if (emulatorEventBuilder_ == null) {
         if (eventCase_ == 2) {
-          return (com.skymouse.skymouseclient.proto.MouseEvent) event_;
+          return (com.skymouse.skymouseclient.proto.EmulatorEvent) event_;
         }
-        return com.skymouse.skymouseclient.proto.MouseEvent.getDefaultInstance();
+        return com.skymouse.skymouseclient.proto.EmulatorEvent.getDefaultInstance();
       } else {
         if (eventCase_ == 2) {
-          return mouseBuilder_.getMessage();
+          return emulatorEventBuilder_.getMessage();
         }
-        return com.skymouse.skymouseclient.proto.MouseEvent.getDefaultInstance();
+        return com.skymouse.skymouseclient.proto.EmulatorEvent.getDefaultInstance();
       }
     }
     /**
-     * <code>.skymouse.MouseEvent mouse = 2;</code>
+     * <code>.skymouse.EmulatorEvent emulator_event = 2;</code>
      */
-    public Builder setMouse(com.skymouse.skymouseclient.proto.MouseEvent value) {
-      if (mouseBuilder_ == null) {
+    public Builder setEmulatorEvent(com.skymouse.skymouseclient.proto.EmulatorEvent value) {
+      if (emulatorEventBuilder_ == null) {
         if (value == null) {
           throw new NullPointerException();
         }
         event_ = value;
         onChanged();
       } else {
-        mouseBuilder_.setMessage(value);
+        emulatorEventBuilder_.setMessage(value);
       }
       eventCase_ = 2;
       return this;
     }
     /**
-     * <code>.skymouse.MouseEvent mouse = 2;</code>
+     * <code>.skymouse.EmulatorEvent emulator_event = 2;</code>
      */
-    public Builder setMouse(
-        com.skymouse.skymouseclient.proto.MouseEvent.Builder builderForValue) {
-      if (mouseBuilder_ == null) {
+    public Builder setEmulatorEvent(
+        com.skymouse.skymouseclient.proto.EmulatorEvent.Builder builderForValue) {
+      if (emulatorEventBuilder_ == null) {
         event_ = builderForValue.build();
         onChanged();
       } else {
-        mouseBuilder_.setMessage(builderForValue.build());
+        emulatorEventBuilder_.setMessage(builderForValue.build());
       }
       eventCase_ = 2;
       return this;
     }
     /**
-     * <code>.skymouse.MouseEvent mouse = 2;</code>
+     * <code>.skymouse.EmulatorEvent emulator_event = 2;</code>
      */
-    public Builder mergeMouse(com.skymouse.skymouseclient.proto.MouseEvent value) {
-      if (mouseBuilder_ == null) {
+    public Builder mergeEmulatorEvent(com.skymouse.skymouseclient.proto.EmulatorEvent value) {
+      if (emulatorEventBuilder_ == null) {
         if (eventCase_ == 2 &&
-            event_ != com.skymouse.skymouseclient.proto.MouseEvent.getDefaultInstance()) {
-          event_ = com.skymouse.skymouseclient.proto.MouseEvent.newBuilder((com.skymouse.skymouseclient.proto.MouseEvent) event_)
+            event_ != com.skymouse.skymouseclient.proto.EmulatorEvent.getDefaultInstance()) {
+          event_ = com.skymouse.skymouseclient.proto.EmulatorEvent.newBuilder((com.skymouse.skymouseclient.proto.EmulatorEvent) event_)
               .mergeFrom(value).buildPartial();
         } else {
           event_ = value;
@@ -602,19 +602,19 @@ private static final long serialVersionUID = 0L;
         onChanged();
       } else {
         if (eventCase_ == 2) {
-          mouseBuilder_.mergeFrom(value);
+          emulatorEventBuilder_.mergeFrom(value);
         } else {
-          mouseBuilder_.setMessage(value);
+          emulatorEventBuilder_.setMessage(value);
         }
       }
       eventCase_ = 2;
       return this;
     }
     /**
-     * <code>.skymouse.MouseEvent mouse = 2;</code>
+     * <code>.skymouse.EmulatorEvent emulator_event = 2;</code>
      */
-    public Builder clearMouse() {
-      if (mouseBuilder_ == null) {
+    public Builder clearEmulatorEvent() {
+      if (emulatorEventBuilder_ == null) {
         if (eventCase_ == 2) {
           eventCase_ = 0;
           event_ = null;
@@ -625,50 +625,50 @@ private static final long serialVersionUID = 0L;
           eventCase_ = 0;
           event_ = null;
         }
-        mouseBuilder_.clear();
+        emulatorEventBuilder_.clear();
       }
       return this;
     }
     /**
-     * <code>.skymouse.MouseEvent mouse = 2;</code>
+     * <code>.skymouse.EmulatorEvent emulator_event = 2;</code>
      */
-    public com.skymouse.skymouseclient.proto.MouseEvent.Builder getMouseBuilder() {
-      return internalGetMouseFieldBuilder().getBuilder();
+    public com.skymouse.skymouseclient.proto.EmulatorEvent.Builder getEmulatorEventBuilder() {
+      return internalGetEmulatorEventFieldBuilder().getBuilder();
     }
     /**
-     * <code>.skymouse.MouseEvent mouse = 2;</code>
+     * <code>.skymouse.EmulatorEvent emulator_event = 2;</code>
      */
     @java.lang.Override
-    public com.skymouse.skymouseclient.proto.MouseEventOrBuilder getMouseOrBuilder() {
-      if ((eventCase_ == 2) && (mouseBuilder_ != null)) {
-        return mouseBuilder_.getMessageOrBuilder();
+    public com.skymouse.skymouseclient.proto.EmulatorEventOrBuilder getEmulatorEventOrBuilder() {
+      if ((eventCase_ == 2) && (emulatorEventBuilder_ != null)) {
+        return emulatorEventBuilder_.getMessageOrBuilder();
       } else {
         if (eventCase_ == 2) {
-          return (com.skymouse.skymouseclient.proto.MouseEvent) event_;
+          return (com.skymouse.skymouseclient.proto.EmulatorEvent) event_;
         }
-        return com.skymouse.skymouseclient.proto.MouseEvent.getDefaultInstance();
+        return com.skymouse.skymouseclient.proto.EmulatorEvent.getDefaultInstance();
       }
     }
     /**
-     * <code>.skymouse.MouseEvent mouse = 2;</code>
+     * <code>.skymouse.EmulatorEvent emulator_event = 2;</code>
      */
     private com.google.protobuf.SingleFieldBuilder<
-        com.skymouse.skymouseclient.proto.MouseEvent, com.skymouse.skymouseclient.proto.MouseEvent.Builder, com.skymouse.skymouseclient.proto.MouseEventOrBuilder> 
-        internalGetMouseFieldBuilder() {
-      if (mouseBuilder_ == null) {
+        com.skymouse.skymouseclient.proto.EmulatorEvent, com.skymouse.skymouseclient.proto.EmulatorEvent.Builder, com.skymouse.skymouseclient.proto.EmulatorEventOrBuilder> 
+        internalGetEmulatorEventFieldBuilder() {
+      if (emulatorEventBuilder_ == null) {
         if (!(eventCase_ == 2)) {
-          event_ = com.skymouse.skymouseclient.proto.MouseEvent.getDefaultInstance();
+          event_ = com.skymouse.skymouseclient.proto.EmulatorEvent.getDefaultInstance();
         }
-        mouseBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-            com.skymouse.skymouseclient.proto.MouseEvent, com.skymouse.skymouseclient.proto.MouseEvent.Builder, com.skymouse.skymouseclient.proto.MouseEventOrBuilder>(
-                (com.skymouse.skymouseclient.proto.MouseEvent) event_,
+        emulatorEventBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+            com.skymouse.skymouseclient.proto.EmulatorEvent, com.skymouse.skymouseclient.proto.EmulatorEvent.Builder, com.skymouse.skymouseclient.proto.EmulatorEventOrBuilder>(
+                (com.skymouse.skymouseclient.proto.EmulatorEvent) event_,
                 getParentForChildren(),
                 isClean());
         event_ = null;
       }
       eventCase_ = 2;
       onChanged();
-      return mouseBuilder_;
+      return emulatorEventBuilder_;
     }
 
     // @@protoc_insertion_point(builder_scope:skymouse.UdpMessageToServer)
