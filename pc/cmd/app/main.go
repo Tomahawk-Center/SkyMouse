@@ -7,6 +7,7 @@ import (
 	"syscall"
 
 	"github.com/Tomahawk-Center/SkyMouse/pc/internal/emulator"
+	"github.com/Tomahawk-Center/SkyMouse/pc/internal/server"
 	"github.com/Tomahawk-Center/SkyMouse/pc/internal/server/tcp"
 	"github.com/Tomahawk-Center/SkyMouse/pc/internal/server/udp"
 	"github.com/Tomahawk-Center/SkyMouse/pc/pkg/protoapi"
@@ -15,15 +16,17 @@ import (
 func main() {
 	log.SetOutput(os.Stdout)
 
-	emuEventsCh := make(chan *protoapi.ServerEvent, 20)
+	emuEventsCh := make(chan emulator.Event, 20)
 	emu := emulator.NewEmulator(emuEventsCh)
 
-	udpServer, err := udp.NewServer(":9999", emu)
+	sessMgr := server.NewSessionManager()
+
+	udpServer, err := udp.NewServer(":9999", sessMgr, emu)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	tcpServer, err := tcp.NewServer(":10000", emu, udpServer.Port)
+	tcpServer, err := tcp.NewServer(":10000", sessMgr, emu, udpServer.Port)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -42,12 +45,13 @@ func main() {
 
 	go func() {
 		for ev := range emuEventsCh {
+			log.Printf("Event received: %v\n", ev)
 			msgToClient := &protoapi.MessageToClient{
 				Event: &protoapi.MessageToClient_ServerEvent{
-					ServerEvent: ev,
+					ServerEvent: ev.Data,
 				},
 			}
-			err := udpServer.SendProto(msgToClient)
+			err := udpServer.SendProto(ev.SessionId, msgToClient)
 			if err != nil {
 				log.Printf("Error sending message to client: %v\n", err)
 			}
