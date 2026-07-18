@@ -6,6 +6,7 @@ import (
 	"log"
 	"net"
 	"sync"
+	"time"
 
 	"github.com/Tomahawk-Center/SkyMouse/pc/internal/server"
 	"github.com/Tomahawk-Center/SkyMouse/pc/pkg/protoapi"
@@ -13,16 +14,17 @@ import (
 )
 
 type Server struct {
-	addr    *net.UDPAddr
-	conn    *net.UDPConn
-	quitCh  chan struct{}
-	wg      sync.WaitGroup
-	handler server.EventHandler
-	mu      sync.RWMutex
-	lastIp  *net.UDPAddr
+	addr       *net.UDPAddr
+	sm         *server.SessionManager
+	conn       *net.UDPConn
+	quitCh     chan struct{}
+	wg         sync.WaitGroup
+	handler    server.EventHandler
+	mu         sync.Mutex
+	addrByUuid map[string]*net.UDPAddr
 }
 
-func NewServer(addr string, handler server.EventHandler) (*Server, error) {
+func NewServer(addr string, sm *server.SessionManager, handler server.EventHandler) (*Server, error) {
 	if handler == nil {
 		return nil, errors.New("handler cannot be nil")
 	}
@@ -32,9 +34,11 @@ func NewServer(addr string, handler server.EventHandler) (*Server, error) {
 		return nil, err
 	}
 	return &Server{
-		addr:    ad,
-		quitCh:  make(chan struct{}),
-		handler: handler,
+		addr:       ad,
+		sm:         sm,
+		quitCh:     make(chan struct{}),
+		handler:    handler,
+		addrByUuid: make(map[string]*net.UDPAddr),
 	}, nil
 
 }
@@ -72,8 +76,7 @@ func (s *Server) Port() (int, error) {
 }
 
 // SendProto sends protobuf message to last connected IP addr
-// TODO: fix this bodge solution... by using session manager maybe
-func (s *Server) SendProto(msg proto.Message) error {
+func (s *Server) SendProto(sessionId string, msg proto.Message) error { // TODO RC?
 	if s.conn == nil {
 		return fmt.Errorf("UDP Server not started")
 	}
@@ -81,10 +84,14 @@ func (s *Server) SendProto(msg proto.Message) error {
 	if err != nil {
 		return fmt.Errorf("could not marshal proto: %v", err)
 	}
-	s.mu.RLock()
-	a := s.lastIp
-	s.mu.RUnlock()
-	_, err = s.conn.WriteToUDP(data, a)
+
+	s.mu.Lock()
+	addr, ok := s.addrByUuid[sessionId]
+	s.mu.Unlock()
+	if !ok {
+		return errors.New("udp addr not found")
+	}
+	_, err = s.conn.WriteToUDP(data, addr)
 	if err != nil {
 		return fmt.Errorf("could not send proto: %v", err)
 	}
@@ -113,16 +120,31 @@ func (s *Server) acceptLoop() {
 			continue
 		}
 		// log.Printf("UDP Received %d bytes from %s: %s\n", n, remoteAddr, string(buf[:n]))
-		var msg protoapi.MessageToServer
+		var msg protoapi.UdpMessageToServer
 		if err := proto.Unmarshal(buf[:n], &msg); err != nil {
 			log.Printf("UDP Protobuf unmarshal error from %s: %v\n", remoteAddr, err)
 			continue
 		}
 
+		udpToken := msg.UdpToken
+		sess, ok := s.sm.GetByUdpToken(udpToken)
+		if !ok {
+			continue
+		}
+		sess.SetLastActive(time.Now())
+
 		s.mu.Lock()
-		s.lastIp = remoteAddr
+		s.addrByUuid[sess.Id()] = remoteAddr
 		s.mu.Unlock()
 
-		s.handler.Handle(&msg)
+		if !sess.IsHandshake() {
+			continue
+		}
+
+		emEv := msg.GetEmulatorEvent()
+		if emEv != nil {
+			s.handler.Handle(sess.Id(), emEv)
+		}
+
 	}
 }
