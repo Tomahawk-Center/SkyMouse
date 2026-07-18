@@ -8,13 +8,18 @@ import (
 	"github.com/go-vgo/robotgo"
 )
 
+type Event struct {
+	SessionId string
+	Data      *protoapi.ServerEvent
+}
+
 type Emulator struct {
-	eventsChan     chan *protoapi.ServerEvent
+	eventsChan     chan Event
 	displaysBounds []screenBounds
 	isBorderHit    bool
 }
 
-func NewEmulator(ch chan *protoapi.ServerEvent) *Emulator {
+func NewEmulator(ch chan Event) *Emulator {
 	var d []screenBounds
 	for i := range robotgo.DisplaysNum() {
 		x, y, w, h := robotgo.GetDisplayBounds(i)
@@ -39,19 +44,19 @@ func (e *Emulator) getDisplayIndex(x, y int) int {
 	return -1
 }
 
-func (e *Emulator) Handle(event *protoapi.MessageToServer) {
+func (e *Emulator) Handle(sessionId string, event *protoapi.EmulatorEvent) {
 
 	switch ev := event.Event.(type) {
-	case *protoapi.MessageToServer_Mouse:
-		e.handleMouse(ev.Mouse)
-	case *protoapi.MessageToServer_Click:
+	case *protoapi.EmulatorEvent_Mouse:
+		e.handleMouse(sessionId, ev.Mouse)
+	case *protoapi.EmulatorEvent_Click:
 		e.handleClick(ev.Click)
-	case *protoapi.MessageToServer_Scroll:
+	case *protoapi.EmulatorEvent_Scroll:
 		e.handleScroll(ev.Scroll)
 	}
 }
 
-func (e *Emulator) handleMouse(ev *protoapi.MouseEvent) {
+func (e *Emulator) handleMouse(sessionId string, ev *protoapi.MouseEvent) {
 	if ev.DeltaX == 0 && ev.DeltaY == 0 {
 		return
 	}
@@ -66,22 +71,25 @@ func (e *Emulator) handleMouse(ev *protoapi.MouseEvent) {
 
 	if iNew == -1 {
 		if !e.isBorderHit {
-			select {
-			case e.eventsChan <- &protoapi.ServerEvent{
+			ev := Event{SessionId: sessionId, Data: &protoapi.ServerEvent{
 				Type:        protoapi.HapticEventType_EVENT_EDGE_HIT,
 				TimestampMs: time.Now().UnixMilli(),
-			}:
+			}}
+
+			select {
+			case e.eventsChan <- ev:
 			default:
 			}
 		}
 
 		e.isBorderHit = true
 	} else if iOld != iNew {
-		select {
-		case e.eventsChan <- &protoapi.ServerEvent{
+		ev := Event{SessionId: sessionId, Data: &protoapi.ServerEvent{
 			Type:        protoapi.HapticEventType_EVENT_BORDER_CROSSING,
 			TimestampMs: time.Now().UnixMilli(),
-		}:
+		}}
+		select {
+		case e.eventsChan <- ev:
 		default:
 		}
 	} else {
