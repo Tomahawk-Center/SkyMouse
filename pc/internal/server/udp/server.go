@@ -68,16 +68,18 @@ func (s *Server) Stop() {
 }
 
 func (s *Server) Port() (int, error) {
-	if s.conn == nil {
+	c := s.conn
+	if c == nil {
 		return 0, fmt.Errorf("UDP Server not started")
 	}
-	addr := s.conn.LocalAddr().(*net.UDPAddr)
+	addr := c.LocalAddr().(*net.UDPAddr)
 	return addr.Port, nil
 }
 
 // SendProto sends protobuf message to last connected IP addr
-func (s *Server) SendProto(sessionId string, msg proto.Message) error { // TODO RC?
-	if s.conn == nil {
+func (s *Server) SendProto(sessionId string, msg proto.Message) error {
+	c := s.conn
+	if c == nil {
 		return fmt.Errorf("UDP Server not started")
 	}
 	data, err := proto.Marshal(msg)
@@ -91,7 +93,7 @@ func (s *Server) SendProto(sessionId string, msg proto.Message) error { // TODO 
 	if !ok {
 		return errors.New("udp addr not found")
 	}
-	_, err = s.conn.WriteToUDP(data, addr)
+	_, err = c.WriteToUDP(data, addr)
 	if err != nil {
 		return fmt.Errorf("could not send proto: %v", err)
 	}
