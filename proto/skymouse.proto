@@ -38,10 +38,60 @@ message ScrollEvent {
     int64 timestamp_ms = 2;
 }
 
-message MessageToServer {
+message Ping {}
+
+message Pong {}
+
+message ClientHello {
+    string client_version = 1;
+}
+
+message ServerHello {
+    string server_version = 1;
+    int32 udp_port = 2;
+    uint32 udp_token = 3;
+}
+
+
+enum HapticEventType {
+    EVENT_UNKNOWN = 0;
+    EVENT_BORDER_CROSSING = 1;
+    EVENT_EDGE_HIT = 2;
+
+}
+
+message ServerEvent {
+    HapticEventType type = 1;
+    int64 timestamp_ms = 2;
+}
+
+message EmulatorEvent {
     oneof event {
         MouseEvent mouse = 1;
         ClickEvent click = 2;
         ScrollEvent scroll = 3;
+    }
+}
+
+message MessageToServer {
+    oneof event {
+        ClientHello client_hello = 1;
+        EmulatorEvent emulator_event = 2;
+        Ping ping = 3;
+        Pong pong = 4;
+    }
+}
+
+message UdpMessageToServer {
+    uint32 udp_token = 1;
+    oneof event {
+        EmulatorEvent emulator_event = 2;
+    }
+}
+
+message MessageToClient {
+    oneof event {
+        ServerHello server_hello = 1;
+        ServerEvent server_event = 2;
     }
 }

@@ -3,6 +3,8 @@ package com.skymouse.skymouseclient.data
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import java.io.OutputStream
 import java.net.InetSocketAddress
@@ -11,6 +13,8 @@ import java.net.Socket
 class TcpClientManager {
     private var socket: Socket? = null
     private var outputStream: OutputStream? = null
+
+    private val sendMutex = Mutex()
 
     private val _connectionState = MutableStateFlow<TcpConnectionState>(TcpConnectionState.Disconnected)
     val connectionState: StateFlow<TcpConnectionState> = _connectionState
@@ -30,42 +34,71 @@ class TcpClientManager {
         }
     }
 
-    suspend fun sendText(text: String) = withContext(Dispatchers.IO) {
-        val os = outputStream
-        if (os==null || _connectionState.value != TcpConnectionState.Connected) {
-            return@withContext
-        }
+    suspend fun sendProto(message: com.google.protobuf.MessageLite) = withContext(Dispatchers.IO) {
+        sendMutex.withLock {
+            val os = outputStream ?: return@withContext
 
-        try {
-            val bytes = text.toByteArray(Charsets.UTF_8)
-            os.write(bytes)
-            os.flush()
-        } catch (error: Exception) {
-            _connectionState.value = TcpConnectionState.Error(error.localizedMessage ?: "Tcp send failed")
-            disconnect()
+            try {
+                val bytes = message.toByteArray()
+                val size = bytes.size
+
+                val header = byteArrayOf(
+                    (size shr 24).toByte(),
+                    (size shr 16).toByte(),
+                    (size shr 8).toByte(),
+                    size.toByte()
+                )
+
+                os.write(header)
+                os.write(bytes)
+                os.flush()
+            } catch (e: Exception) {
+                _connectionState.value =
+                    TcpConnectionState.Error(e.localizedMessage ?: "Tcp send failed")
+                disconnect()
+            }
         }
     }
 
-    suspend fun sendProto(message: com.google.protobuf.MessageLite) = withContext(Dispatchers.IO){
-        val os = outputStream ?: return@withContext
-
+    suspend fun receiveProto(): com.skymouse.skymouseclient.proto.MessageToClient? = withContext(
+        Dispatchers.IO) {
+        val s = socket ?: return@withContext null
         try {
-            val bytes = message.toByteArray()
-            val size = bytes.size
+            val inputStream = s.getInputStream()
 
-            val header = byteArrayOf(
-                (size shr 24).toByte(),
-                (size shr 16).toByte(),
-                (size shr 8).toByte(),
-                size.toByte()
-            )
+            val header = ByteArray(4)
+            var totalReadHeader = 0
+            while (totalReadHeader<4) {
+                val read = inputStream.read(header, totalReadHeader, 4-totalReadHeader)
+                if (read == -1) {
+                    return@withContext null
+                }
+                totalReadHeader += read
+            }
 
-            os.write(header)
-            os.write(bytes)
-            os.flush()
+            val size = ((header[0].toInt() and 0xFF) shl 24) or
+                    ((header[1].toInt() and 0xFF) shl 16) or
+                    ((header[2].toInt() and 0xFF) shl 8) or
+                    (header[3].toInt() and 0xFF)
+
+            if (size <= 0 || size > 1024 * 1024) return@withContext null // Too big packets protection
+
+            val body = ByteArray(size)
+            var totalReadBody = 0
+            while (totalReadBody < size) {
+                val read = inputStream.read(body, totalReadBody, size - totalReadBody)
+                if (read == -1) {
+                    return@withContext null
+                }
+                totalReadBody += read
+            }
+
+            return@withContext com.skymouse.skymouseclient.proto.MessageToClient.parseFrom(body)
         } catch (e: Exception) {
-            _connectionState.value = TcpConnectionState.Error(e.localizedMessage ?: "Tcp send failed")
-            disconnect()
+            if (!s.isClosed) {
+                _connectionState.value = TcpConnectionState.Error(e.localizedMessage ?: "Tcp receive failed")
+            }
+            null
         }
     }
 

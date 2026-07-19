@@ -4,6 +4,7 @@ go 1.26.4
 
 require (
 	github.com/go-vgo/robotgo v1.0.2
+	github.com/google/uuid v1.6.0
 	google.golang.org/protobuf v1.36.11
 )
 

@@ -2,26 +2,31 @@ package udp
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"net"
 	"sync"
+	"time"
 
-	"github.com/Tomahawk-Center/SkyMouse/pc/internal/emulator"
+	"github.com/Tomahawk-Center/SkyMouse/pc/internal/server"
 	"github.com/Tomahawk-Center/SkyMouse/pc/pkg/protoapi"
 	"google.golang.org/protobuf/proto"
 )
 
 type Server struct {
-	addr     *net.UDPAddr
-	conn     *net.UDPConn
-	quitCh   chan struct{}
-	wg       sync.WaitGroup
-	emulator *emulator.Emulator
+	addr       *net.UDPAddr
+	sm         *server.SessionManager
+	conn       *net.UDPConn
+	quitCh     chan struct{}
+	wg         sync.WaitGroup
+	handler    server.EventHandler
+	mu         sync.Mutex
+	addrByUuid map[string]*net.UDPAddr
 }
 
-func NewServer(addr string, emu *emulator.Emulator) (*Server, error) {
-	if emu == nil {
-		return nil, errors.New("emulator cannot be nil")
+func NewServer(addr string, sm *server.SessionManager, handler server.EventHandler) (*Server, error) {
+	if handler == nil {
+		return nil, errors.New("handler cannot be nil")
 	}
 
 	ad, err := net.ResolveUDPAddr("udp", addr)
@@ -29,9 +34,11 @@ func NewServer(addr string, emu *emulator.Emulator) (*Server, error) {
 		return nil, err
 	}
 	return &Server{
-		addr:     ad,
-		quitCh:   make(chan struct{}),
-		emulator: emu,
+		addr:       ad,
+		sm:         sm,
+		quitCh:     make(chan struct{}),
+		handler:    handler,
+		addrByUuid: make(map[string]*net.UDPAddr),
 	}, nil
 
 }
@@ -60,6 +67,39 @@ func (s *Server) Stop() {
 	log.Println("Server UDP shut down successfully")
 }
 
+func (s *Server) Port() (int, error) {
+	c := s.conn
+	if c == nil {
+		return 0, fmt.Errorf("UDP Server not started")
+	}
+	addr := c.LocalAddr().(*net.UDPAddr)
+	return addr.Port, nil
+}
+
+// SendProto sends protobuf message to last connected IP addr
+func (s *Server) SendProto(sessionId string, msg proto.Message) error {
+	c := s.conn
+	if c == nil {
+		return fmt.Errorf("UDP Server not started")
+	}
+	data, err := proto.Marshal(msg)
+	if err != nil {
+		return fmt.Errorf("could not marshal proto: %v", err)
+	}
+
+	s.mu.Lock()
+	addr, ok := s.addrByUuid[sessionId]
+	s.mu.Unlock()
+	if !ok {
+		return errors.New("udp addr not found")
+	}
+	_, err = c.WriteToUDP(data, addr)
+	if err != nil {
+		return fmt.Errorf("could not send proto: %v", err)
+	}
+	return nil
+}
+
 func (s *Server) acceptLoop() {
 	defer s.wg.Done()
 
@@ -82,12 +122,31 @@ func (s *Server) acceptLoop() {
 			continue
 		}
 		// log.Printf("UDP Received %d bytes from %s: %s\n", n, remoteAddr, string(buf[:n]))
-		var msg protoapi.MessageToServer
+		var msg protoapi.UdpMessageToServer
 		if err := proto.Unmarshal(buf[:n], &msg); err != nil {
 			log.Printf("UDP Protobuf unmarshal error from %s: %v\n", remoteAddr, err)
 			continue
 		}
 
-		s.emulator.Handle(&msg)
+		udpToken := msg.UdpToken
+		sess, ok := s.sm.GetByUdpToken(udpToken)
+		if !ok {
+			continue
+		}
+		sess.SetLastActive(time.Now())
+
+		s.mu.Lock()
+		s.addrByUuid[sess.Id()] = remoteAddr
+		s.mu.Unlock()
+
+		if !sess.IsHandshake() {
+			continue
+		}
+
+		emEv := msg.GetEmulatorEvent()
+		if emEv != nil {
+			s.handler.Handle(sess.Id(), emEv)
+		}
+
 	}
 }

@@ -30,75 +30,99 @@ public object MessageToServerKt {
     internal fun _build(): com.skymouse.skymouseclient.proto.MessageToServer = _builder.build()
 
     /**
-     * `.skymouse.MouseEvent mouse = 1;`
+     * `.skymouse.ClientHello client_hello = 1;`
      */
-    public var mouse: com.skymouse.skymouseclient.proto.MouseEvent
-      @kotlin.jvm.JvmName("getMouse")
-        get() = _builder.mouse
-      @kotlin.jvm.JvmName("setMouse")
+    public var clientHello: com.skymouse.skymouseclient.proto.ClientHello
+      @kotlin.jvm.JvmName("getClientHello")
+        get() = _builder.clientHello
+      @kotlin.jvm.JvmName("setClientHello")
         set(value) {
-        _builder.mouse = value
+        _builder.clientHello = value
       }
     /**
-     * `.skymouse.MouseEvent mouse = 1;`
+     * `.skymouse.ClientHello client_hello = 1;`
      */
-    public fun clearMouse() {
-      _builder.clearMouse()
+    public fun clearClientHello() {
+      _builder.clearClientHello()
     }
     /**
-     * `.skymouse.MouseEvent mouse = 1;`
-     * @return Whether the mouse field is set.
+     * `.skymouse.ClientHello client_hello = 1;`
+     * @return Whether the clientHello field is set.
      */
-    public fun hasMouse(): kotlin.Boolean {
-      return _builder.hasMouse()
+    public fun hasClientHello(): kotlin.Boolean {
+      return _builder.hasClientHello()
     }
 
     /**
-     * `.skymouse.ClickEvent click = 2;`
+     * `.skymouse.EmulatorEvent emulator_event = 2;`
      */
-    public var click: com.skymouse.skymouseclient.proto.ClickEvent
-      @kotlin.jvm.JvmName("getClick")
-        get() = _builder.click
-      @kotlin.jvm.JvmName("setClick")
+    public var emulatorEvent: com.skymouse.skymouseclient.proto.EmulatorEvent
+      @kotlin.jvm.JvmName("getEmulatorEvent")
+        get() = _builder.emulatorEvent
+      @kotlin.jvm.JvmName("setEmulatorEvent")
         set(value) {
-        _builder.click = value
+        _builder.emulatorEvent = value
       }
     /**
-     * `.skymouse.ClickEvent click = 2;`
+     * `.skymouse.EmulatorEvent emulator_event = 2;`
      */
-    public fun clearClick() {
-      _builder.clearClick()
+    public fun clearEmulatorEvent() {
+      _builder.clearEmulatorEvent()
     }
     /**
-     * `.skymouse.ClickEvent click = 2;`
-     * @return Whether the click field is set.
+     * `.skymouse.EmulatorEvent emulator_event = 2;`
+     * @return Whether the emulatorEvent field is set.
      */
-    public fun hasClick(): kotlin.Boolean {
-      return _builder.hasClick()
+    public fun hasEmulatorEvent(): kotlin.Boolean {
+      return _builder.hasEmulatorEvent()
     }
 
     /**
-     * `.skymouse.ScrollEvent scroll = 3;`
+     * `.skymouse.Ping ping = 3;`
      */
-    public var scroll: com.skymouse.skymouseclient.proto.ScrollEvent
-      @kotlin.jvm.JvmName("getScroll")
-        get() = _builder.scroll
-      @kotlin.jvm.JvmName("setScroll")
+    public var ping: com.skymouse.skymouseclient.proto.Ping
+      @kotlin.jvm.JvmName("getPing")
+        get() = _builder.ping
+      @kotlin.jvm.JvmName("setPing")
         set(value) {
-        _builder.scroll = value
+        _builder.ping = value
       }
     /**
-     * `.skymouse.ScrollEvent scroll = 3;`
+     * `.skymouse.Ping ping = 3;`
      */
-    public fun clearScroll() {
-      _builder.clearScroll()
+    public fun clearPing() {
+      _builder.clearPing()
     }
     /**
-     * `.skymouse.ScrollEvent scroll = 3;`
-     * @return Whether the scroll field is set.
+     * `.skymouse.Ping ping = 3;`
+     * @return Whether the ping field is set.
      */
-    public fun hasScroll(): kotlin.Boolean {
-      return _builder.hasScroll()
+    public fun hasPing(): kotlin.Boolean {
+      return _builder.hasPing()
+    }
+
+    /**
+     * `.skymouse.Pong pong = 4;`
+     */
+    public var pong: com.skymouse.skymouseclient.proto.Pong
+      @kotlin.jvm.JvmName("getPong")
+        get() = _builder.pong
+      @kotlin.jvm.JvmName("setPong")
+        set(value) {
+        _builder.pong = value
+      }
+    /**
+     * `.skymouse.Pong pong = 4;`
+     */
+    public fun clearPong() {
+      _builder.clearPong()
+    }
+    /**
+     * `.skymouse.Pong pong = 4;`
+     * @return Whether the pong field is set.
+     */
+    public fun hasPong(): kotlin.Boolean {
+      return _builder.hasPong()
     }
     public val eventCase: com.skymouse.skymouseclient.proto.MessageToServer.EventCase
     @kotlin.jvm.JvmName("getEventCase")
@@ -113,12 +137,15 @@ public object MessageToServerKt {
 public inline fun com.skymouse.skymouseclient.proto.MessageToServer.copy(block: `com.skymouse.skymouseclient.proto`.MessageToServerKt.Dsl.() -> kotlin.Unit): com.skymouse.skymouseclient.proto.MessageToServer =
   `com.skymouse.skymouseclient.proto`.MessageToServerKt.Dsl._create(this.toBuilder()).apply { block() }._build()
 
-public val com.skymouse.skymouseclient.proto.MessageToServerOrBuilder.mouseOrNull: com.skymouse.skymouseclient.proto.MouseEvent?
-  get() = if (hasMouse()) getMouse() else null
+public val com.skymouse.skymouseclient.proto.MessageToServerOrBuilder.clientHelloOrNull: com.skymouse.skymouseclient.proto.ClientHello?
+  get() = if (hasClientHello()) getClientHello() else null
 
-public val com.skymouse.skymouseclient.proto.MessageToServerOrBuilder.clickOrNull: com.skymouse.skymouseclient.proto.ClickEvent?
-  get() = if (hasClick()) getClick() else null
+public val com.skymouse.skymouseclient.proto.MessageToServerOrBuilder.emulatorEventOrNull: com.skymouse.skymouseclient.proto.EmulatorEvent?
+  get() = if (hasEmulatorEvent()) getEmulatorEvent() else null
 
-public val com.skymouse.skymouseclient.proto.MessageToServerOrBuilder.scrollOrNull: com.skymouse.skymouseclient.proto.ScrollEvent?
-  get() = if (hasScroll()) getScroll() else null
+public val com.skymouse.skymouseclient.proto.MessageToServerOrBuilder.pingOrNull: com.skymouse.skymouseclient.proto.Ping?
+  get() = if (hasPing()) getPing() else null
+
+public val com.skymouse.skymouseclient.proto.MessageToServerOrBuilder.pongOrNull: com.skymouse.skymouseclient.proto.Pong?
+  get() = if (hasPong()) getPong() else null
 

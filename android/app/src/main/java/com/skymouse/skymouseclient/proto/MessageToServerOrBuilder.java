@@ -11,49 +11,64 @@ public interface MessageToServerOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>.skymouse.MouseEvent mouse = 1;</code>
-   * @return Whether the mouse field is set.
+   * <code>.skymouse.ClientHello client_hello = 1;</code>
+   * @return Whether the clientHello field is set.
    */
-  boolean hasMouse();
+  boolean hasClientHello();
   /**
-   * <code>.skymouse.MouseEvent mouse = 1;</code>
-   * @return The mouse.
+   * <code>.skymouse.ClientHello client_hello = 1;</code>
+   * @return The clientHello.
    */
-  com.skymouse.skymouseclient.proto.MouseEvent getMouse();
+  com.skymouse.skymouseclient.proto.ClientHello getClientHello();
   /**
-   * <code>.skymouse.MouseEvent mouse = 1;</code>
+   * <code>.skymouse.ClientHello client_hello = 1;</code>
    */
-  com.skymouse.skymouseclient.proto.MouseEventOrBuilder getMouseOrBuilder();
+  com.skymouse.skymouseclient.proto.ClientHelloOrBuilder getClientHelloOrBuilder();
 
   /**
-   * <code>.skymouse.ClickEvent click = 2;</code>
-   * @return Whether the click field is set.
+   * <code>.skymouse.EmulatorEvent emulator_event = 2;</code>
+   * @return Whether the emulatorEvent field is set.
    */
-  boolean hasClick();
+  boolean hasEmulatorEvent();
   /**
-   * <code>.skymouse.ClickEvent click = 2;</code>
-   * @return The click.
+   * <code>.skymouse.EmulatorEvent emulator_event = 2;</code>
+   * @return The emulatorEvent.
    */
-  com.skymouse.skymouseclient.proto.ClickEvent getClick();
+  com.skymouse.skymouseclient.proto.EmulatorEvent getEmulatorEvent();
   /**
-   * <code>.skymouse.ClickEvent click = 2;</code>
+   * <code>.skymouse.EmulatorEvent emulator_event = 2;</code>
    */
-  com.skymouse.skymouseclient.proto.ClickEventOrBuilder getClickOrBuilder();
+  com.skymouse.skymouseclient.proto.EmulatorEventOrBuilder getEmulatorEventOrBuilder();
 
   /**
-   * <code>.skymouse.ScrollEvent scroll = 3;</code>
-   * @return Whether the scroll field is set.
+   * <code>.skymouse.Ping ping = 3;</code>
+   * @return Whether the ping field is set.
    */
-  boolean hasScroll();
+  boolean hasPing();
   /**
-   * <code>.skymouse.ScrollEvent scroll = 3;</code>
-   * @return The scroll.
+   * <code>.skymouse.Ping ping = 3;</code>
+   * @return The ping.
    */
-  com.skymouse.skymouseclient.proto.ScrollEvent getScroll();
+  com.skymouse.skymouseclient.proto.Ping getPing();
   /**
-   * <code>.skymouse.ScrollEvent scroll = 3;</code>
+   * <code>.skymouse.Ping ping = 3;</code>
    */
-  com.skymouse.skymouseclient.proto.ScrollEventOrBuilder getScrollOrBuilder();
+  com.skymouse.skymouseclient.proto.PingOrBuilder getPingOrBuilder();
+
+  /**
+   * <code>.skymouse.Pong pong = 4;</code>
+   * @return Whether the pong field is set.
+   */
+  boolean hasPong();
+  /**
+   * <code>.skymouse.Pong pong = 4;</code>
+   * @return The pong.
+   */
+  com.skymouse.skymouseclient.proto.Pong getPong();
+  /**
+   * <code>.skymouse.Pong pong = 4;</code>
+   */
+  com.skymouse.skymouseclient.proto.PongOrBuilder getPongOrBuilder();
 
   com.skymouse.skymouseclient.proto.MessageToServer.EventCase getEventCase();
 }
