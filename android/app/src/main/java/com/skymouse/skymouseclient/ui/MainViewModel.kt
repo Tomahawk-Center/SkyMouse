@@ -127,7 +127,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun onConnectClicked() {
         val portInt = port.toIntOrNull() ?: return
-        val clientVersionStr = "1"
+        val clientVersionStr = "2.0"
 
         prefs.edit {
             putString("ip_address", ipAddress)
@@ -161,7 +161,18 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     }
 
                     val udpPortFromServer = response.serverHello.udpPort
-                    udpClientManager.connect(ipAddress, udpPortFromServer)
+                    val udpToken = response.serverHello.udpToken
+                    if (udpToken == 0) {
+                        Toast.makeText(
+                            getApplication(),
+                            "Server sent an invalid UDP token",
+                            Toast.LENGTH_LONG
+                        ).show()
+
+                        tcpClientManager.disconnect()
+                        return@launch
+                    }
+                    udpClientManager.connect(ipAddress, udpPortFromServer, udpToken)
                     startReceivingServerEvents()
                 } else {
                     tcpClientManager.disconnect()
@@ -210,12 +221,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
         viewModelScope.launch {
             val message = com.skymouse.skymouseclient.proto.messageToServer {
-                click = com.skymouse.skymouseclient.proto.clickEvent {
-                    this.button = button
-                    this.state = if (isPressed) {
-                        com.skymouse.skymouseclient.proto.ButtonState.STATE_DOWN // STATE_PRESSED
-                    } else {
-                        com.skymouse.skymouseclient.proto.ButtonState.STATE_UP   // STATE_RELEASED
+                emulatorEvent = com.skymouse.skymouseclient.proto.emulatorEvent {
+                    click = com.skymouse.skymouseclient.proto.clickEvent {
+                        this.button = button
+                        this.state = if (isPressed) {
+                            com.skymouse.skymouseclient.proto.ButtonState.STATE_DOWN // STATE_PRESSED
+                        } else {
+                            com.skymouse.skymouseclient.proto.ButtonState.STATE_UP   // STATE_RELEASED
+                        }
+                        this.timestampMs = System.currentTimeMillis()
                     }
                 }
             }
@@ -231,8 +245,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
         viewModelScope.launch {
             val message = com.skymouse.skymouseclient.proto.messageToServer {
-                scroll = com.skymouse.skymouseclient.proto.scrollEvent {
-                    deltaY = 1
+                emulatorEvent = com.skymouse.skymouseclient.proto.emulatorEvent {
+                    scroll = com.skymouse.skymouseclient.proto.scrollEvent {
+                        deltaY = 1
+                        timestampMs = System.currentTimeMillis()
+                    }
+
                 }
             }
             tcpClientManager.sendProto(message)
@@ -247,8 +265,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
         viewModelScope.launch {
             val message = com.skymouse.skymouseclient.proto.messageToServer {
-                scroll = com.skymouse.skymouseclient.proto.scrollEvent {
-                    deltaY = -1
+                emulatorEvent = com.skymouse.skymouseclient.proto.emulatorEvent {
+                    scroll = com.skymouse.skymouseclient.proto.scrollEvent {
+                        deltaY = -1
+                        timestampMs = System.currentTimeMillis()
+                    }
                 }
             }
             tcpClientManager.sendProto(message)
@@ -259,7 +280,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun onMouseMove(deltaX: Float, deltaY: Float) {
         viewModelScope.launch {
-            val msg = com.skymouse.skymouseclient.proto.messageToServer {
+            val emulatorEvent = com.skymouse.skymouseclient.proto.emulatorEvent {
                 mouse = com.skymouse.skymouseclient.proto.mouseEvent {
                     this.deltaX = deltaX
                     this.deltaY = deltaY
@@ -267,7 +288,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     this.timestampMs = System.currentTimeMillis()
                 }
             }
-            udpClientManager.sendProto(msg)
+
+            udpClientManager.sendEmulatorEvent(emulatorEvent)
         }
     }
 
