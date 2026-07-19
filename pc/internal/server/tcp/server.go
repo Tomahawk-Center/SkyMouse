@@ -208,7 +208,11 @@ func (s *Server) handleClientHello(sess *server.Session) error {
 	if !ok {
 		return errors.New("connection not found")
 	}
-	_, err = conn.Write(packet)
+	c := conn
+	if c == nil {
+		return errors.New("nil connection")
+	}
+	_, err = c.Write(packet)
 	if err != nil {
 		return err
 	}
