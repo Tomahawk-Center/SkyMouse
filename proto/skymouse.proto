@@ -49,6 +49,7 @@ message ClientHello {
 message ServerHello {
     string server_version = 1;
     int32 udp_port = 2;
+    uint32 udp_token = 3;
 }
 
 
@@ -64,14 +65,27 @@ message ServerEvent {
     int64 timestamp_ms = 2;
 }
 
-message MessageToServer {
+message EmulatorEvent {
     oneof event {
         MouseEvent mouse = 1;
         ClickEvent click = 2;
         ScrollEvent scroll = 3;
-        ClientHello client_hello = 4;
-        Ping ping = 5;
-        Pong pong = 6;
+    }
+}
+
+message MessageToServer {
+    oneof event {
+        ClientHello client_hello = 1;
+        EmulatorEvent emulator_event = 2;
+        Ping ping = 3;
+        Pong pong = 4;
+    }
+}
+
+message UdpMessageToServer {
+    uint32 udp_token = 1;
+    oneof event {
+        EmulatorEvent emulator_event = 2;
     }
 }
 

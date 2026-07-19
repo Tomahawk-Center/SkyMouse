@@ -7,7 +7,6 @@ import (
 	"log"
 	"net"
 	"sync"
-	"time"
 
 	"github.com/Tomahawk-Center/SkyMouse/pc/internal/server"
 	"github.com/Tomahawk-Center/SkyMouse/pc/pkg/protoapi"
@@ -16,25 +15,32 @@ import (
 
 type Server struct {
 	addr       string
+	sm         *server.SessionManager
 	ln         net.Listener
 	quitCh     chan struct{}
 	wg         sync.WaitGroup
 	handler    server.EventHandler
 	getUdpPort func() (int, error)
 	mu         sync.Mutex
-	conns      map[net.Conn]*clientSession
+	conns      map[string]net.Conn
 }
 
-func NewServer(addr string, handler server.EventHandler, udpPortProvider func() (int, error)) (*Server, error) {
+func NewServer(addr string, sessionManager *server.SessionManager, handler server.EventHandler, udpPortProvider func() (int, error)) (*Server, error) {
 	if handler == nil {
 		return nil, errors.New("handler cannot be nil")
 	}
+
+	if sessionManager == nil {
+		return nil, errors.New("sessionManager cannot be nil")
+	}
+
 	return &Server{
 		addr:       addr,
 		quitCh:     make(chan struct{}),
-		conns:      make(map[net.Conn]*clientSession),
+		conns:      make(map[string]net.Conn),
 		handler:    handler,
 		getUdpPort: udpPortProvider,
+		sm:         sessionManager,
 	}, nil
 }
 
@@ -69,7 +75,7 @@ func (s *Server) StopForce() {
 	}
 
 	s.mu.Lock()
-	for conn := range s.conns {
+	for _, conn := range s.conns {
 		_ = conn.Close()
 	}
 	s.mu.Unlock()
@@ -100,21 +106,21 @@ func (s *Server) acceptLoop() {
 
 func (s *Server) handleConnection(conn net.Conn) {
 	defer s.wg.Done()
-	defer func(conn net.Conn) {
-		_ = conn.Close()
-	}(conn)
 
-	session := &clientSession{conn: conn, lastActive: time.Now()}
-
-	s.mu.Lock()
-	s.conns[conn] = session
-	s.mu.Unlock()
+	session := s.sm.CreateSession()
+	id := session.Id()
 
 	defer func() {
+		_ = conn.Close()
 		s.mu.Lock()
-		delete(s.conns, conn)
+		delete(s.conns, id)
 		s.mu.Unlock()
+		s.sm.RemoveSession(id)
 	}()
+
+	s.mu.Lock()
+	s.conns[id] = conn
+	s.mu.Unlock()
 
 	log.Printf("New connection from %s\n", conn.RemoteAddr().String())
 
@@ -137,8 +143,6 @@ func (s *Server) handleConnection(conn net.Conn) {
 			return
 		}
 
-		s.conns[conn].lastActive = time.Now()
-
 		var msg protoapi.MessageToServer
 		err = proto.Unmarshal(buf, &msg)
 		if err != nil {
@@ -153,7 +157,7 @@ func (s *Server) handleConnection(conn net.Conn) {
 	}
 }
 
-func (s *Server) handlePing(sess *clientSession) error {
+func (s *Server) handlePing() error {
 	//TODO
 	return errors.New("ping-pong not implemented yet")
 
@@ -173,14 +177,15 @@ func (s *Server) handlePing(sess *clientSession) error {
 	//return nil
 }
 
-func (s *Server) handleClientHello(sess *clientSession, m *protoapi.MessageToServer) error {
+func (s *Server) handleClientHello(sess *server.Session) error {
 	serverHello := &protoapi.ServerHello{}
-	serverHello.ServerVersion = "1" // TODO remove hardcoded server version
+	serverHello.ServerVersion = "2.0" // TODO remove hardcoded server version
 	udpPort, err := s.getUdpPort()
 	if err != nil {
 		udpPort = 0
 	}
 	serverHello.UdpPort = int32(udpPort)
+	serverHello.UdpToken = sess.UdpToken()
 
 	msg := &protoapi.MessageToClient{
 		Event: &protoapi.MessageToClient_ServerHello{
@@ -197,26 +202,40 @@ func (s *Server) handleClientHello(sess *clientSession, m *protoapi.MessageToSer
 
 	binary.BigEndian.PutUint32(packet[0:4], uint32(len(b))) // TODO perf may be improved
 	copy(packet[4:], b)
-	_, err = sess.conn.Write(packet)
-	return err
+	s.mu.Lock()
+	conn, ok := s.conns[sess.Id()]
+	s.mu.Unlock()
+	if !ok {
+		return errors.New("connection not found")
+	}
+	c := conn
+	if c == nil {
+		return errors.New("nil connection")
+	}
+	_, err = c.Write(packet)
+	if err != nil {
+		return err
+	}
+
+	sess.SetIsHandshake(true)
+	return nil
 }
 
-func (s *Server) routeMessage(sess *clientSession, m *protoapi.MessageToServer) {
-	// TODO separate event for emulator messages in .proto
+func (s *Server) routeMessage(sess *server.Session, m *protoapi.MessageToServer) {
 	switch m.Event.(type) {
-	case *protoapi.MessageToServer_Mouse:
-		s.handler.Handle(m)
-	case *protoapi.MessageToServer_Click:
-		s.handler.Handle(m)
-	case *protoapi.MessageToServer_Scroll:
-		s.handler.Handle(m)
+	case *protoapi.MessageToServer_EmulatorEvent:
+		if sess.IsHandshake() {
+			s.handler.Handle(sess.Id(), m.GetEmulatorEvent())
+		}
+
 	case *protoapi.MessageToServer_Ping:
-		err := s.handlePing(sess)
+		err := s.handlePing()
 		if err != nil {
 			log.Printf("Send pong failed: %v\n", err)
 		}
+
 	case *protoapi.MessageToServer_ClientHello:
-		err := s.handleClientHello(sess, m)
+		err := s.handleClientHello(sess)
 		if err != nil {
 			log.Printf("Send client hello failed: %v\n", err)
 		}

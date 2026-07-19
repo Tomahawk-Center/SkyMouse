@@ -13,16 +13,18 @@ class UdpClientManager {
     private var socket: DatagramSocket? = null
     private var serverAddress: InetAddress? = null
     private var serverPort: Int = 8080
+    private var token: Int = 0
 
     private val _connectionState = MutableStateFlow<UdpConnectionState>(UdpConnectionState.Disconnected)
     val connectionState: StateFlow<UdpConnectionState> = _connectionState
 
-    suspend fun connect(ip: String, port: Int) = withContext(Dispatchers.IO) {
+    suspend fun connect(ip: String, port: Int, udpToken: Int) = withContext(Dispatchers.IO) {
         _connectionState.value = UdpConnectionState.Connecting
         try {
             serverAddress = InetAddress.getByName(ip)
             serverPort = port
             socket = DatagramSocket()
+            token = udpToken
 
             _connectionState.value = UdpConnectionState.Connected
         } catch (e: Exception) {
@@ -30,7 +32,19 @@ class UdpClientManager {
         }
     }
 
-    suspend fun sendProto(proto: com.google.protobuf.MessageLite) = withContext(Dispatchers.IO) {
+    /**
+     * Sends an EmulatorEvent to the server with token
+     */
+    suspend fun sendEmulatorEvent(event: com.skymouse.skymouseclient.proto.EmulatorEvent) = withContext(Dispatchers.IO) {
+        val msg = com.skymouse.skymouseclient.proto.udpMessageToServer {
+            this.udpToken = token
+            this.emulatorEvent = event
+        }
+
+        sendProto(msg)
+    }
+
+    private suspend fun sendProto(proto: com.google.protobuf.MessageLite) = withContext(Dispatchers.IO) {
         val s = socket
         val address = serverAddress
         if (s == null || address == null || _connectionState.value != UdpConnectionState.Connected) return@withContext
