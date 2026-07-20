@@ -9,13 +9,14 @@ import (
 	"sync"
 
 	"github.com/Tomahawk-Center/SkyMouse/pc/internal/server"
+	"github.com/Tomahawk-Center/SkyMouse/pc/internal/session"
 	"github.com/Tomahawk-Center/SkyMouse/pc/pkg/protoapi"
 	"google.golang.org/protobuf/proto"
 )
 
 type Server struct {
 	addr       string
-	sm         *server.SessionManager
+	sm         *session.Manager
 	ln         net.Listener
 	quitCh     chan struct{}
 	wg         sync.WaitGroup
@@ -25,7 +26,7 @@ type Server struct {
 	conns      map[string]net.Conn
 }
 
-func NewServer(addr string, sessionManager *server.SessionManager, handler server.EventHandler, udpPortProvider func() (int, error)) (*Server, error) {
+func NewServer(addr string, sessionManager *session.Manager, handler server.EventHandler, udpPortProvider func() (int, error)) (*Server, error) {
 	if handler == nil {
 		return nil, errors.New("handler cannot be nil")
 	}
@@ -177,7 +178,7 @@ func (s *Server) handlePing() error {
 	//return nil
 }
 
-func (s *Server) handleClientHello(sess *server.Session) error {
+func (s *Server) handleClientHello(sess *session.Session) error {
 	serverHello := &protoapi.ServerHello{}
 	serverHello.ServerVersion = "2.0" // TODO remove hardcoded server version
 	udpPort, err := s.getUdpPort()
@@ -221,7 +222,7 @@ func (s *Server) handleClientHello(sess *server.Session) error {
 	return nil
 }
 
-func (s *Server) routeMessage(sess *server.Session, m *protoapi.MessageToServer) {
+func (s *Server) routeMessage(sess *session.Session, m *protoapi.MessageToServer) {
 	switch m.Event.(type) {
 	case *protoapi.MessageToServer_EmulatorEvent:
 		if sess.IsHandshake() {

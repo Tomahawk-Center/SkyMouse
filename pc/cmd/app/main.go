@@ -7,9 +7,9 @@ import (
 	"syscall"
 
 	"github.com/Tomahawk-Center/SkyMouse/pc/internal/emulator"
-	"github.com/Tomahawk-Center/SkyMouse/pc/internal/server"
 	"github.com/Tomahawk-Center/SkyMouse/pc/internal/server/tcp"
 	"github.com/Tomahawk-Center/SkyMouse/pc/internal/server/udp"
+	"github.com/Tomahawk-Center/SkyMouse/pc/internal/session"
 	"github.com/Tomahawk-Center/SkyMouse/pc/pkg/protoapi"
 )
 
@@ -19,7 +19,7 @@ func main() {
 	emuEventsCh := make(chan emulator.Event, 20)
 	emu := emulator.NewEmulator(emuEventsCh)
 
-	sessMgr := server.NewSessionManager()
+	sessMgr := session.NewSessionManager()
 
 	udpServer, err := udp.NewServer(":9999", sessMgr, emu)
 	if err != nil {

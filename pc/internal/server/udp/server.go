@@ -9,13 +9,14 @@ import (
 	"time"
 
 	"github.com/Tomahawk-Center/SkyMouse/pc/internal/server"
+	"github.com/Tomahawk-Center/SkyMouse/pc/internal/session"
 	"github.com/Tomahawk-Center/SkyMouse/pc/pkg/protoapi"
 	"google.golang.org/protobuf/proto"
 )
 
 type Server struct {
 	addr       *net.UDPAddr
-	sm         *server.SessionManager
+	sm         *session.Manager
 	conn       *net.UDPConn
 	quitCh     chan struct{}
 	wg         sync.WaitGroup
@@ -24,7 +25,7 @@ type Server struct {
 	addrByUuid map[string]*net.UDPAddr
 }
 
-func NewServer(addr string, sm *server.SessionManager, handler server.EventHandler) (*Server, error) {
+func NewServer(addr string, sm *session.Manager, handler server.EventHandler) (*Server, error) {
 	if handler == nil {
 		return nil, errors.New("handler cannot be nil")
 	}
@@ -145,6 +146,13 @@ func (s *Server) acceptLoop() {
 
 		emEv := msg.GetEmulatorEvent()
 		if emEv != nil {
+			mouseEv := emEv.GetMouse()
+			if mouseEv != nil {
+				if !sess.UdpState.VerifyAndSetNewSequenceId(mouseEv.SequenceId) {
+					continue
+				}
+			}
+
 			s.handler.Handle(sess.Id(), emEv)
 		}
 
