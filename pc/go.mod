@@ -6,6 +6,7 @@ require (
 	github.com/go-vgo/robotgo v1.0.2
 	github.com/google/uuid v1.6.0
 	google.golang.org/protobuf v1.36.11
+	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
