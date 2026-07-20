@@ -38,7 +38,7 @@ func main() {
 
 	sessMgr := session.NewSessionManager()
 
-	udpServer, err := udp.NewServer(":9999", sessMgr, emu)
+	udpServer, err := udp.NewServer(":0", sessMgr, emu)
 	if err != nil {
 		log.Fatal(err)
 	}
