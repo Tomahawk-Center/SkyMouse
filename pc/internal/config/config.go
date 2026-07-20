@@ -1,6 +1,7 @@
 package config
 
 import (
+	"errors"
 	"io"
 
 	"gopkg.in/yaml.v3"
@@ -18,7 +19,19 @@ func LoadConfig(r io.Reader) (*Config, error) {
 	if err != nil {
 		return nil, err
 	}
+	err = validate(&cfg)
+	if err != nil {
+		return nil, errors.New("config validation failed: " + err.Error())
+	}
 	return &cfg, nil
+}
+
+func validate(cfg *Config) error {
+	// cfg.ServerIp may be "", it's ok
+	if cfg.TcpPort == 0 {
+		return errors.New("tcp_port is required")
+	}
+	return nil
 }
 
 func (cfg *Config) SaveConfig(w io.Writer) error {
