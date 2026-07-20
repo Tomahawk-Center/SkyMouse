@@ -1,11 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"os/signal"
 	"syscall"
 
+	"github.com/Tomahawk-Center/SkyMouse/pc/internal/config"
 	"github.com/Tomahawk-Center/SkyMouse/pc/internal/emulator"
 	"github.com/Tomahawk-Center/SkyMouse/pc/internal/server/tcp"
 	"github.com/Tomahawk-Center/SkyMouse/pc/internal/server/udp"
@@ -15,6 +17,21 @@ import (
 
 func main() {
 	log.SetOutput(os.Stdout)
+
+	configFile, err := os.Open("config.yaml")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	cfg, err := config.LoadConfig(configFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = configFile.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	emuEventsCh := make(chan emulator.Event, 20)
 	emu := emulator.NewEmulator(emuEventsCh)
@@ -26,7 +43,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	tcpServer, err := tcp.NewServer(":10000", sessMgr, emu, udpServer.Port)
+	tcpServer, err := tcp.NewServer(fmt.Sprintf("%s:%v", cfg.ServerIp, cfg.TcpPort), sessMgr, emu, udpServer.Port)
 	if err != nil {
 		log.Fatal(err)
 	}
