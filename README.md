@@ -6,7 +6,7 @@ server_ip: "" # put the mashine IP or "" to listen all interfaces (not required 
 tcp_port: 10000 # port to connect to the server (required field)
 ```
 
-#### Command for generate proto for Kotlin & Go  
+#### Command to generate proto for Kotlin & Go  
 run in repo root:  
 ```sh
 protoc --proto_path=proto \
