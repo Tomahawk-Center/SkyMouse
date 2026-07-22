@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"os/signal"
@@ -20,7 +21,22 @@ func main() {
 	log.SetOutput(os.Stdout)
 
 	cfgPathFlag := flag.String("config", "config.yaml", "path to config file")
+	logToFileFlag := flag.Bool("lf", false, "also write log in skymouse.log")
 	flag.Parse()
+
+	if *logToFileFlag {
+		logFile, err := os.OpenFile("skymouse.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+		defer func(logFile *os.File) {
+			_ = logFile.Close()
+		}(logFile)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		w := io.MultiWriter(os.Stdout, logFile)
+		log.SetOutput(w)
+	}
+
 	configFile, err := os.Open(*cfgPathFlag)
 	if err != nil {
 		log.Fatal(err)
