@@ -10,6 +10,7 @@ import (
 type Config struct {
 	ServerIp string `yaml:"server_ip"`
 	TcpPort  int    `yaml:"tcp_port"`
+	LogPath  string `yaml:"log_path"`
 }
 
 func LoadConfig(r io.Reader) (*Config, error) {
@@ -19,11 +20,20 @@ func LoadConfig(r io.Reader) (*Config, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	setDefaults(&cfg)
 	err = validate(&cfg)
 	if err != nil {
 		return nil, errors.New("config validation failed: " + err.Error())
 	}
+
 	return &cfg, nil
+}
+
+func setDefaults(cfg *Config) {
+	if cfg.LogPath == "" {
+		cfg.LogPath = "skymouse.log"
+	}
 }
 
 func validate(cfg *Config) error {
