@@ -103,4 +103,6 @@ func main() {
 
 	log.Println("Shutting down TCP")
 	tcpServer.Stop()
+
+	log.Println("Bye")
 }
