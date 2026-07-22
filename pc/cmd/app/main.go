@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -18,7 +19,9 @@ import (
 func main() {
 	log.SetOutput(os.Stdout)
 
-	configFile, err := os.Open("config.yaml")
+	cfgPathFlag := flag.String("config", "config.yaml", "path to config file")
+	flag.Parse()
+	configFile, err := os.Open(*cfgPathFlag)
 	if err != nil {
 		log.Fatal(err)
 	}
