@@ -23,7 +23,7 @@ fun MainScreen(viewModel: MainViewModel) {
     val tcpState by viewModel.tcpConnectionState.collectAsState()
     val udpState by viewModel.udpConnectionState.collectAsState()
 
-    val isConnected = tcpState is TcpConnectionState.Connected || udpState is UdpConnectionState.Connected
+    val isConnected = tcpState is TcpConnectionState.Connected && udpState is UdpConnectionState.Connected
 
     Scaffold(
         topBar = {
