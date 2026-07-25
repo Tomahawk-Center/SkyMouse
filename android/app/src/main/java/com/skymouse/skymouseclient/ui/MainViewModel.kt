@@ -14,6 +14,7 @@ import androidx.core.content.edit
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.skymouse.skymouseclient.data.GyroscopeProvider
+import com.skymouse.skymouseclient.data.SettingsState
 import com.skymouse.skymouseclient.data.TcpClientManager
 import com.skymouse.skymouseclient.data.TcpConnectionState
 import com.skymouse.skymouseclient.data.UdpClientManager
@@ -23,12 +24,42 @@ import com.skymouse.skymouseclient.proto.MouseButton
 import com.skymouse.skymouseclient.proto.ServerEvent
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val prefs = application.getSharedPreferences("settings", Context.MODE_PRIVATE)
+
+    private val _settingsState = MutableStateFlow(SettingsState())
+    val settingsState: StateFlow<SettingsState> = _settingsState
+
+    fun onSensitivityChange(newValue: Float) {
+        _settingsState.update { currentState ->
+            currentState.copy(gyroSensitivity = newValue)
+        }
+    }
+
+    fun onAccelerationChange(newValue: Float) {
+        _settingsState.update { currentState ->
+            currentState.copy(gyroAcceleration = newValue)
+        }
+    }
+
+    fun onTouchpadSensitivityChange(newValue: Float) {
+        _settingsState.update { it.copy(touchpadSensitivity = newValue) }
+    }
+
+    fun onTouchpadAccelerationChange(newValue: Float) {
+        _settingsState.update { it.copy(touchpadAcceleration = newValue) }
+    }
+
+    fun onLongPressVibrationLevelChange(newValue: Int) {
+        _settingsState.update { it.copy(longPressVibrationLevel = newValue) }
+    }
 
     var isGyroEnabled by mutableStateOf(prefs.getBoolean("gyro_enabled", false))
         private set
@@ -95,7 +126,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun startHoldVibration() {
         val timings = longArrayOf(0, 100)
-        val amplitudes = intArrayOf(0, 1)
+        val amplitudes = intArrayOf(0, settingsState.value.longPressVibrationLevel)
         val effect = VibrationEffect.createWaveform(timings, amplitudes, 1)
         vibrator.vibrate(effect)
     }
@@ -298,6 +329,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     init {
+        viewModelScope.launch {
+            settingsState.collect { state ->
+                gyroscopeProvider.updateSettings(
+                    state.gyroSensitivity,
+                    state.gyroAcceleration
+                )
+            }
+        }
+
         if (isGyroEnabled) {
             gyroscopeProvider.start()
         }
