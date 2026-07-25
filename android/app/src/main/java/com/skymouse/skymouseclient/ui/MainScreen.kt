@@ -18,6 +18,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import com.skymouse.skymouseclient.data.TcpConnectionState
 import com.skymouse.skymouseclient.data.UdpConnectionState
 
@@ -26,6 +28,7 @@ import com.skymouse.skymouseclient.data.UdpConnectionState
 fun MainScreen(viewModel: MainViewModel, onNavigateToSettings: () -> Unit) {
     val tcpState by viewModel.tcpConnectionState.collectAsState()
     val udpState by viewModel.udpConnectionState.collectAsState()
+    val haptic = LocalHapticFeedback.current
 
     val isConnected = tcpState is TcpConnectionState.Connected || udpState is UdpConnectionState.Connected
 
@@ -34,7 +37,12 @@ fun MainScreen(viewModel: MainViewModel, onNavigateToSettings: () -> Unit) {
             TopAppBar(
                 title = { Text("SkyMouse Client") },
                 actions = {
-                    IconButton(onClick = onNavigateToSettings) {
+                    IconButton(
+                        onClick = {
+                            haptic.performHapticFeedback(HapticFeedbackType.SegmentTick)
+                            onNavigateToSettings()
+                        }
+                    ) {
                         Icon(
                             imageVector = Icons.Default.Settings,
                             contentDescription = "Settings",
