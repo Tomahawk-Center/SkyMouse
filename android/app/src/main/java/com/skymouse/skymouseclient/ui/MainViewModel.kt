@@ -19,6 +19,8 @@ import com.skymouse.skymouseclient.data.TcpClientManager
 import com.skymouse.skymouseclient.data.TcpConnectionState
 import com.skymouse.skymouseclient.data.UdpClientManager
 import com.skymouse.skymouseclient.data.UdpConnectionState
+import com.skymouse.skymouseclient.data.util.VersionVerificationResult
+import com.skymouse.skymouseclient.data.util.VersionVerifier
 import com.skymouse.skymouseclient.proto.HapticEventType
 import com.skymouse.skymouseclient.proto.MouseButton
 import com.skymouse.skymouseclient.proto.ServerEvent
@@ -181,7 +183,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun onConnectClicked() {
         val portInt = port.toIntOrNull() ?: return
-        val clientVersionStr = "2.0"
+        val clientVersionStr = "3.0"
 
         prefs.edit {
             putString("ip_address", ipAddress)
@@ -203,15 +205,25 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 val response = tcpClientManager.receiveProto()
                 if (response != null && response.hasServerHello()) {
                     val serverVersion = response.serverHello.serverVersion
-                    if (serverVersion != clientVersionStr) {
+
+
+                    val versionVerificationResult = VersionVerifier.verify(clientVersionStr, serverVersion)
+
+                    if (versionVerificationResult is VersionVerificationResult.Mismatch) {
                         Toast.makeText(
                             getApplication(),
-                            "Server version mismatch: $serverVersion, client version: $clientVersionStr",
+                            versionVerificationResult.reason,
                             Toast.LENGTH_LONG
                         ).show()
 
                         tcpClientManager.disconnect()
                         return@launch
+                    } else if (versionVerificationResult is VersionVerificationResult.Warning) {
+                        Toast.makeText(
+                            getApplication(),
+                            versionVerificationResult.message,
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
 
                     val udpPortFromServer = response.serverHello.udpPort

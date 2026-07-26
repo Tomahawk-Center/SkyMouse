@@ -10,6 +10,7 @@ import (
 
 	"github.com/Tomahawk-Center/SkyMouse/pc/internal/server"
 	"github.com/Tomahawk-Center/SkyMouse/pc/internal/session"
+	"github.com/Tomahawk-Center/SkyMouse/pc/internal/util/version_verifier"
 	"github.com/Tomahawk-Center/SkyMouse/pc/pkg/protoapi"
 	"google.golang.org/protobuf/proto"
 )
@@ -178,9 +179,10 @@ func (s *Server) handlePing() error {
 	//return nil
 }
 
-func (s *Server) handleClientHello(sess *session.Session) error {
+func (s *Server) handleClientHello(sess *session.Session, clientHelloMsg *protoapi.ClientHello) error {
+	serverVersion := "3.0" // TODO remove hardcoded server version
 	serverHello := &protoapi.ServerHello{}
-	serverHello.ServerVersion = "2.0" // TODO remove hardcoded server version
+	serverHello.ServerVersion = serverVersion
 	udpPort, err := s.getUdpPort()
 	if err != nil {
 		udpPort = 0
@@ -218,7 +220,14 @@ func (s *Server) handleClientHello(sess *session.Session) error {
 		return err
 	}
 
-	sess.SetIsHandshake(true)
+	err = version_verifier.VerifyClientVersion(clientHelloMsg.ClientVersion, serverVersion)
+	if err != nil {
+		log.Printf("Handshake state is not set because version check failed for session: %s, reason: %v", sess.Id(), err)
+	} else {
+		sess.SetIsHandshake(true)
+		log.Println("Handshake state set to true for session:", sess.Id())
+	}
+
 	return nil
 }
 
@@ -236,7 +245,7 @@ func (s *Server) routeMessage(sess *session.Session, m *protoapi.MessageToServer
 		}
 
 	case *protoapi.MessageToServer_ClientHello:
-		err := s.handleClientHello(sess)
+		err := s.handleClientHello(sess, m.GetClientHello())
 		if err != nil {
 			log.Printf("Send client hello failed: %v\n", err)
 		}
