@@ -26,6 +26,13 @@ fun SettingsScreen(
 ) {
     val settingsState by viewModel.settingsState.collectAsStateWithLifecycle()
 
+    androidx.compose.runtime.DisposableEffect(Unit) {
+        onDispose {
+            viewModel.saveSettings()
+        }
+    }
+
+
     SettingsContent(
         settingsState = settingsState,
         onGyroSensitivityChange = viewModel::onSensitivityChange,
