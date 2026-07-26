@@ -7,6 +7,11 @@ tcp_port: 10000 # port to connect to the server (required field)
 log_path: "skymouse.log" # path to the log file (not required field)
 ```
 
+### Server statup flags
+`--help` — Print auto-generated help for all flags  
+`-lf` — Enable log to a file  
+`--config` — Path to the YAML config file  
+
 #### Command to generate proto for Kotlin & Go  
 run in repo root:  
 ```sh
