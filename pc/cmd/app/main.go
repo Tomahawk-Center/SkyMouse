@@ -17,12 +17,20 @@ import (
 	"github.com/Tomahawk-Center/SkyMouse/pc/pkg/protoapi"
 )
 
+const serverVersion = "3.0"
+
 func main() {
 	log.SetOutput(os.Stdout)
 
 	cfgPathFlag := flag.String("config", "config.yaml", "path to config file")
 	logToFileFlag := flag.Bool("lf", false, "also write log in skymouse.log")
+	showVersionFlag := flag.Bool("version", false, "show version")
 	flag.Parse()
+
+	if *showVersionFlag {
+		fmt.Printf("Server version: %s\n", serverVersion)
+		os.Exit(0)
+	}
 
 	if *logToFileFlag {
 		logFile, err := os.OpenFile("skymouse.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
