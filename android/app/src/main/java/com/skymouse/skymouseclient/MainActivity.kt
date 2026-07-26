@@ -21,8 +21,8 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import com.skymouse.skymouseclient.ui.MainScreen
 import com.skymouse.skymouseclient.ui.MainViewModel
+import com.skymouse.skymouseclient.ui.navigation.Navigation
 
 class MainActivity : ComponentActivity() {
     private val mainViewModel: MainViewModel by viewModels()
@@ -71,7 +71,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainScreen(viewModel = mainViewModel)
+                    Navigation(viewModel = mainViewModel)
                 }
             }
         }

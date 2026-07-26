@@ -41,6 +41,11 @@ class GyroscopeProvider(
         isRunning = false
     }
 
+    fun updateSettings(newSensitivity: Float, newAcceleration: Float) {
+        this.sensitivity = newSensitivity
+        this.acceleration = newAcceleration
+    }
+
     override fun onSensorChanged(event: SensorEvent?) {
         if (event == null || !isRunning) return
 
