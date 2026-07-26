@@ -1,4 +1,4 @@
-package server
+package session
 
 import (
 	"sync"
@@ -6,8 +6,11 @@ import (
 )
 
 type Session struct {
-	id          string
-	udpToken    uint32
+	id       string
+	udpToken uint32
+
+	UdpState UdpState
+
 	mu          sync.RWMutex
 	lastActive  time.Time
 	isHandshake bool

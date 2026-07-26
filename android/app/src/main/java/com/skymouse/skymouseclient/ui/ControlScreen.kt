@@ -34,10 +34,14 @@ import androidx.compose.ui.input.pointer.changedToDown
 import androidx.compose.ui.input.pointer.changedToUp
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.skymouse.skymouseclient.proto.MouseButton
+import kotlin.math.sqrt
 
 @Composable
 fun ControlScreen(viewModel: MainViewModel) {
+    val settingsState by viewModel.settingsState.collectAsStateWithLifecycle()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -69,7 +73,14 @@ fun ControlScreen(viewModel: MainViewModel) {
                         .pointerInput(Unit) {
                             detectDragGestures { change, dragAmount ->
                                 change.consume()
-                                viewModel.onMouseMove(dragAmount.x, dragAmount.y)
+                                val magnitude = sqrt(dragAmount.x*dragAmount.x + dragAmount.y*dragAmount.y)
+                                val accMul = 1f + (magnitude * settingsState.touchpadAcceleration)
+                                val sensitivity = settingsState.touchpadSensitivity
+
+                                viewModel.onMouseMove(
+                                    dragAmount.x * accMul * sensitivity,
+                                    dragAmount.y * accMul * sensitivity
+                                )
                             }
                         },
                     contentAlignment = Alignment.Center
