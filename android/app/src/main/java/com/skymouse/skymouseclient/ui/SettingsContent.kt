@@ -15,6 +15,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.skymouse.skymouseclient.data.SettingsState
@@ -58,7 +59,13 @@ private fun SettingsContent(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Settings") }
+                title = {
+                    Text(
+                        text = "Settings",
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
             )
         }
     ) { innerPadding ->
@@ -66,7 +73,7 @@ private fun SettingsContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(horizontal = 16.dp, vertical = 8.dp)
+                .padding(horizontal = 30.dp, vertical = 16.dp)
         ) {
             // Gyro Settings
             Text(
