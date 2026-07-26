@@ -1,11 +1,15 @@
 package main
 
 import (
+	"flag"
+	"fmt"
+	"io"
 	"log"
 	"os"
 	"os/signal"
 	"syscall"
 
+	"github.com/Tomahawk-Center/SkyMouse/pc/internal/config"
 	"github.com/Tomahawk-Center/SkyMouse/pc/internal/emulator"
 	"github.com/Tomahawk-Center/SkyMouse/pc/internal/server/tcp"
 	"github.com/Tomahawk-Center/SkyMouse/pc/internal/server/udp"
@@ -16,17 +20,49 @@ import (
 func main() {
 	log.SetOutput(os.Stdout)
 
+	cfgPathFlag := flag.String("config", "config.yaml", "path to config file")
+	logToFileFlag := flag.Bool("lf", false, "also write log in skymouse.log")
+	flag.Parse()
+
+	if *logToFileFlag {
+		logFile, err := os.OpenFile("skymouse.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+		defer func(logFile *os.File) {
+			_ = logFile.Close()
+		}(logFile)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		w := io.MultiWriter(os.Stdout, logFile)
+		log.SetOutput(w)
+	}
+
+	configFile, err := os.Open(*cfgPathFlag)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	cfg, err := config.LoadConfig(configFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err = configFile.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	emuEventsCh := make(chan emulator.Event, 20)
 	emu := emulator.NewEmulator(emuEventsCh)
 
 	sessMgr := session.NewSessionManager()
 
-	udpServer, err := udp.NewServer(":9999", sessMgr, emu)
+	udpServer, err := udp.NewServer(":0", sessMgr, emu)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	tcpServer, err := tcp.NewServer(":10000", sessMgr, emu, udpServer.Port)
+	tcpServer, err := tcp.NewServer(fmt.Sprintf("%s:%v", cfg.ServerIp, cfg.TcpPort), sessMgr, emu, udpServer.Port)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -67,4 +103,6 @@ func main() {
 
 	log.Println("Shutting down TCP")
 	tcpServer.Stop()
+
+	log.Println("Bye")
 }

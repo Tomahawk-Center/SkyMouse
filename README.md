@@ -1,4 +1,18 @@
-#### Command for generate proto for Kotlin & Go  
+## How to startup the server
+create config.yaml file near of the server.exe  
+config fields  
+``` yaml
+server_ip: "" # put the mashine IP or "" to listen all interfaces (not required field)
+tcp_port: 10000 # port to connect to the server (required field)
+log_path: "skymouse.log" # path to the log file (not required field)
+```
+
+### Server statup flags
+`--help` — Print auto-generated help for all flags  
+`-lf` — Enable log to a file  
+`--config` — Path to the YAML config file  
+
+#### Command to generate proto for Kotlin & Go  
 run in repo root:  
 ```sh
 protoc --proto_path=proto \

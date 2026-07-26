@@ -56,7 +56,7 @@ func (s *Server) Start() error {
 	s.wg.Add(1)
 	go s.acceptLoop()
 
-	log.Printf("TCP Server started on %s\n", s.addr)
+	log.Printf("TCP Server started on %s\n", ln.Addr().String())
 	return nil
 }
 
@@ -108,8 +108,8 @@ func (s *Server) acceptLoop() {
 func (s *Server) handleConnection(conn net.Conn) {
 	defer s.wg.Done()
 
-	session := s.sm.CreateSession()
-	id := session.Id()
+	sess := s.sm.CreateSession()
+	id := sess.Id()
 
 	defer func() {
 		_ = conn.Close()
@@ -154,7 +154,7 @@ func (s *Server) handleConnection(conn net.Conn) {
 		log.Println("Received message:")
 		log.Println(&msg)
 
-		s.routeMessage(session, &msg)
+		s.routeMessage(sess, &msg)
 	}
 }
 

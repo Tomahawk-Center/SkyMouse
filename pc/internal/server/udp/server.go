@@ -55,7 +55,7 @@ func (s *Server) Start() error {
 	s.wg.Add(1)
 	go s.acceptLoop()
 
-	log.Printf("UDP Server started on %s\n", s.addr)
+	log.Printf("UDP Server started on %s\n", c.LocalAddr().String())
 	return nil
 }
 
