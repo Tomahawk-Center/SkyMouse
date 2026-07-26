@@ -70,7 +70,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	tcpServer, err := tcp.NewServer(fmt.Sprintf("%s:%v", cfg.ServerIp, cfg.TcpPort), sessMgr, emu, udpServer.Port)
+	tcpServer, err := tcp.NewServer(fmt.Sprintf("%s:%v", cfg.ServerIp, cfg.TcpPort), sessMgr, emu, udpServer.Port, serverVersion)
 	if err != nil {
 		log.Fatal(err)
 	}
