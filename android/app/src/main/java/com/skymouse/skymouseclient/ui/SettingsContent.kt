@@ -39,7 +39,8 @@ fun SettingsScreen(
         onGyroAccelerationChange = viewModel::onAccelerationChange,
         onTouchpadSensitivityChange = viewModel::onTouchpadSensitivityChange,
         onTouchpadAccelerationChange = viewModel::onTouchpadAccelerationChange,
-        onLongPressVibrationLevelChange = viewModel::onLongPressVibrationLevelChange
+        onLongPressVibrationLevelChange = viewModel::onLongPressVibrationLevelChange,
+        onScrollMultiplierChange = viewModel::onScrollMultiplierChange
     )
 }
 
@@ -51,7 +52,8 @@ private fun SettingsContent(
     onGyroAccelerationChange: (Float) -> Unit,
     onTouchpadSensitivityChange: (Float) -> Unit,
     onTouchpadAccelerationChange: (Float) -> Unit,
-    onLongPressVibrationLevelChange: (Int) -> Unit
+    onLongPressVibrationLevelChange: (Int) -> Unit,
+    onScrollMultiplierChange: (Int) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -127,6 +129,19 @@ private fun SettingsContent(
                 value = settingsState.longPressVibrationLevel.toFloat(),
                 onValueChange = { onLongPressVibrationLevelChange(it.toInt()) },
                 valueRange = 1.0f..255.0f
+            )
+
+            Spacer(modifier = Modifier.height(36.dp))
+
+            // Scroll
+            Text(
+                text = "Scroll Multiplier: ${settingsState.scrollMultiplier}",
+                style = MaterialTheme.typography.titleMedium
+            )
+            Slider(
+                value = settingsState.scrollMultiplier.toFloat(),
+                onValueChange = { onScrollMultiplierChange(it.toInt()) },
+                valueRange = 1.0f..10.0f
             )
         }
     }

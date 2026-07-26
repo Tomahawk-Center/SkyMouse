@@ -63,6 +63,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         _settingsState.update { it.copy(longPressVibrationLevel = newValue) }
     }
 
+    fun onScrollMultiplierChange(newValue: Int) {
+        _settingsState.update { it.copy(scrollMultiplier = newValue) }
+    }
+
     var isGyroEnabled by mutableStateOf(prefs.getBoolean("gyro_enabled", false))
         private set
 
@@ -167,6 +171,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             putFloat("touchpad_sensitivity", state.touchpadSensitivity)
             putFloat("touchpad_acceleration", state.touchpadAcceleration)
             putInt("long_press_vibration", state.longPressVibrationLevel)
+            putInt("scroll_multiplier", state.scrollMultiplier)
         }
     }
 
@@ -176,7 +181,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             gyroAcceleration = prefs.getFloat("gyro_acceleration", 2.0f),
             touchpadSensitivity = prefs.getFloat("touchpad_sensitivity", 1.0f),
             touchpadAcceleration = prefs.getFloat("touchpad_acceleration", 0.05f),
-            longPressVibrationLevel = prefs.getInt("long_press_vibration", 1)
+            longPressVibrationLevel = prefs.getInt("long_press_vibration", 1),
+            scrollMultiplier = prefs.getInt("scroll_multiplier", 1)
         )
         _settingsState.value = loadedState
     }
@@ -313,7 +319,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             val message = com.skymouse.skymouseclient.proto.messageToServer {
                 emulatorEvent = com.skymouse.skymouseclient.proto.emulatorEvent {
                     scroll = com.skymouse.skymouseclient.proto.scrollEvent {
-                        deltaY = 1
+                        deltaY = settingsState.value.scrollMultiplier
                         timestampMs = System.currentTimeMillis()
                     }
 
@@ -333,7 +339,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             val message = com.skymouse.skymouseclient.proto.messageToServer {
                 emulatorEvent = com.skymouse.skymouseclient.proto.emulatorEvent {
                     scroll = com.skymouse.skymouseclient.proto.scrollEvent {
-                        deltaY = -1
+                        deltaY = -1 * settingsState.value.scrollMultiplier
                         timestampMs = System.currentTimeMillis()
                     }
                 }

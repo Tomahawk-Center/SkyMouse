@@ -8,4 +8,6 @@ data class SettingsState(
     val touchpadAcceleration: Float = 0.05f,
 
     val longPressVibrationLevel: Int = 1,
+
+    val scrollMultiplier: Int = 1,
 )
