@@ -156,6 +156,29 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     var ipAddress by mutableStateOf(prefs.getString("ip_address", "") ?: "")
     var port by mutableStateOf(prefs.getString("port", "10000") ?: "10000")
 
+
+    fun saveSettings() {
+        val state = _settingsState.value
+        prefs.edit {
+            putFloat("gyro_sensitivity", state.gyroSensitivity)
+            putFloat("gyro_acceleration", state.gyroAcceleration)
+            putFloat("touchpad_sensitivity", state.touchpadSensitivity)
+            putFloat("touchpad_acceleration", state.touchpadAcceleration)
+            putInt("long_press_vibration", state.longPressVibrationLevel)
+        }
+    }
+
+    private fun loadSettings() {
+        val loadedState = SettingsState(
+            gyroSensitivity = prefs.getFloat("gyro_sensitivity", 4.0f),
+            gyroAcceleration = prefs.getFloat("gyro_acceleration", 2.0f),
+            touchpadSensitivity = prefs.getFloat("touchpad_sensitivity", 1.0f),
+            touchpadAcceleration = prefs.getFloat("touchpad_acceleration", 0.05f),
+            longPressVibrationLevel = prefs.getInt("long_press_vibration", 1)
+        )
+        _settingsState.value = loadedState
+    }
+
     fun onConnectClicked() {
         val portInt = port.toIntOrNull() ?: return
         val clientVersionStr = "2.0"
@@ -329,6 +352,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     init {
+        loadSettings()
+
         viewModelScope.launch {
             settingsState.collect { state ->
                 gyroscopeProvider.updateSettings(
