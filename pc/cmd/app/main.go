@@ -17,7 +17,7 @@ import (
 	"github.com/Tomahawk-Center/SkyMouse/pc/pkg/protoapi"
 )
 
-const serverVersion = "3.0"
+const protobufVersion = "3.0"
 
 func main() {
 	log.SetOutput(os.Stdout)
@@ -28,7 +28,7 @@ func main() {
 	flag.Parse()
 
 	if *showVersionFlag {
-		fmt.Printf("Server version: %s\n", serverVersion)
+		fmt.Printf("Protobuf contract version: %s\n", protobufVersion)
 		os.Exit(0)
 	}
 
@@ -70,7 +70,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	tcpServer, err := tcp.NewServer(fmt.Sprintf("%s:%v", cfg.ServerIp, cfg.TcpPort), sessMgr, emu, udpServer.Port, serverVersion)
+	tcpServer, err := tcp.NewServer(fmt.Sprintf("%s:%v", cfg.ServerIp, cfg.TcpPort), sessMgr, emu, udpServer.Port, protobufVersion)
 	if err != nil {
 		log.Fatal(err)
 	}
