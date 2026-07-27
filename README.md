@@ -11,6 +11,7 @@ log_path: "skymouse.log" # path to the log file (not required field)
 `--help` — Print auto-generated help for all flags  
 `-lf` — Enable log to a file  
 `--config` — Path to the YAML config file  
+`-v` — Print Protobuf contract version
 
 ## Command to generate proto for Kotlin & Go  
 run in repo root:  
