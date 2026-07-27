@@ -16,16 +16,16 @@ import (
 )
 
 type Server struct {
-	addr       string
-	sm         *session.Manager
-	ln         net.Listener
-	quitCh     chan struct{}
-	wg         sync.WaitGroup
-	handler    server.EventHandler
-	getUdpPort func() (int, error)
-	serverVer  string
-	mu         sync.Mutex
-	conns      map[string]net.Conn
+	addr        string
+	sm          *session.Manager
+	ln          net.Listener
+	quitCh      chan struct{}
+	wg          sync.WaitGroup
+	handler     server.EventHandler
+	getUdpPort  func() (int, error)
+	protobufVer string
+	mu          sync.Mutex
+	conns       map[string]net.Conn
 }
 
 func NewServer(
@@ -44,13 +44,13 @@ func NewServer(
 	}
 
 	return &Server{
-		addr:       addr,
-		quitCh:     make(chan struct{}),
-		conns:      make(map[string]net.Conn),
-		handler:    handler,
-		getUdpPort: udpPortProvider,
-		sm:         sessionManager,
-		serverVer:  serverVersion,
+		addr:        addr,
+		quitCh:      make(chan struct{}),
+		conns:       make(map[string]net.Conn),
+		handler:     handler,
+		getUdpPort:  udpPortProvider,
+		sm:          sessionManager,
+		protobufVer: serverVersion,
 	}, nil
 }
 
@@ -189,7 +189,7 @@ func (s *Server) handlePing() error {
 
 func (s *Server) handleClientHello(sess *session.Session, clientHelloMsg *protoapi.ClientHello) error {
 	serverHello := &protoapi.ServerHello{}
-	serverHello.ServerVersion = s.serverVer
+	serverHello.ServerVersion = s.protobufVer
 	udpPort, err := s.getUdpPort()
 	if err != nil {
 		udpPort = 0
@@ -227,7 +227,7 @@ func (s *Server) handleClientHello(sess *session.Session, clientHelloMsg *protoa
 		return err
 	}
 
-	err = version_verifier.VerifyClientVersion(clientHelloMsg.ClientVersion, s.serverVer)
+	err = version_verifier.VerifyClientVersion(clientHelloMsg.ClientVersion, s.protobufVer)
 	if err != nil {
 		log.Printf("Handshake state is not set because version check failed for session: %s, reason: %v", sess.Id(), err)
 	} else {
