@@ -60,6 +60,13 @@ enum HapticEventType {
 
 }
 
+enum CommandEvent {
+    COMMAND_UNKNOWN = 0;
+    COMMAND_SHUT_DOWN = 1;
+    COMMAND_SLEEP = 2;
+    COMMAND_LOCK_SCREEN = 3;
+}
+
 message ServerEvent {
     HapticEventType type = 1;
     int64 timestamp_ms = 2;
@@ -79,6 +86,7 @@ message MessageToServer {
         EmulatorEvent emulator_event = 2;
         Ping ping = 3;
         Pong pong = 4;
+        CommandEvent command = 5;
     }
 }
 
