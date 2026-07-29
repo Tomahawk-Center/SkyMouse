@@ -124,6 +124,37 @@ public object MessageToServerKt {
     public fun hasPong(): kotlin.Boolean {
       return _builder.hasPong()
     }
+
+    /**
+     * `.skymouse.CommandEvent command = 5;`
+     */
+    public var command: com.skymouse.skymouseclient.proto.CommandEvent
+      @kotlin.jvm.JvmName("getCommand")
+        get() = _builder.command
+      @kotlin.jvm.JvmName("setCommand")
+        set(value) {
+        _builder.command = value
+      }
+    public var commandValue: kotlin.Int
+      @kotlin.jvm.JvmName("getCommandValue")
+        get() = _builder.commandValue
+      @kotlin.jvm.JvmName("setCommandValue")
+        set(value) {
+        _builder.commandValue = value
+      }
+    /**
+     * `.skymouse.CommandEvent command = 5;`
+     */
+    public fun clearCommand() {
+      _builder.clearCommand()
+    }
+    /**
+     * `.skymouse.CommandEvent command = 5;`
+     * @return Whether the command field is set.
+     */
+    public fun hasCommand(): kotlin.Boolean {
+      return _builder.hasCommand()
+    }
     public val eventCase: com.skymouse.skymouseclient.proto.MessageToServer.EventCase
     @kotlin.jvm.JvmName("getEventCase")
       get() = _builder.getEventCase()

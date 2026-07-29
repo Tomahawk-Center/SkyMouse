@@ -70,5 +70,21 @@ public interface MessageToServerOrBuilder extends
    */
   com.skymouse.skymouseclient.proto.PongOrBuilder getPongOrBuilder();
 
+  /**
+   * <code>.skymouse.CommandEvent command = 5;</code>
+   * @return Whether the command field is set.
+   */
+  boolean hasCommand();
+  /**
+   * <code>.skymouse.CommandEvent command = 5;</code>
+   * @return The enum numeric value on the wire for command.
+   */
+  int getCommandValue();
+  /**
+   * <code>.skymouse.CommandEvent command = 5;</code>
+   * @return The command.
+   */
+  com.skymouse.skymouseclient.proto.CommandEvent getCommand();
+
   com.skymouse.skymouseclient.proto.MessageToServer.EventCase getEventCase();
 }
