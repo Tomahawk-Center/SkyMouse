@@ -12,6 +12,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.content.edit
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import com.skymouse.skymouseclient.data.GyroscopeProvider
 import com.skymouse.skymouseclient.data.SettingsState
@@ -32,7 +34,30 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
 
-class MainViewModel(application: Application) : AndroidViewModel(application) {
+class MainViewModel(application: Application) : AndroidViewModel(application), DefaultLifecycleObserver {
+
+    private var shouldAutoReconnect = false
+
+    override fun onStart(owner: LifecycleOwner) {
+        super.onStart(owner)
+        if (isGyroEnabled) {
+            gyroscopeProvider.start()
+        }
+
+        if (shouldAutoReconnect && tcpConnectionState.value !is TcpConnectionState.Connected) {
+            onConnectClicked()
+        }
+    }
+
+    override fun onStop(owner: LifecycleOwner) {
+        super.onStop(owner)
+        gyroscopeProvider.stop()
+
+        if (tcpConnectionState.value is TcpConnectionState.Connected) {
+            shouldAutoReconnect = true
+            disconnect()
+        }
+    }
 
     private val prefs = application.getSharedPreferences("settings", Context.MODE_PRIVATE)
 
@@ -253,7 +278,20 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    /**
+     * Disconnect both TCP and UDP connections
+     * Should be called when you need disconnect without reconnection
+     */
     fun onDisconnectClicked() {
+        shouldAutoReconnect = false
+        disconnect()
+    }
+
+    /**
+     * Disconnect both TCP and UDP connections
+     * Should be called when you need disconnect without changing reconnect state
+     */
+    fun disconnect() {
         viewModelScope.launch {
             udpClientManager.disconnect()
             tcpClientManager.disconnect()
@@ -379,10 +417,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     state.gyroAcceleration
                 )
             }
-        }
-
-        if (isGyroEnabled) {
-            gyroscopeProvider.start()
         }
     }
 
