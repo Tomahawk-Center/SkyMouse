@@ -26,7 +26,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -70,6 +76,8 @@ private fun SettingsContent(
     onScrollMultiplierChange: (Int) -> Unit,
     onAutoReconnectChange: (Boolean) -> Unit
 ) {
+    val haptic = LocalHapticFeedback.current
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -94,23 +102,27 @@ private fun SettingsContent(
                 text = "Gyroscope Sensitivity: ${(settingsState.gyroSensitivity * 10).roundToInt() / 10.0}",
                 style = MaterialTheme.typography.titleMedium
             )
-            Slider(
+            HapticSlider(
                 value = settingsState.gyroSensitivity,
                 onValueChange = onGyroSensitivityChange,
                 valueRange = 0.1f..5.0f,
+                getHapticBucket = { (it * 10).roundToInt() },
+                isEdge = { it <= 0.1f || it >= 5.0f },
                 modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
             Text(
-                text = "Gyroscope Acceleration: ${(settingsState.gyroAcceleration * 100).roundToInt() / 100.0}",
+                text = "Gyroscope Acceleration: ${(settingsState.gyroAcceleration * 100 + 0.0001f).toInt() / 100.0}",
                 style = MaterialTheme.typography.titleMedium
             )
-            Slider(
+            HapticSlider(
                 value = settingsState.gyroAcceleration,
                 onValueChange = onGyroAccelerationChange,
                 valueRange = 0.0f..3.0f,
+                getHapticBucket = { (it * 10 + 0.0001f).toInt() },
+                isEdge = { it <= 0.0f || it >= 3.0f },
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -118,13 +130,15 @@ private fun SettingsContent(
 
             // Touchpad Settings
             Text(
-                text = "Touchpad Sensitivity: ${(settingsState.touchpadSensitivity * 100).roundToInt() / 100.0}",
+                text = "Touchpad Sensitivity: ${(settingsState.touchpadSensitivity * 100 + 0.0001f).toInt() / 100.0}",
                 style = MaterialTheme.typography.titleMedium
             )
-            Slider(
+            HapticSlider(
                 value = settingsState.touchpadSensitivity,
                 onValueChange = onTouchpadSensitivityChange,
-                valueRange = 0.1f..3.0f
+                valueRange = 0.1f..3.0f,
+                getHapticBucket = { (it * 10 + 0.0001f).toInt() },
+                isEdge = { it <= 0.1f || it >= 3.0f }
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -133,10 +147,12 @@ private fun SettingsContent(
                 text = "Touchpad Acceleration: ${(settingsState.touchpadAcceleration * 100).roundToInt() / 100.0}",
                 style = MaterialTheme.typography.titleMedium
             )
-            Slider(
+            HapticSlider(
                 value = settingsState.touchpadAcceleration,
                 onValueChange = onTouchpadAccelerationChange,
-                valueRange = 0.0f..0.2f
+                valueRange = 0.0f..0.2f,
+                getHapticBucket = { (it * 100).roundToInt() },
+                isEdge = { it <= 0.0f || it >= 0.2f }
             )
 
             Spacer(modifier = Modifier.height(36.dp))
@@ -146,10 +162,12 @@ private fun SettingsContent(
                 text = "Long Press Vibration Intensity: ${settingsState.longPressVibrationLevel}",
                 style = MaterialTheme.typography.titleMedium
             )
-            Slider(
+            HapticSlider(
                 value = settingsState.longPressVibrationLevel.toFloat(),
                 onValueChange = { onLongPressVibrationLevelChange(it.toInt()) },
-                valueRange = 1.0f..255.0f
+                valueRange = 1.0f..255.0f,
+                getHapticBucket = { it.toInt() / 5 },
+                isEdge = { val intValue = it.toInt(); intValue == 1 || intValue == 255 }
             )
 
             Spacer(modifier = Modifier.height(36.dp))
@@ -159,13 +177,16 @@ private fun SettingsContent(
                 text = "Scroll Multiplier: ${settingsState.scrollMultiplier}",
                 style = MaterialTheme.typography.titleMedium
             )
-            Slider(
+            HapticSlider(
                 value = settingsState.scrollMultiplier.toFloat(),
                 onValueChange = { onScrollMultiplierChange(it.toInt()) },
-                valueRange = 1.0f..10.0f
+                valueRange = 1.0f..10.0f,
+                getHapticBucket = { it.toInt() },
+                isEdge = { val intValue = it.toInt(); intValue == 1 || intValue == 10 }
             )
 
-            // Auto-reconnect
+            Spacer(modifier = Modifier.height(36.dp))
+
             Text(
                 text = "Auto Reconnect",
                 style = MaterialTheme.typography.titleMedium
@@ -173,8 +194,11 @@ private fun SettingsContent(
             Switch(
                 checked = settingsState.autoReconnect,
                 onCheckedChange = {
-
-
+                    if (it) {
+                        haptic.performHapticFeedback(HapticFeedbackType.GestureThresholdActivate)
+                    } else {
+                        haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                    }
                     onAutoReconnectChange(it)
                 },
                 thumbContent = {
@@ -201,4 +225,41 @@ private fun SettingsContent(
             )
         }
     }
+}
+
+@Composable
+fun HapticSlider(
+    value: Float,
+    onValueChange: (Float) -> Unit,
+    valueRange: ClosedFloatingPointRange<Float>,
+    getHapticBucket: (Float) -> Int,
+    isEdge: (Float) -> Boolean,
+    modifier: Modifier = Modifier
+) {
+    val haptic = LocalHapticFeedback.current
+    var lastHapticValue by remember { mutableIntStateOf(getHapticBucket(value)) }
+    var hasVibratedOnEdge by remember { mutableStateOf(false) }
+
+    Slider(
+        value = value,
+        onValueChange = { newValue ->
+            val currentBucket = getHapticBucket(newValue)
+
+            if (isEdge(newValue)) {
+                if (!hasVibratedOnEdge) {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    hasVibratedOnEdge = true
+                }
+            } else {
+                hasVibratedOnEdge = false
+                if (currentBucket != lastHapticValue) {
+                    haptic.performHapticFeedback(HapticFeedbackType.SegmentFrequentTick)
+                    lastHapticValue = currentBucket
+                }
+            }
+            onValueChange(newValue)
+        },
+        valueRange = valueRange,
+        modifier = modifier
+    )
 }
