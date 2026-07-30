@@ -1,15 +1,27 @@
 package com.skymouse.skymouseclient.ui
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Check
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -41,7 +53,8 @@ fun SettingsScreen(
         onTouchpadSensitivityChange = viewModel::onTouchpadSensitivityChange,
         onTouchpadAccelerationChange = viewModel::onTouchpadAccelerationChange,
         onLongPressVibrationLevelChange = viewModel::onLongPressVibrationLevelChange,
-        onScrollMultiplierChange = viewModel::onScrollMultiplierChange
+        onScrollMultiplierChange = viewModel::onScrollMultiplierChange,
+        onAutoReconnectChange = viewModel::onAutoReconnectChange
     )
 }
 
@@ -54,7 +67,8 @@ private fun SettingsContent(
     onTouchpadSensitivityChange: (Float) -> Unit,
     onTouchpadAccelerationChange: (Float) -> Unit,
     onLongPressVibrationLevelChange: (Int) -> Unit,
-    onScrollMultiplierChange: (Int) -> Unit
+    onScrollMultiplierChange: (Int) -> Unit,
+    onAutoReconnectChange: (Boolean) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -149,6 +163,41 @@ private fun SettingsContent(
                 value = settingsState.scrollMultiplier.toFloat(),
                 onValueChange = { onScrollMultiplierChange(it.toInt()) },
                 valueRange = 1.0f..10.0f
+            )
+
+            // Auto-reconnect
+            Text(
+                text = "Auto Reconnect",
+                style = MaterialTheme.typography.titleMedium
+            )
+            Switch(
+                checked = settingsState.autoReconnect,
+                onCheckedChange = {
+
+
+                    onAutoReconnectChange(it)
+                },
+                thumbContent = {
+                    AnimatedContent(
+                        targetState = settingsState.autoReconnect,
+                        transitionSpec = { fadeIn(tween(100)) togetherWith fadeOut(tween(100)) },
+                        label = "switch_thumb_icon"
+                    ) { isSelected ->
+                        Icon(
+                            imageVector = if (isSelected) Icons.Rounded.Check else Icons.Rounded.Close,
+                            contentDescription = null,
+                            modifier = Modifier.size(SwitchDefaults.IconSize)
+                        )
+                    }
+                },
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
+                    checkedTrackColor = MaterialTheme.colorScheme.primary,
+                    checkedIconColor = MaterialTheme.colorScheme.primary,
+                    uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant,
+                    uncheckedIconColor = MaterialTheme.colorScheme.surfaceVariant
+                )
             )
         }
     }

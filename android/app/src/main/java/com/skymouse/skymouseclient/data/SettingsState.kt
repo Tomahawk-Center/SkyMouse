@@ -10,4 +10,6 @@ data class SettingsState(
     val longPressVibrationLevel: Int = 1,
 
     val scrollMultiplier: Int = 1,
+
+    val autoReconnect: Boolean = true,
 )

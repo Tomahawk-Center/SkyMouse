@@ -92,6 +92,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application), D
         _settingsState.update { it.copy(scrollMultiplier = newValue) }
     }
 
+    fun onAutoReconnectChange(newValue: Boolean) {
+        _settingsState.update { it.copy(autoReconnect = newValue) }
+    }
+
     var isGyroEnabled by mutableStateOf(prefs.getBoolean("gyro_enabled", false))
         private set
 
@@ -197,6 +201,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application), D
             putFloat("touchpad_acceleration", state.touchpadAcceleration)
             putInt("long_press_vibration", state.longPressVibrationLevel)
             putInt("scroll_multiplier", state.scrollMultiplier)
+            putBoolean("auto_reconnect", state.autoReconnect)
         }
     }
 
@@ -207,7 +212,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application), D
             touchpadSensitivity = prefs.getFloat("touchpad_sensitivity", 1.0f),
             touchpadAcceleration = prefs.getFloat("touchpad_acceleration", 0.05f),
             longPressVibrationLevel = prefs.getInt("long_press_vibration", 1),
-            scrollMultiplier = prefs.getInt("scroll_multiplier", 1)
+            scrollMultiplier = prefs.getInt("scroll_multiplier", 1),
+            autoReconnect = prefs.getBoolean("auto_reconnect", true)
         )
         _settingsState.value = loadedState
     }
