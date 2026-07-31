@@ -22,6 +22,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import com.skymouse.skymouseclient.data.TcpConnectionState
 import com.skymouse.skymouseclient.data.UdpConnectionState
+import com.skymouse.skymouseclient.data.util.KeepScreenAwakeInGyroMode
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,6 +32,13 @@ fun MainScreen(viewModel: MainViewModel, onNavigateToSettings: () -> Unit) {
     val haptic = LocalHapticFeedback.current
 
     val isConnected = tcpState is TcpConnectionState.Connected && udpState is UdpConnectionState.Connected
+
+    val isGyroActive by viewModel.isGyroActive.collectAsState()
+
+    KeepScreenAwakeInGyroMode(
+        isGyroModeActive = viewModel.isGyroEnabled,
+        isGyroActive = isGyroActive
+    )
 
     Scaffold(
         topBar = {
