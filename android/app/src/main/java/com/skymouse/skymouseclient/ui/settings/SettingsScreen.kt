@@ -1,4 +1,4 @@
-package com.skymouse.skymouseclient.ui
+package com.skymouse.skymouseclient.ui.settings
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.tween
@@ -41,7 +41,7 @@ import kotlin.math.roundToInt
 
 @Composable
 fun SettingsScreen(
-    viewModel: MainViewModel
+    viewModel: SettingsViewModel
 ) {
     val settingsState by viewModel.settingsState.collectAsStateWithLifecycle()
 
@@ -50,7 +50,6 @@ fun SettingsScreen(
             viewModel.saveSettings()
         }
     }
-
 
     SettingsContent(
         settingsState = settingsState,
