@@ -65,7 +65,7 @@ func main() {
 
 	sessMgr := session.NewSessionManager()
 
-	udpServer, err := udp.NewServer(":0", sessMgr, emu)
+	udpServer, err := udp.NewServer(fmt.Sprintf("%s:0", cfg.ServerIp), sessMgr, emu)
 	if err != nil {
 		log.Fatal(err)
 	}

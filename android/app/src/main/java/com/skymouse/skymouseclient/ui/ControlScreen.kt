@@ -167,6 +167,8 @@ fun ControlScreen(viewModel: MainViewModel) {
         }
     }
 
+    val haptic = LocalHapticFeedback.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -300,7 +302,10 @@ fun ControlScreen(viewModel: MainViewModel) {
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(
-            onClick = { viewModel.toggleControlMode() },
+            onClick = {
+                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                viewModel.toggleControlMode()
+                      },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp),
@@ -320,7 +325,10 @@ fun ControlScreen(viewModel: MainViewModel) {
 
         // disconnect button
         Button(
-            onClick = { viewModel.onDisconnectClicked() },
+            onClick = {
+                haptic.performHapticFeedback(HapticFeedbackType.GestureThresholdActivate)
+                viewModel.onDisconnectClicked()
+                      },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),

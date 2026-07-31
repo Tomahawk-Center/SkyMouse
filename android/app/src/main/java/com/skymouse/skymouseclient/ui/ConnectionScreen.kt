@@ -16,10 +16,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.skymouse.skymouseclient.data.TcpConnectionState
@@ -32,6 +35,14 @@ fun ConnectionScreen(viewModel: MainViewModel) {
 
     val isConnecting = tcpState is TcpConnectionState.Connecting || udpState is UdpConnectionState.Connecting
     val error = (tcpState as? TcpConnectionState.Error)?.message ?: (udpState as? UdpConnectionState.Error)?.message
+
+    val haptic = LocalHapticFeedback.current
+
+    LaunchedEffect(error) {
+        if (error != null) {
+            haptic.performHapticFeedback(HapticFeedbackType.Reject)
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -83,7 +94,10 @@ fun ConnectionScreen(viewModel: MainViewModel) {
             CircularProgressIndicator(modifier = Modifier.size(48.dp))
         } else {
             Button(
-                onClick = { viewModel.onConnectClicked() },
+                onClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.GestureThresholdActivate)
+                    viewModel.onConnectClicked()
+                          },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),

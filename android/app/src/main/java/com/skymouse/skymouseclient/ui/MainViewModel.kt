@@ -12,6 +12,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.content.edit
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import com.skymouse.skymouseclient.data.GyroscopeProvider
 import com.skymouse.skymouseclient.data.SettingsState
@@ -33,7 +35,37 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
 
-class MainViewModel(application: Application) : AndroidViewModel(application) {
+class MainViewModel(application: Application) : AndroidViewModel(application), DefaultLifecycleObserver {
+
+    private var shouldAutoReconnect = false
+    private var isFirstStart = true
+
+    override fun onStart(owner: LifecycleOwner) {
+        super.onStart(owner)
+        if (isGyroEnabled) {
+            gyroscopeProvider.start()
+        }
+
+        val shouldConnect = (isFirstStart && settingsState.value.autoConnectOnStartup) || shouldAutoReconnect
+        isFirstStart = false
+
+        if (shouldConnect && tcpConnectionState.value !is TcpConnectionState.Connected) {
+            onConnectClicked()
+        }
+    }
+
+    override fun onStop(owner: LifecycleOwner) {
+        super.onStop(owner)
+        gyroscopeProvider.stop()
+
+        if (tcpConnectionState.value is TcpConnectionState.Connected) {
+            if (settingsState.value.autoReconnect) {
+                shouldAutoReconnect = true
+            }
+
+            disconnect()
+        }
+    }
 
     private val prefs = application.getSharedPreferences("settings", Context.MODE_PRIVATE)
 
@@ -77,6 +109,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun onScrollMultiplierChange(newValue: Int) {
         _settingsState.update { it.copy(scrollMultiplier = newValue) }
+    }
+
+    fun onAutoReconnectChange(newValue: Boolean) {
+        _settingsState.update { it.copy(autoReconnect = newValue) }
+    }
+
+    fun onAutoConnectOnStartupChange(newValue: Boolean) {
+        _settingsState.update { it.copy(autoConnectOnStartup = newValue) }
     }
 
     var isGyroEnabled by mutableStateOf(prefs.getBoolean("gyro_enabled", false))
@@ -184,6 +224,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             putFloat("touchpad_acceleration", state.touchpadAcceleration)
             putInt("long_press_vibration", state.longPressVibrationLevel)
             putInt("scroll_multiplier", state.scrollMultiplier)
+            putBoolean("auto_reconnect", state.autoReconnect)
+            putBoolean("auto_connect_on_startup", state.autoConnectOnStartup)
         }
     }
 
@@ -194,7 +236,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             touchpadSensitivity = prefs.getFloat("touchpad_sensitivity", 1.0f),
             touchpadAcceleration = prefs.getFloat("touchpad_acceleration", 0.05f),
             longPressVibrationLevel = prefs.getInt("long_press_vibration", 1),
-            scrollMultiplier = prefs.getInt("scroll_multiplier", 1)
+            scrollMultiplier = prefs.getInt("scroll_multiplier", 1),
+            autoReconnect = prefs.getBoolean("auto_reconnect", true),
+            autoConnectOnStartup = prefs.getBoolean("auto_connect_on_startup", false)
         )
         _settingsState.value = loadedState
     }
@@ -265,7 +309,20 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    /**
+     * Disconnect both TCP and UDP connections
+     * Should be called when you need disconnect without reconnection
+     */
     fun onDisconnectClicked() {
+        shouldAutoReconnect = false
+        disconnect()
+    }
+
+    /**
+     * Disconnect both TCP and UDP connections
+     * Should be called when you need disconnect without changing reconnect state
+     */
+    fun disconnect() {
         viewModelScope.launch {
             udpClientManager.disconnect()
             tcpClientManager.disconnect()
@@ -381,6 +438,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         onMouseMove(dx, dy)
     }
 
+    val isGyroActive: StateFlow<Boolean> = gyroscopeProvider.isGyroActive
+
     init {
         loadSettings()
 
@@ -391,10 +450,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     state.gyroAcceleration
                 )
             }
-        }
-
-        if (isGyroEnabled) {
-            gyroscopeProvider.start()
         }
     }
 
