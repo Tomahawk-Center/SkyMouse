@@ -5,8 +5,17 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import kotlin.math.abs
 import kotlin.math.sqrt
+import kotlin.time.Duration.Companion.milliseconds
 
 class GyroscopeProvider(
     context: Context,
@@ -27,6 +36,13 @@ class GyroscopeProvider(
     private val deadZoneThresholdLow = 0.01f
     private val deadZoneThresholdHigh = 0.03f
 
+    private val _isGyroActive = MutableStateFlow(false)
+    val isGyroActive: StateFlow<Boolean> = _isGyroActive.asStateFlow()
+
+    private val providerScope = CoroutineScope(Dispatchers.Default)
+    private var timeoutJob: Job? = null
+    private val activeTimeoutMs = 20_000L
+
     fun start() {
         if (isRunning) return
         gyroscope?.let {
@@ -39,6 +55,9 @@ class GyroscopeProvider(
         if (!isRunning) return
         sensorManager.unregisterListener(this)
         isRunning = false
+
+        timeoutJob?.cancel()
+        _isGyroActive.value = false
     }
 
     fun updateSettings(newSensitivity: Float, newAcceleration: Float) {
@@ -66,11 +85,30 @@ class GyroscopeProvider(
             currDy += (targetDy - currDy) * smoothing
 
             if (currDx != 0f || currDy != 0f) {
+                if (abs(currDx) > 0.01f || abs(currDy) > 0.01f) {
+                    notifyMotion()
+                }
+
                 onMove(currDx, currDy)
             } else {
                 currDx = 0f
                 currDy = 0f
             }
+        }
+    }
+
+    private fun notifyMotion() {
+        if (!_isGyroActive.value) {
+            _isGyroActive.value = true
+        }
+        resetTimeoutTimer()
+    }
+
+    private fun resetTimeoutTimer() {
+        timeoutJob?.cancel()
+        timeoutJob = providerScope.launch {
+            delay(activeTimeoutMs.milliseconds)
+            _isGyroActive.value = false
         }
     }
 

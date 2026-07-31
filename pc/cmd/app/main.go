@@ -17,7 +17,7 @@ import (
 	"github.com/Tomahawk-Center/SkyMouse/pc/pkg/protoapi"
 )
 
-const protobufVersion = "3.0"
+const protobufVersion = "3.1"
 
 func main() {
 	log.SetOutput(os.Stdout)
@@ -65,7 +65,7 @@ func main() {
 
 	sessMgr := session.NewSessionManager()
 
-	udpServer, err := udp.NewServer(":0", sessMgr, emu)
+	udpServer, err := udp.NewServer(fmt.Sprintf("%s:0", cfg.ServerIp), sessMgr, emu)
 	if err != nil {
 		log.Fatal(err)
 	}

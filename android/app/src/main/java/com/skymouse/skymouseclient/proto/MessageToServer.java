@@ -58,6 +58,7 @@ private static final long serialVersionUID = 0L;
     EMULATOR_EVENT(2),
     PING(3),
     PONG(4),
+    COMMAND(5),
     EVENT_NOT_SET(0);
     private final int value;
     private EventCase(int value) {
@@ -79,6 +80,7 @@ private static final long serialVersionUID = 0L;
         case 2: return EMULATOR_EVENT;
         case 3: return PING;
         case 4: return PONG;
+        case 5: return COMMAND;
         case 0: return EVENT_NOT_SET;
         default: return null;
       }
@@ -218,6 +220,37 @@ private static final long serialVersionUID = 0L;
     return com.skymouse.skymouseclient.proto.Pong.getDefaultInstance();
   }
 
+  public static final int COMMAND_FIELD_NUMBER = 5;
+  /**
+   * <code>.skymouse.CommandEvent command = 5;</code>
+   * @return Whether the command field is set.
+   */
+  public boolean hasCommand() {
+    return eventCase_ == 5;
+  }
+  /**
+   * <code>.skymouse.CommandEvent command = 5;</code>
+   * @return The enum numeric value on the wire for command.
+   */
+  public int getCommandValue() {
+    if (eventCase_ == 5) {
+      return (java.lang.Integer) event_;
+    }
+    return 0;
+  }
+  /**
+   * <code>.skymouse.CommandEvent command = 5;</code>
+   * @return The command.
+   */
+  public com.skymouse.skymouseclient.proto.CommandEvent getCommand() {
+    if (eventCase_ == 5) {
+      com.skymouse.skymouseclient.proto.CommandEvent result = com.skymouse.skymouseclient.proto.CommandEvent.forNumber(
+          (java.lang.Integer) event_);
+      return result == null ? com.skymouse.skymouseclient.proto.CommandEvent.UNRECOGNIZED : result;
+    }
+    return com.skymouse.skymouseclient.proto.CommandEvent.COMMAND_UNKNOWN;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -244,6 +277,9 @@ private static final long serialVersionUID = 0L;
     if (eventCase_ == 4) {
       output.writeMessage(4, (com.skymouse.skymouseclient.proto.Pong) event_);
     }
+    if (eventCase_ == 5) {
+      output.writeEnum(5, ((java.lang.Integer) event_));
+    }
     getUnknownFields().writeTo(output);
   }
   private int computeSerializedSize_0() {
@@ -263,6 +299,10 @@ private static final long serialVersionUID = 0L;
     if (eventCase_ == 4) {
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(4, (com.skymouse.skymouseclient.proto.Pong) event_);
+    }
+    if (eventCase_ == 5) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeEnumSize(5, ((java.lang.Integer) event_));
     }
     return size;
   }
@@ -306,6 +346,10 @@ private static final long serialVersionUID = 0L;
         if (!getPong()
             .equals(other.getPong())) return false;
         break;
+      case 5:
+        if (getCommandValue()
+            != other.getCommandValue()) return false;
+        break;
       case 0:
       default:
     }
@@ -336,6 +380,10 @@ private static final long serialVersionUID = 0L;
       case 4:
         hash = (37 * hash) + PONG_FIELD_NUMBER;
         hash = (53 * hash) + getPong().hashCode();
+        break;
+      case 5:
+        hash = (37 * hash) + COMMAND_FIELD_NUMBER;
+        hash = (53 * hash) + getCommandValue();
         break;
       case 0:
       default:
@@ -571,6 +619,10 @@ private static final long serialVersionUID = 0L;
           mergePong(other.getPong());
           break;
         }
+        case COMMAND: {
+          setCommandValue(other.getCommandValue());
+          break;
+        }
         case EVENT_NOT_SET: {
           break;
         }
@@ -629,6 +681,12 @@ private static final long serialVersionUID = 0L;
               eventCase_ = 4;
               break;
             } // case 34
+            case 40: {
+              int rawValue = input.readEnum();
+              eventCase_ = 5;
+              event_ = rawValue;
+              break;
+            } // case 40
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -1227,6 +1285,75 @@ private static final long serialVersionUID = 0L;
       eventCase_ = 4;
       onChanged();
       return pongBuilder_;
+    }
+
+    /**
+     * <code>.skymouse.CommandEvent command = 5;</code>
+     * @return Whether the command field is set.
+     */
+    @java.lang.Override
+    public boolean hasCommand() {
+      return eventCase_ == 5;
+    }
+    /**
+     * <code>.skymouse.CommandEvent command = 5;</code>
+     * @return The enum numeric value on the wire for command.
+     */
+    @java.lang.Override
+    public int getCommandValue() {
+      if (eventCase_ == 5) {
+        return ((java.lang.Integer) event_).intValue();
+      }
+      return 0;
+    }
+    /**
+     * <code>.skymouse.CommandEvent command = 5;</code>
+     * @param value The enum numeric value on the wire for command to set.
+     * @return This builder for chaining.
+     */
+    public Builder setCommandValue(int value) {
+      eventCase_ = 5;
+      event_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>.skymouse.CommandEvent command = 5;</code>
+     * @return The command.
+     */
+    @java.lang.Override
+    public com.skymouse.skymouseclient.proto.CommandEvent getCommand() {
+      if (eventCase_ == 5) {
+        com.skymouse.skymouseclient.proto.CommandEvent result = com.skymouse.skymouseclient.proto.CommandEvent.forNumber(
+            (java.lang.Integer) event_);
+        return result == null ? com.skymouse.skymouseclient.proto.CommandEvent.UNRECOGNIZED : result;
+      }
+      return com.skymouse.skymouseclient.proto.CommandEvent.COMMAND_UNKNOWN;
+    }
+    /**
+     * <code>.skymouse.CommandEvent command = 5;</code>
+     * @param value The command to set.
+     * @throws IllegalArgumentException if UNRECOGNIZED is provided.
+     * @return This builder for chaining.
+     */
+    public Builder setCommand(com.skymouse.skymouseclient.proto.CommandEvent value) {
+      if (value == null) { throw new NullPointerException(); }
+      eventCase_ = 5;
+      event_ = value.getNumber();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>.skymouse.CommandEvent command = 5;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearCommand() {
+      if (eventCase_ == 5) {
+        eventCase_ = 0;
+        event_ = null;
+        onChanged();
+      }
+      return this;
     }
 
     // @@protoc_insertion_point(builder_scope:skymouse.MessageToServer)

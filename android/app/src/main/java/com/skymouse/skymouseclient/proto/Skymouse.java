@@ -111,25 +111,29 @@ public final class Skymouse extends com.google.protobuf.GeneratedFile {
       "\030\001 \001(\0132\024.skymouse.MouseEventH\000\022%\n\005click\030" +
       "\002 \001(\0132\024.skymouse.ClickEventH\000\022\'\n\006scroll\030" +
       "\003 \001(\0132\025.skymouse.ScrollEventH\000B\007\n\005event\"" +
-      "\274\001\n\017MessageToServer\022-\n\014client_hello\030\001 \001(" +
+      "\347\001\n\017MessageToServer\022-\n\014client_hello\030\001 \001(" +
       "\0132\025.skymouse.ClientHelloH\000\0221\n\016emulator_e" +
       "vent\030\002 \001(\0132\027.skymouse.EmulatorEventH\000\022\036\n" +
       "\004ping\030\003 \001(\0132\016.skymouse.PingH\000\022\036\n\004pong\030\004 " +
-      "\001(\0132\016.skymouse.PongH\000B\007\n\005event\"c\n\022UdpMes" +
-      "sageToServer\022\021\n\tudp_token\030\001 \001(\r\0221\n\016emula" +
-      "tor_event\030\002 \001(\0132\027.skymouse.EmulatorEvent" +
-      "H\000B\007\n\005event\"x\n\017MessageToClient\022-\n\014server" +
-      "_hello\030\001 \001(\0132\025.skymouse.ServerHelloH\000\022-\n" +
-      "\014server_event\030\002 \001(\0132\025.skymouse.ServerEve" +
-      "ntH\000B\007\n\005event*W\n\013MouseButton\022\022\n\016BUTTON_U" +
-      "NKNOWN\020\000\022\017\n\013BUTTON_LEFT\020\001\022\020\n\014BUTTON_RIGH" +
-      "T\020\002\022\021\n\rBUTTON_MIDDLE\020\003*>\n\013ButtonState\022\021\n" +
-      "\rSTATE_UNKNOWN\020\000\022\016\n\nSTATE_DOWN\020\001\022\014\n\010STAT" +
-      "E_UP\020\002*S\n\017HapticEventType\022\021\n\rEVENT_UNKNO" +
-      "WN\020\000\022\031\n\025EVENT_BORDER_CROSSING\020\001\022\022\n\016EVENT" +
-      "_EDGE_HIT\020\002BY\n!com.skymouse.skymouseclie" +
-      "nt.protoP\001Z2github.com/Tomahawk-Center/S" +
-      "kyMouse/proto;protoapib\006proto3"
+      "\001(\0132\016.skymouse.PongH\000\022)\n\007command\030\005 \001(\0162\026" +
+      ".skymouse.CommandEventH\000B\007\n\005event\"c\n\022Udp" +
+      "MessageToServer\022\021\n\tudp_token\030\001 \001(\r\0221\n\016em" +
+      "ulator_event\030\002 \001(\0132\027.skymouse.EmulatorEv" +
+      "entH\000B\007\n\005event\"x\n\017MessageToClient\022-\n\014ser" +
+      "ver_hello\030\001 \001(\0132\025.skymouse.ServerHelloH\000" +
+      "\022-\n\014server_event\030\002 \001(\0132\025.skymouse.Server" +
+      "EventH\000B\007\n\005event*W\n\013MouseButton\022\022\n\016BUTTO" +
+      "N_UNKNOWN\020\000\022\017\n\013BUTTON_LEFT\020\001\022\020\n\014BUTTON_R" +
+      "IGHT\020\002\022\021\n\rBUTTON_MIDDLE\020\003*>\n\013ButtonState" +
+      "\022\021\n\rSTATE_UNKNOWN\020\000\022\016\n\nSTATE_DOWN\020\001\022\014\n\010S" +
+      "TATE_UP\020\002*S\n\017HapticEventType\022\021\n\rEVENT_UN" +
+      "KNOWN\020\000\022\031\n\025EVENT_BORDER_CROSSING\020\001\022\022\n\016EV" +
+      "ENT_EDGE_HIT\020\002*f\n\014CommandEvent\022\023\n\017COMMAN" +
+      "D_UNKNOWN\020\000\022\025\n\021COMMAND_SHUT_DOWN\020\001\022\021\n\rCO" +
+      "MMAND_SLEEP\020\002\022\027\n\023COMMAND_LOCK_SCREEN\020\003BY" +
+      "\n!com.skymouse.skymouseclient.protoP\001Z2g" +
+      "ithub.com/Tomahawk-Center/SkyMouse/proto" +
+      ";protoapib\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -194,7 +198,7 @@ public final class Skymouse extends com.google.protobuf.GeneratedFile {
     internal_static_skymouse_MessageToServer_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_skymouse_MessageToServer_descriptor,
-        new java.lang.String[] { "ClientHello", "EmulatorEvent", "Ping", "Pong", "Event", });
+        new java.lang.String[] { "ClientHello", "EmulatorEvent", "Ping", "Pong", "Command", "Event", });
     internal_static_skymouse_UdpMessageToServer_descriptor =
       getDescriptor().getMessageType(10);
     internal_static_skymouse_UdpMessageToServer_fieldAccessorTable = new

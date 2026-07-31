@@ -21,11 +21,16 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import com.skymouse.skymouseclient.ui.MainViewModel
+import com.skymouse.skymouseclient.data.SkyMouseManager
+import com.skymouse.skymouseclient.ui.connection.ConnectionViewModel
+import com.skymouse.skymouseclient.ui.control.ControlViewModel
+import com.skymouse.skymouseclient.ui.main.MainViewModel
 import com.skymouse.skymouseclient.ui.navigation.Navigation
 
 class MainActivity : ComponentActivity() {
     private val mainViewModel: MainViewModel by viewModels()
+    private val connectionViewModel: ConnectionViewModel by viewModels()
+    private val controlViewModel: ControlViewModel by viewModels()
 
     private val requestLocalNetwork = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -44,6 +49,15 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        SkyMouseManager.loadSettings(applicationContext)
+
+        lifecycle.addObserver(mainViewModel)
+        lifecycle.addObserver(controlViewModel)
+
+        mainViewModel.onAutoConnect = { connectionViewModel.onConnectClicked() }
+        mainViewModel.onDisconnect = { connectionViewModel.disconnect() }
+
         setContent {
             val darkTheme = isSystemInDarkTheme()
             val context = LocalContext.current
@@ -71,7 +85,11 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Navigation(viewModel = mainViewModel)
+                    Navigation(
+                        mainViewModel = mainViewModel,
+                        connectionViewModel = connectionViewModel,
+                        controlViewModel = controlViewModel
+                    )
                 }
             }
         }

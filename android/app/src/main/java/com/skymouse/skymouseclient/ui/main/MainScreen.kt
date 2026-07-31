@@ -1,9 +1,10 @@
-package com.skymouse.skymouseclient.ui
+package com.skymouse.skymouseclient.ui.main
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardCommandKey
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -22,21 +23,54 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import com.skymouse.skymouseclient.data.TcpConnectionState
 import com.skymouse.skymouseclient.data.UdpConnectionState
+import com.skymouse.skymouseclient.data.util.KeepScreenAwakeInGyroMode
+import com.skymouse.skymouseclient.ui.connection.ConnectionScreen
+import com.skymouse.skymouseclient.ui.connection.ConnectionViewModel
+import com.skymouse.skymouseclient.ui.control.ControlScreen
+import com.skymouse.skymouseclient.ui.control.ControlViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(viewModel: MainViewModel, onNavigateToSettings: () -> Unit) {
-    val tcpState by viewModel.tcpConnectionState.collectAsState()
-    val udpState by viewModel.udpConnectionState.collectAsState()
+fun MainScreen(
+    mainViewModel: MainViewModel,
+    connectionViewModel: ConnectionViewModel,
+    controlViewModel: ControlViewModel,
+    onNavigateToSettings: () -> Unit
+) {
+    val tcpState by mainViewModel.tcpConnectionState.collectAsState()
+    val udpState by mainViewModel.udpConnectionState.collectAsState()
     val haptic = LocalHapticFeedback.current
 
     val isConnected = tcpState is TcpConnectionState.Connected && udpState is UdpConnectionState.Connected
+
+    val isGyroActive by controlViewModel.isGyroActive.collectAsState()
+
+    KeepScreenAwakeInGyroMode(
+        isGyroModeActive = controlViewModel.isGyroEnabled,
+        isGyroActive = isGyroActive
+    )
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("SkyMouse Client") },
                 actions = {
+                    if (isConnected) {
+                        IconButton(
+                            onClick = {
+                                haptic.performHapticFeedback(HapticFeedbackType.SegmentTick)
+                                controlViewModel.isCommandSheetShown = true
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.KeyboardCommandKey,
+                                contentDescription = "Commands",
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                        }
+                    }
+
+
                     IconButton(
                         onClick = {
                             haptic.performHapticFeedback(HapticFeedbackType.SegmentTick)
@@ -64,9 +98,13 @@ fun MainScreen(viewModel: MainViewModel, onNavigateToSettings: () -> Unit) {
             contentAlignment = Alignment.Center
         ) {
             if (isConnected) {
-                ControlScreen(viewModel)
+                ControlScreen(
+                    viewModel = controlViewModel,
+                    settingsStateFlow = mainViewModel.settingsState,
+                    onDisconnectClicked = { connectionViewModel.onDisconnectClicked() }
+                )
             } else {
-                ConnectionScreen(viewModel)
+                ConnectionScreen(viewModel = connectionViewModel)
             }
         }
     }

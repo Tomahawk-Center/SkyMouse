@@ -171,6 +171,58 @@ func (HapticEventType) EnumDescriptor() ([]byte, []int) {
 	return file_skymouse_proto_rawDescGZIP(), []int{2}
 }
 
+type CommandEvent int32
+
+const (
+	CommandEvent_COMMAND_UNKNOWN     CommandEvent = 0
+	CommandEvent_COMMAND_SHUT_DOWN   CommandEvent = 1
+	CommandEvent_COMMAND_SLEEP       CommandEvent = 2
+	CommandEvent_COMMAND_LOCK_SCREEN CommandEvent = 3
+)
+
+// Enum value maps for CommandEvent.
+var (
+	CommandEvent_name = map[int32]string{
+		0: "COMMAND_UNKNOWN",
+		1: "COMMAND_SHUT_DOWN",
+		2: "COMMAND_SLEEP",
+		3: "COMMAND_LOCK_SCREEN",
+	}
+	CommandEvent_value = map[string]int32{
+		"COMMAND_UNKNOWN":     0,
+		"COMMAND_SHUT_DOWN":   1,
+		"COMMAND_SLEEP":       2,
+		"COMMAND_LOCK_SCREEN": 3,
+	}
+)
+
+func (x CommandEvent) Enum() *CommandEvent {
+	p := new(CommandEvent)
+	*p = x
+	return p
+}
+
+func (x CommandEvent) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (CommandEvent) Descriptor() protoreflect.EnumDescriptor {
+	return file_skymouse_proto_enumTypes[3].Descriptor()
+}
+
+func (CommandEvent) Type() protoreflect.EnumType {
+	return &file_skymouse_proto_enumTypes[3]
+}
+
+func (x CommandEvent) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use CommandEvent.Descriptor instead.
+func (CommandEvent) EnumDescriptor() ([]byte, []int) {
+	return file_skymouse_proto_rawDescGZIP(), []int{3}
+}
+
 type MouseEvent struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	DeltaX        float32                `protobuf:"fixed32,1,opt,name=delta_x,json=deltaX,proto3" json:"delta_x,omitempty"`
@@ -685,6 +737,7 @@ type MessageToServer struct {
 	//	*MessageToServer_EmulatorEvent
 	//	*MessageToServer_Ping
 	//	*MessageToServer_Pong
+	//	*MessageToServer_Command
 	Event         isMessageToServer_Event `protobuf_oneof:"event"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -763,6 +816,15 @@ func (x *MessageToServer) GetPong() *Pong {
 	return nil
 }
 
+func (x *MessageToServer) GetCommand() CommandEvent {
+	if x != nil {
+		if x, ok := x.Event.(*MessageToServer_Command); ok {
+			return x.Command
+		}
+	}
+	return CommandEvent_COMMAND_UNKNOWN
+}
+
 type isMessageToServer_Event interface {
 	isMessageToServer_Event()
 }
@@ -783,6 +845,10 @@ type MessageToServer_Pong struct {
 	Pong *Pong `protobuf:"bytes,4,opt,name=pong,proto3,oneof"`
 }
 
+type MessageToServer_Command struct {
+	Command CommandEvent `protobuf:"varint,5,opt,name=command,proto3,enum=skymouse.CommandEvent,oneof"`
+}
+
 func (*MessageToServer_ClientHello) isMessageToServer_Event() {}
 
 func (*MessageToServer_EmulatorEvent) isMessageToServer_Event() {}
@@ -790,6 +856,8 @@ func (*MessageToServer_EmulatorEvent) isMessageToServer_Event() {}
 func (*MessageToServer_Ping) isMessageToServer_Event() {}
 
 func (*MessageToServer_Pong) isMessageToServer_Event() {}
+
+func (*MessageToServer_Command) isMessageToServer_Event() {}
 
 type UdpMessageToServer struct {
 	state    protoimpl.MessageState `protogen:"open.v1"`
@@ -982,12 +1050,13 @@ const file_skymouse_proto_rawDesc = "" +
 	"\x05mouse\x18\x01 \x01(\v2\x14.skymouse.MouseEventH\x00R\x05mouse\x12,\n" +
 	"\x05click\x18\x02 \x01(\v2\x14.skymouse.ClickEventH\x00R\x05click\x12/\n" +
 	"\x06scroll\x18\x03 \x01(\v2\x15.skymouse.ScrollEventH\x00R\x06scrollB\a\n" +
-	"\x05event\"\xe4\x01\n" +
+	"\x05event\"\x98\x02\n" +
 	"\x0fMessageToServer\x12:\n" +
 	"\fclient_hello\x18\x01 \x01(\v2\x15.skymouse.ClientHelloH\x00R\vclientHello\x12@\n" +
 	"\x0eemulator_event\x18\x02 \x01(\v2\x17.skymouse.EmulatorEventH\x00R\remulatorEvent\x12$\n" +
 	"\x04ping\x18\x03 \x01(\v2\x0e.skymouse.PingH\x00R\x04ping\x12$\n" +
-	"\x04pong\x18\x04 \x01(\v2\x0e.skymouse.PongH\x00R\x04pongB\a\n" +
+	"\x04pong\x18\x04 \x01(\v2\x0e.skymouse.PongH\x00R\x04pong\x122\n" +
+	"\acommand\x18\x05 \x01(\x0e2\x16.skymouse.CommandEventH\x00R\acommandB\a\n" +
 	"\x05event\"|\n" +
 	"\x12UdpMessageToServer\x12\x1b\n" +
 	"\tudp_token\x18\x01 \x01(\rR\budpToken\x12@\n" +
@@ -1010,7 +1079,12 @@ const file_skymouse_proto_rawDesc = "" +
 	"\x0fHapticEventType\x12\x11\n" +
 	"\rEVENT_UNKNOWN\x10\x00\x12\x19\n" +
 	"\x15EVENT_BORDER_CROSSING\x10\x01\x12\x12\n" +
-	"\x0eEVENT_EDGE_HIT\x10\x02BY\n" +
+	"\x0eEVENT_EDGE_HIT\x10\x02*f\n" +
+	"\fCommandEvent\x12\x13\n" +
+	"\x0fCOMMAND_UNKNOWN\x10\x00\x12\x15\n" +
+	"\x11COMMAND_SHUT_DOWN\x10\x01\x12\x11\n" +
+	"\rCOMMAND_SLEEP\x10\x02\x12\x17\n" +
+	"\x13COMMAND_LOCK_SCREEN\x10\x03BY\n" +
 	"!com.skymouse.skymouseclient.protoP\x01Z2github.com/Tomahawk-Center/SkyMouse/proto;protoapib\x06proto3"
 
 var (
@@ -1025,44 +1099,46 @@ func file_skymouse_proto_rawDescGZIP() []byte {
 	return file_skymouse_proto_rawDescData
 }
 
-var file_skymouse_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
+var file_skymouse_proto_enumTypes = make([]protoimpl.EnumInfo, 4)
 var file_skymouse_proto_msgTypes = make([]protoimpl.MessageInfo, 12)
 var file_skymouse_proto_goTypes = []any{
 	(MouseButton)(0),           // 0: skymouse.MouseButton
 	(ButtonState)(0),           // 1: skymouse.ButtonState
 	(HapticEventType)(0),       // 2: skymouse.HapticEventType
-	(*MouseEvent)(nil),         // 3: skymouse.MouseEvent
-	(*ClickEvent)(nil),         // 4: skymouse.ClickEvent
-	(*ScrollEvent)(nil),        // 5: skymouse.ScrollEvent
-	(*Ping)(nil),               // 6: skymouse.Ping
-	(*Pong)(nil),               // 7: skymouse.Pong
-	(*ClientHello)(nil),        // 8: skymouse.ClientHello
-	(*ServerHello)(nil),        // 9: skymouse.ServerHello
-	(*ServerEvent)(nil),        // 10: skymouse.ServerEvent
-	(*EmulatorEvent)(nil),      // 11: skymouse.EmulatorEvent
-	(*MessageToServer)(nil),    // 12: skymouse.MessageToServer
-	(*UdpMessageToServer)(nil), // 13: skymouse.UdpMessageToServer
-	(*MessageToClient)(nil),    // 14: skymouse.MessageToClient
+	(CommandEvent)(0),          // 3: skymouse.CommandEvent
+	(*MouseEvent)(nil),         // 4: skymouse.MouseEvent
+	(*ClickEvent)(nil),         // 5: skymouse.ClickEvent
+	(*ScrollEvent)(nil),        // 6: skymouse.ScrollEvent
+	(*Ping)(nil),               // 7: skymouse.Ping
+	(*Pong)(nil),               // 8: skymouse.Pong
+	(*ClientHello)(nil),        // 9: skymouse.ClientHello
+	(*ServerHello)(nil),        // 10: skymouse.ServerHello
+	(*ServerEvent)(nil),        // 11: skymouse.ServerEvent
+	(*EmulatorEvent)(nil),      // 12: skymouse.EmulatorEvent
+	(*MessageToServer)(nil),    // 13: skymouse.MessageToServer
+	(*UdpMessageToServer)(nil), // 14: skymouse.UdpMessageToServer
+	(*MessageToClient)(nil),    // 15: skymouse.MessageToClient
 }
 var file_skymouse_proto_depIdxs = []int32{
 	0,  // 0: skymouse.ClickEvent.button:type_name -> skymouse.MouseButton
 	1,  // 1: skymouse.ClickEvent.state:type_name -> skymouse.ButtonState
 	2,  // 2: skymouse.ServerEvent.type:type_name -> skymouse.HapticEventType
-	3,  // 3: skymouse.EmulatorEvent.mouse:type_name -> skymouse.MouseEvent
-	4,  // 4: skymouse.EmulatorEvent.click:type_name -> skymouse.ClickEvent
-	5,  // 5: skymouse.EmulatorEvent.scroll:type_name -> skymouse.ScrollEvent
-	8,  // 6: skymouse.MessageToServer.client_hello:type_name -> skymouse.ClientHello
-	11, // 7: skymouse.MessageToServer.emulator_event:type_name -> skymouse.EmulatorEvent
-	6,  // 8: skymouse.MessageToServer.ping:type_name -> skymouse.Ping
-	7,  // 9: skymouse.MessageToServer.pong:type_name -> skymouse.Pong
-	11, // 10: skymouse.UdpMessageToServer.emulator_event:type_name -> skymouse.EmulatorEvent
-	9,  // 11: skymouse.MessageToClient.server_hello:type_name -> skymouse.ServerHello
-	10, // 12: skymouse.MessageToClient.server_event:type_name -> skymouse.ServerEvent
-	13, // [13:13] is the sub-list for method output_type
-	13, // [13:13] is the sub-list for method input_type
-	13, // [13:13] is the sub-list for extension type_name
-	13, // [13:13] is the sub-list for extension extendee
-	0,  // [0:13] is the sub-list for field type_name
+	4,  // 3: skymouse.EmulatorEvent.mouse:type_name -> skymouse.MouseEvent
+	5,  // 4: skymouse.EmulatorEvent.click:type_name -> skymouse.ClickEvent
+	6,  // 5: skymouse.EmulatorEvent.scroll:type_name -> skymouse.ScrollEvent
+	9,  // 6: skymouse.MessageToServer.client_hello:type_name -> skymouse.ClientHello
+	12, // 7: skymouse.MessageToServer.emulator_event:type_name -> skymouse.EmulatorEvent
+	7,  // 8: skymouse.MessageToServer.ping:type_name -> skymouse.Ping
+	8,  // 9: skymouse.MessageToServer.pong:type_name -> skymouse.Pong
+	3,  // 10: skymouse.MessageToServer.command:type_name -> skymouse.CommandEvent
+	12, // 11: skymouse.UdpMessageToServer.emulator_event:type_name -> skymouse.EmulatorEvent
+	10, // 12: skymouse.MessageToClient.server_hello:type_name -> skymouse.ServerHello
+	11, // 13: skymouse.MessageToClient.server_event:type_name -> skymouse.ServerEvent
+	14, // [14:14] is the sub-list for method output_type
+	14, // [14:14] is the sub-list for method input_type
+	14, // [14:14] is the sub-list for extension type_name
+	14, // [14:14] is the sub-list for extension extendee
+	0,  // [0:14] is the sub-list for field type_name
 }
 
 func init() { file_skymouse_proto_init() }
@@ -1080,6 +1156,7 @@ func file_skymouse_proto_init() {
 		(*MessageToServer_EmulatorEvent)(nil),
 		(*MessageToServer_Ping)(nil),
 		(*MessageToServer_Pong)(nil),
+		(*MessageToServer_Command)(nil),
 	}
 	file_skymouse_proto_msgTypes[10].OneofWrappers = []any{
 		(*UdpMessageToServer_EmulatorEvent)(nil),
@@ -1093,7 +1170,7 @@ func file_skymouse_proto_init() {
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_skymouse_proto_rawDesc), len(file_skymouse_proto_rawDesc)),
-			NumEnums:      3,
+			NumEnums:      4,
 			NumMessages:   12,
 			NumExtensions: 0,
 			NumServices:   0,
