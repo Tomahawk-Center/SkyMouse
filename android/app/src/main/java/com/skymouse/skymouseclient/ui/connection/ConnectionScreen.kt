@@ -1,4 +1,4 @@
-package com.skymouse.skymouseclient.ui
+package com.skymouse.skymouseclient.ui.connection
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,13 +25,14 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.skymouse.skymouseclient.data.SkyMouseManager
 import com.skymouse.skymouseclient.data.TcpConnectionState
 import com.skymouse.skymouseclient.data.UdpConnectionState
 
 @Composable
-fun ConnectionScreen(viewModel: MainViewModel) {
-    val tcpState by viewModel.tcpConnectionState.collectAsState()
-    val udpState by viewModel.udpConnectionState.collectAsState()
+fun ConnectionScreen(viewModel: ConnectionViewModel) {
+    val tcpState by SkyMouseManager.tcpClient.connectionState.collectAsState()
+    val udpState by SkyMouseManager.udpClient.connectionState.collectAsState()
 
     val isConnecting = tcpState is TcpConnectionState.Connecting || udpState is UdpConnectionState.Connecting
     val error = (tcpState as? TcpConnectionState.Error)?.message ?: (udpState as? UdpConnectionState.Error)?.message
