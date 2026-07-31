@@ -19,16 +19,25 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.skymouse.skymouseclient.ui.MainScreen
-import com.skymouse.skymouseclient.ui.MainViewModel
-import com.skymouse.skymouseclient.ui.SettingsScreen
+import com.skymouse.skymouseclient.ui.connection.ConnectionViewModel
+import com.skymouse.skymouseclient.ui.control.ControlViewModel
+import com.skymouse.skymouseclient.ui.main.MainScreen
+import com.skymouse.skymouseclient.ui.main.MainViewModel
+import com.skymouse.skymouseclient.ui.settings.SettingsScreen
+import com.skymouse.skymouseclient.ui.settings.SettingsViewModel
 
 @Composable
-fun Navigation(viewModel: MainViewModel) {
+fun Navigation(
+    mainViewModel: MainViewModel,
+    connectionViewModel: ConnectionViewModel,
+    controlViewModel: ControlViewModel
+) {
     val navController = rememberNavController()
+    val settingsViewModel: SettingsViewModel = viewModel()
 
     Box(
         modifier = Modifier
@@ -76,14 +85,16 @@ fun Navigation(viewModel: MainViewModel) {
             composable("main") {
                 AnimatedCardWrapper {
                     MainScreen(
-                        viewModel = viewModel,
+                        mainViewModel = mainViewModel,
+                        connectionViewModel = connectionViewModel,
+                        controlViewModel = controlViewModel,
                         onNavigateToSettings = { navController.navigate("settings") }
                     )
                 }
             }
             composable("settings") {
                 AnimatedCardWrapper {
-                    SettingsScreen(viewModel = viewModel)
+                    SettingsScreen(viewModel = settingsViewModel)
                 }
             }
         }
