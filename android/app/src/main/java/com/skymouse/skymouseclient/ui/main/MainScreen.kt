@@ -59,7 +59,7 @@ fun MainScreen(
                         IconButton(
                             onClick = {
                                 haptic.performHapticFeedback(HapticFeedbackType.SegmentTick)
-                                viewModel.isCommandSheetShown = true
+                                controlViewModel.isCommandSheetShown = true
                             }
                         ) {
                             Icon(
