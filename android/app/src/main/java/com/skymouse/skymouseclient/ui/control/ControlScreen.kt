@@ -1,4 +1,4 @@
-package com.skymouse.skymouseclient.ui
+package com.skymouse.skymouseclient.ui.control
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -37,12 +37,18 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.skymouse.skymouseclient.data.SettingsState
 import com.skymouse.skymouseclient.proto.MouseButton
+import kotlinx.coroutines.flow.StateFlow
 import kotlin.math.sqrt
 
 @Composable
-fun ControlScreen(viewModel: MainViewModel) {
-    val settingsState by viewModel.settingsState.collectAsStateWithLifecycle()
+fun ControlScreen(
+    viewModel: ControlViewModel,
+    settingsStateFlow: StateFlow<SettingsState>,
+    onDisconnectClicked: () -> Unit
+) {
+    val settingsState by settingsStateFlow.collectAsStateWithLifecycle()
 
     val haptic = LocalHapticFeedback.current
 
@@ -204,7 +210,7 @@ fun ControlScreen(viewModel: MainViewModel) {
         Button(
             onClick = {
                 haptic.performHapticFeedback(HapticFeedbackType.GestureThresholdActivate)
-                viewModel.onDisconnectClicked()
+                onDisconnectClicked()
                       },
             modifier = Modifier
                 .fillMaxWidth()
