@@ -16,6 +16,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import com.skymouse.skymouseclient.data.GyroscopeProvider
 import com.skymouse.skymouseclient.data.SkyMouseManager
+import com.skymouse.skymouseclient.proto.CommandEvent
 import com.skymouse.skymouseclient.proto.MouseButton
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -201,5 +202,17 @@ class ControlViewModel(
 
     override fun onCleared() {
         gyroscopeProvider.stop()
+    }
+
+
+    var isCommandSheetShown by mutableStateOf(false)
+
+    fun onSendCommand(command: CommandEvent) {
+        viewModelScope.launch {
+            val msg = com.skymouse.skymouseclient.proto.messageToServer {
+                this.command = command
+            }
+            tcpClientManager.sendProto(msg)
+        }
     }
 }
