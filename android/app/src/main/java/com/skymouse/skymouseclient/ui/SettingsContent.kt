@@ -187,6 +187,7 @@ private fun SettingsContent(
 
             Spacer(modifier = Modifier.height(36.dp))
 
+            // Auto-reconnect
             Text(
                 text = "Auto Reconnect",
                 style = MaterialTheme.typography.titleMedium

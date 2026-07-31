@@ -54,7 +54,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application), D
         gyroscopeProvider.stop()
 
         if (tcpConnectionState.value is TcpConnectionState.Connected) {
-            shouldAutoReconnect = true
+            if (settingsState.value.autoReconnect) {
+                shouldAutoReconnect = true
+            }
+
             disconnect()
         }
     }
