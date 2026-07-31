@@ -1,6 +1,10 @@
 package com.skymouse.skymouseclient.ui
 
+import android.os.Build
+import android.os.ext.SdkExtensions
+import androidx.annotation.RequiresExtension
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -15,32 +19,153 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bedtime
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.PowerSettingsNew
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
+import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.changedToDown
 import androidx.compose.ui.input.pointer.changedToUp
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.skymouse.skymouseclient.proto.CommandEvent
 import com.skymouse.skymouseclient.proto.MouseButton
+import kotlinx.coroutines.launch
 import kotlin.math.sqrt
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ControlScreen(viewModel: MainViewModel) {
     val settingsState by viewModel.settingsState.collectAsStateWithLifecycle()
+
+    val haptic = LocalHapticFeedback.current
+
+    val bottomSheetState = rememberModalBottomSheetState()
+    val scope = rememberCoroutineScope()
+    var pendingCommand by remember { mutableStateOf<CommandEvent?>(null) }
+
+    if (pendingCommand != null) {
+        val commandName = when (pendingCommand) {
+            CommandEvent.COMMAND_SHUT_DOWN -> "Shut Down"
+            CommandEvent.COMMAND_SLEEP -> "Sleep"
+            CommandEvent.COMMAND_LOCK_SCREEN -> "Lock Screen"
+            else -> "Unknown Command"
+        }
+
+        AlertDialog(
+            onDismissRequest = { pendingCommand = null },
+            title = { Text("Confirm Action") },
+            text = { Text("Are you sure you want to $commandName the server?") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        val event = pendingCommand!!
+                        pendingCommand = null
+
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        viewModel.onSendCommand(event)
+
+                        scope.launch { bottomSheetState.hide() }.invokeOnCompletion {
+                            if (!bottomSheetState.isVisible) {
+                                viewModel.isCommandSheetShown = false
+                            }
+                        }
+                    }
+                ) {
+                    Text("Confirm", color = MaterialTheme.colorScheme.error)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.Reject)
+                    pendingCommand = null
+                }) {
+                    Text("Cancel")
+                }
+            }
+        )
+    }
+
+    if (viewModel.isCommandSheetShown) {
+        if (!(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && SdkExtensions.getExtensionVersion(Build.VERSION_CODES.S) >= 13)) {
+            viewModel.isCommandSheetShown = false
+            return
+        }
+
+        ModalBottomSheet(
+            onDismissRequest = {viewModel.isCommandSheetShown = false},
+            sheetState = bottomSheetState
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 32.dp)
+            ) {
+                Text(
+                    "Server Commands",
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(16.dp)
+                )
+
+                val onCommandSelected: (CommandEvent)->Unit = { event ->
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    pendingCommand = event
+                }
+
+                CommandItem(
+                    text = "Shut Down",
+                    icon = Icons.Default.PowerSettingsNew,
+                    onClick = {
+                        onCommandSelected(CommandEvent.COMMAND_SHUT_DOWN)
+
+                    }
+                )
+
+                CommandItem(
+                    text = "Sleep",
+                    icon = Icons.Default.Bedtime,
+                    onClick = {
+                        onCommandSelected(CommandEvent.COMMAND_SLEEP)
+                    }
+                )
+                CommandItem(
+                    text = "Lock Screen",
+                    icon = Icons.Default.Lock,
+                    onClick = {
+                        onCommandSelected(CommandEvent.COMMAND_LOCK_SCREEN)
+                    }
+                )
+
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -246,4 +371,19 @@ fun MouseInteractionButton(
     ) {
         Text(text, color = MaterialTheme.colorScheme.onPrimary, style = MaterialTheme.typography.titleSmall)
     }
+}
+
+
+@RequiresExtension(extension = Build.VERSION_CODES.S, version = 13)
+@Composable
+fun CommandItem(
+    text: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    onClick: ()->Unit) {
+    ListItem(
+        headlineContent = {Text(text)},
+        leadingContent = {Icon(icon, contentDescription = null)},
+        modifier = Modifier.clickable {onClick()},
+        colors = ListItemDefaults.colors(containerColor = Color.Transparent)
+    )
 }
