@@ -173,8 +173,6 @@ fun ControlScreen(
         }
     }
 
-    val haptic = LocalHapticFeedback.current
-
     Column(
         modifier = Modifier
             .fillMaxSize()
