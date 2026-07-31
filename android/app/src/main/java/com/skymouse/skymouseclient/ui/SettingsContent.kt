@@ -60,7 +60,8 @@ fun SettingsScreen(
         onTouchpadAccelerationChange = viewModel::onTouchpadAccelerationChange,
         onLongPressVibrationLevelChange = viewModel::onLongPressVibrationLevelChange,
         onScrollMultiplierChange = viewModel::onScrollMultiplierChange,
-        onAutoReconnectChange = viewModel::onAutoReconnectChange
+        onAutoReconnectChange = viewModel::onAutoReconnectChange,
+        onAutoConnectOnStartupChange = viewModel::onAutoConnectOnStartupChange
     )
 }
 
@@ -74,7 +75,8 @@ private fun SettingsContent(
     onTouchpadAccelerationChange: (Float) -> Unit,
     onLongPressVibrationLevelChange: (Int) -> Unit,
     onScrollMultiplierChange: (Int) -> Unit,
-    onAutoReconnectChange: (Boolean) -> Unit
+    onAutoReconnectChange: (Boolean) -> Unit,
+    onAutoConnectOnStartupChange: (Boolean) -> Unit,
 ) {
     val haptic = LocalHapticFeedback.current
 
@@ -205,6 +207,46 @@ private fun SettingsContent(
                 thumbContent = {
                     AnimatedContent(
                         targetState = settingsState.autoReconnect,
+                        transitionSpec = { fadeIn(tween(100)) togetherWith fadeOut(tween(100)) },
+                        label = "switch_thumb_icon"
+                    ) { isSelected ->
+                        Icon(
+                            imageVector = if (isSelected) Icons.Rounded.Check else Icons.Rounded.Close,
+                            contentDescription = null,
+                            modifier = Modifier.size(SwitchDefaults.IconSize)
+                        )
+                    }
+                },
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
+                    checkedTrackColor = MaterialTheme.colorScheme.primary,
+                    checkedIconColor = MaterialTheme.colorScheme.primary,
+                    uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant,
+                    uncheckedIconColor = MaterialTheme.colorScheme.surfaceVariant
+                )
+            )
+
+            Spacer(modifier = Modifier.height(36.dp))
+
+            // Auto-connect on startup
+            Text(
+                text = "Auto Connect on app startup",
+                style = MaterialTheme.typography.titleMedium
+            )
+            Switch(
+                checked = settingsState.autoConnectOnStartup,
+                onCheckedChange = {
+                    if (it) {
+                        haptic.performHapticFeedback(HapticFeedbackType.GestureThresholdActivate)
+                    } else {
+                        haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                    }
+                    onAutoConnectOnStartupChange(it)
+                },
+                thumbContent = {
+                    AnimatedContent(
+                        targetState = settingsState.autoConnectOnStartup,
                         transitionSpec = { fadeIn(tween(100)) togetherWith fadeOut(tween(100)) },
                         label = "switch_thumb_icon"
                     ) { isSelected ->
