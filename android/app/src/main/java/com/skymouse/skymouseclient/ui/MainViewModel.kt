@@ -37,6 +37,7 @@ import kotlin.time.Duration.Companion.milliseconds
 class MainViewModel(application: Application) : AndroidViewModel(application), DefaultLifecycleObserver {
 
     private var shouldAutoReconnect = false
+    private var isFirstStart = true
 
     override fun onStart(owner: LifecycleOwner) {
         super.onStart(owner)
@@ -44,7 +45,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application), D
             gyroscopeProvider.start()
         }
 
-        if (shouldAutoReconnect && tcpConnectionState.value !is TcpConnectionState.Connected) {
+        val shouldConnect = (isFirstStart && settingsState.value.autoConnectOnStartup) || shouldAutoReconnect
+        isFirstStart = false
+
+        if (shouldConnect && tcpConnectionState.value !is TcpConnectionState.Connected) {
             onConnectClicked()
         }
     }
@@ -54,7 +58,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application), D
         gyroscopeProvider.stop()
 
         if (tcpConnectionState.value is TcpConnectionState.Connected) {
-            shouldAutoReconnect = true
+            if (settingsState.value.autoReconnect) {
+                shouldAutoReconnect = true
+            }
+
             disconnect()
         }
     }
@@ -94,6 +101,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application), D
 
     fun onAutoReconnectChange(newValue: Boolean) {
         _settingsState.update { it.copy(autoReconnect = newValue) }
+    }
+
+    fun onAutoConnectOnStartupChange(newValue: Boolean) {
+        _settingsState.update { it.copy(autoConnectOnStartup = newValue) }
     }
 
     var isGyroEnabled by mutableStateOf(prefs.getBoolean("gyro_enabled", false))
@@ -202,6 +213,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application), D
             putInt("long_press_vibration", state.longPressVibrationLevel)
             putInt("scroll_multiplier", state.scrollMultiplier)
             putBoolean("auto_reconnect", state.autoReconnect)
+            putBoolean("auto_connect_on_startup", state.autoConnectOnStartup)
         }
     }
 
@@ -213,7 +225,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application), D
             touchpadAcceleration = prefs.getFloat("touchpad_acceleration", 0.05f),
             longPressVibrationLevel = prefs.getInt("long_press_vibration", 1),
             scrollMultiplier = prefs.getInt("scroll_multiplier", 1),
-            autoReconnect = prefs.getBoolean("auto_reconnect", true)
+            autoReconnect = prefs.getBoolean("auto_reconnect", true),
+            autoConnectOnStartup = prefs.getBoolean("auto_connect_on_startup", false)
         )
         _settingsState.value = loadedState
     }

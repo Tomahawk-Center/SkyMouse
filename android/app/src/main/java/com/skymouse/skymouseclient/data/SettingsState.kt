@@ -12,4 +12,6 @@ data class SettingsState(
     val scrollMultiplier: Int = 1,
 
     val autoReconnect: Boolean = true,
+
+    val autoConnectOnStartup: Boolean = false,
 )
