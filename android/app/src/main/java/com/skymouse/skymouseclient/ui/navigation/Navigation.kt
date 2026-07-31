@@ -88,7 +88,13 @@ fun Navigation(
                         mainViewModel = mainViewModel,
                         connectionViewModel = connectionViewModel,
                         controlViewModel = controlViewModel,
-                        onNavigateToSettings = { navController.navigate("settings") }
+                        onNavigateToSettings = {
+                            if (navController.currentDestination?.route != "settings") {
+                                navController.navigate("settings") {
+                                    launchSingleTop = true
+                                }
+                            }
+                        }
                     )
                 }
             }
