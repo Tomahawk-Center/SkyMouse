@@ -8,6 +8,7 @@ import (
 	"net"
 	"sync"
 
+	"github.com/Tomahawk-Center/SkyMouse/pc/internal/commands"
 	"github.com/Tomahawk-Center/SkyMouse/pc/internal/server"
 	"github.com/Tomahawk-Center/SkyMouse/pc/internal/session"
 	"github.com/Tomahawk-Center/SkyMouse/pc/internal/util/version_verifier"
@@ -243,6 +244,24 @@ func (s *Server) routeMessage(sess *session.Session, m *protoapi.MessageToServer
 	case *protoapi.MessageToServer_EmulatorEvent:
 		if sess.IsHandshake() {
 			s.handler.Handle(sess.Id(), m.GetEmulatorEvent())
+		}
+
+	case *protoapi.MessageToServer_Command:
+		if sess.IsHandshake() {
+			var err error
+			switch m.GetCommand() {
+			case protoapi.CommandEvent_COMMAND_SHUT_DOWN:
+				err = commands.Shutdown()
+			case protoapi.CommandEvent_COMMAND_SLEEP:
+				err = commands.Sleep()
+			case protoapi.CommandEvent_COMMAND_LOCK_SCREEN:
+				err = commands.LockScreen()
+			default:
+				return
+			}
+			if err != nil {
+				log.Printf("Command execute failed: %v", err)
+			}
 		}
 
 	case *protoapi.MessageToServer_Ping:
