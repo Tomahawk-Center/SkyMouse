@@ -21,6 +21,7 @@ import com.skymouse.skymouseclient.data.UdpClientManager
 import com.skymouse.skymouseclient.data.UdpConnectionState
 import com.skymouse.skymouseclient.data.util.VersionVerificationResult
 import com.skymouse.skymouseclient.data.util.VersionVerifier
+import com.skymouse.skymouseclient.proto.CommandEvent
 import com.skymouse.skymouseclient.proto.HapticEventType
 import com.skymouse.skymouseclient.proto.MouseButton
 import com.skymouse.skymouseclient.proto.ServerEvent
@@ -38,6 +39,17 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _settingsState = MutableStateFlow(SettingsState())
     val settingsState: StateFlow<SettingsState> = _settingsState
+
+    var isCommandSheetShown by mutableStateOf(false)
+
+    fun onSendCommand(command: CommandEvent) {
+        viewModelScope.launch {
+            val msg = com.skymouse.skymouseclient.proto.messageToServer {
+                this.command = command
+            }
+            tcpClientManager.sendProto(msg)
+        }
+    }
 
     fun onSensitivityChange(newValue: Float) {
         _settingsState.update { currentState ->
