@@ -413,6 +413,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application), D
         onMouseMove(dx, dy)
     }
 
+    val isGyroActive: StateFlow<Boolean> = gyroscopeProvider.isGyroActive
+
     init {
         loadSettings()
 
