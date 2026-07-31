@@ -100,7 +100,10 @@ fun Navigation(
             }
             composable("settings") {
                 AnimatedCardWrapper {
-                    SettingsScreen(viewModel = settingsViewModel)
+                    SettingsScreen(
+                        viewModel = settingsViewModel,
+                        onNavigateBack = { navController.popBackStack() }
+                    )
                 }
             }
         }
