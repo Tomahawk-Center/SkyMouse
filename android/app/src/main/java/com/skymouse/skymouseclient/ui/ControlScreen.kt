@@ -30,9 +30,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.changedToDown
 import androidx.compose.ui.input.pointer.changedToUp
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.skymouse.skymouseclient.proto.MouseButton
@@ -41,6 +43,8 @@ import kotlin.math.sqrt
 @Composable
 fun ControlScreen(viewModel: MainViewModel) {
     val settingsState by viewModel.settingsState.collectAsStateWithLifecycle()
+
+    val haptic = LocalHapticFeedback.current
 
     Column(
         modifier = Modifier
@@ -175,7 +179,10 @@ fun ControlScreen(viewModel: MainViewModel) {
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(
-            onClick = { viewModel.toggleControlMode() },
+            onClick = {
+                haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                viewModel.toggleControlMode()
+                      },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp),
@@ -195,7 +202,10 @@ fun ControlScreen(viewModel: MainViewModel) {
 
         // disconnect button
         Button(
-            onClick = { viewModel.onDisconnectClicked() },
+            onClick = {
+                haptic.performHapticFeedback(HapticFeedbackType.GestureThresholdActivate)
+                viewModel.onDisconnectClicked()
+                      },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),

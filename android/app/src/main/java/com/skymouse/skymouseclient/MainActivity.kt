@@ -44,6 +44,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        lifecycle.addObserver(mainViewModel)
+
         setContent {
             val darkTheme = isSystemInDarkTheme()
             val context = LocalContext.current
