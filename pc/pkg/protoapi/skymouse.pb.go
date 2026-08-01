@@ -865,6 +865,7 @@ type UdpMessageToServer struct {
 	// Types that are valid to be assigned to Event:
 	//
 	//	*UdpMessageToServer_EmulatorEvent
+	//	*UdpMessageToServer_Ping
 	Event         isUdpMessageToServer_Event `protobuf_oneof:"event"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -923,6 +924,15 @@ func (x *UdpMessageToServer) GetEmulatorEvent() *EmulatorEvent {
 	return nil
 }
 
+func (x *UdpMessageToServer) GetPing() *Ping {
+	if x != nil {
+		if x, ok := x.Event.(*UdpMessageToServer_Ping); ok {
+			return x.Ping
+		}
+	}
+	return nil
+}
+
 type isUdpMessageToServer_Event interface {
 	isUdpMessageToServer_Event()
 }
@@ -931,7 +941,13 @@ type UdpMessageToServer_EmulatorEvent struct {
 	EmulatorEvent *EmulatorEvent `protobuf:"bytes,2,opt,name=emulator_event,json=emulatorEvent,proto3,oneof"`
 }
 
+type UdpMessageToServer_Ping struct {
+	Ping *Ping `protobuf:"bytes,3,opt,name=ping,proto3,oneof"`
+}
+
 func (*UdpMessageToServer_EmulatorEvent) isUdpMessageToServer_Event() {}
+
+func (*UdpMessageToServer_Ping) isUdpMessageToServer_Event() {}
 
 type MessageToClient struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -939,6 +955,7 @@ type MessageToClient struct {
 	//
 	//	*MessageToClient_ServerHello
 	//	*MessageToClient_ServerEvent
+	//	*MessageToClient_Pong
 	Event         isMessageToClient_Event `protobuf_oneof:"event"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -999,6 +1016,15 @@ func (x *MessageToClient) GetServerEvent() *ServerEvent {
 	return nil
 }
 
+func (x *MessageToClient) GetPong() *Pong {
+	if x != nil {
+		if x, ok := x.Event.(*MessageToClient_Pong); ok {
+			return x.Pong
+		}
+	}
+	return nil
+}
+
 type isMessageToClient_Event interface {
 	isMessageToClient_Event()
 }
@@ -1011,9 +1037,15 @@ type MessageToClient_ServerEvent struct {
 	ServerEvent *ServerEvent `protobuf:"bytes,2,opt,name=server_event,json=serverEvent,proto3,oneof"`
 }
 
+type MessageToClient_Pong struct {
+	Pong *Pong `protobuf:"bytes,3,opt,name=pong,proto3,oneof"`
+}
+
 func (*MessageToClient_ServerHello) isMessageToClient_Event() {}
 
 func (*MessageToClient_ServerEvent) isMessageToClient_Event() {}
+
+func (*MessageToClient_Pong) isMessageToClient_Event() {}
 
 var File_skymouse_proto protoreflect.FileDescriptor
 
@@ -1057,14 +1089,16 @@ const file_skymouse_proto_rawDesc = "" +
 	"\x04ping\x18\x03 \x01(\v2\x0e.skymouse.PingH\x00R\x04ping\x12$\n" +
 	"\x04pong\x18\x04 \x01(\v2\x0e.skymouse.PongH\x00R\x04pong\x122\n" +
 	"\acommand\x18\x05 \x01(\x0e2\x16.skymouse.CommandEventH\x00R\acommandB\a\n" +
-	"\x05event\"|\n" +
+	"\x05event\"\xa2\x01\n" +
 	"\x12UdpMessageToServer\x12\x1b\n" +
 	"\tudp_token\x18\x01 \x01(\rR\budpToken\x12@\n" +
-	"\x0eemulator_event\x18\x02 \x01(\v2\x17.skymouse.EmulatorEventH\x00R\remulatorEventB\a\n" +
-	"\x05event\"\x92\x01\n" +
+	"\x0eemulator_event\x18\x02 \x01(\v2\x17.skymouse.EmulatorEventH\x00R\remulatorEvent\x12$\n" +
+	"\x04ping\x18\x03 \x01(\v2\x0e.skymouse.PingH\x00R\x04pingB\a\n" +
+	"\x05event\"\xb8\x01\n" +
 	"\x0fMessageToClient\x12:\n" +
 	"\fserver_hello\x18\x01 \x01(\v2\x15.skymouse.ServerHelloH\x00R\vserverHello\x12:\n" +
-	"\fserver_event\x18\x02 \x01(\v2\x15.skymouse.ServerEventH\x00R\vserverEventB\a\n" +
+	"\fserver_event\x18\x02 \x01(\v2\x15.skymouse.ServerEventH\x00R\vserverEvent\x12$\n" +
+	"\x04pong\x18\x03 \x01(\v2\x0e.skymouse.PongH\x00R\x04pongB\a\n" +
 	"\x05event*W\n" +
 	"\vMouseButton\x12\x12\n" +
 	"\x0eBUTTON_UNKNOWN\x10\x00\x12\x0f\n" +
@@ -1132,13 +1166,15 @@ var file_skymouse_proto_depIdxs = []int32{
 	8,  // 9: skymouse.MessageToServer.pong:type_name -> skymouse.Pong
 	3,  // 10: skymouse.MessageToServer.command:type_name -> skymouse.CommandEvent
 	12, // 11: skymouse.UdpMessageToServer.emulator_event:type_name -> skymouse.EmulatorEvent
-	10, // 12: skymouse.MessageToClient.server_hello:type_name -> skymouse.ServerHello
-	11, // 13: skymouse.MessageToClient.server_event:type_name -> skymouse.ServerEvent
-	14, // [14:14] is the sub-list for method output_type
-	14, // [14:14] is the sub-list for method input_type
-	14, // [14:14] is the sub-list for extension type_name
-	14, // [14:14] is the sub-list for extension extendee
-	0,  // [0:14] is the sub-list for field type_name
+	7,  // 12: skymouse.UdpMessageToServer.ping:type_name -> skymouse.Ping
+	10, // 13: skymouse.MessageToClient.server_hello:type_name -> skymouse.ServerHello
+	11, // 14: skymouse.MessageToClient.server_event:type_name -> skymouse.ServerEvent
+	8,  // 15: skymouse.MessageToClient.pong:type_name -> skymouse.Pong
+	16, // [16:16] is the sub-list for method output_type
+	16, // [16:16] is the sub-list for method input_type
+	16, // [16:16] is the sub-list for extension type_name
+	16, // [16:16] is the sub-list for extension extendee
+	0,  // [0:16] is the sub-list for field type_name
 }
 
 func init() { file_skymouse_proto_init() }
@@ -1160,10 +1196,12 @@ func file_skymouse_proto_init() {
 	}
 	file_skymouse_proto_msgTypes[10].OneofWrappers = []any{
 		(*UdpMessageToServer_EmulatorEvent)(nil),
+		(*UdpMessageToServer_Ping)(nil),
 	}
 	file_skymouse_proto_msgTypes[11].OneofWrappers = []any{
 		(*MessageToClient_ServerHello)(nil),
 		(*MessageToClient_ServerEvent)(nil),
+		(*MessageToClient_Pong)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
