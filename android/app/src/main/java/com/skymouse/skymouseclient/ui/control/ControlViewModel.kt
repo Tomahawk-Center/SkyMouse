@@ -53,6 +53,7 @@ class ControlViewModel(
 
     private val pressedButtons = mutableSetOf<MouseButton>()
     private var holdVibrationJob: Job? = null
+    private var isHoldingVibration = false
 
     init {
         viewModelScope.launch {
@@ -91,16 +92,17 @@ class ControlViewModel(
             val isFirstButton = pressedButtons.isEmpty()
             pressedButtons.add(button)
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
-                vibrateLocal(VibrationEffect.EFFECT_CLICK, VibrationEffect.Composition.DELAY_TYPE_RELATIVE_START_OFFSET, 0.7f)
-            } else {
-                vibrateLocal(VibrationEffect.EFFECT_CLICK, 0, 0.8f)
-            }
-
             if (isFirstButton) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    vibrateLocal(VibrationEffect.EFFECT_CLICK, VibrationEffect.Composition.PRIMITIVE_CLICK, 0.7f)
+                } else {
+                    vibrateLocal(VibrationEffect.EFFECT_CLICK, 0, 0.8f)
+                }
+
                 holdVibrationJob?.cancel()
                 holdVibrationJob = viewModelScope.launch {
-                    delay(150.milliseconds)
+                    delay(200.milliseconds)
+                    isHoldingVibration = true
                     startHoldVibration()
                 }
             }
@@ -108,7 +110,10 @@ class ControlViewModel(
             pressedButtons.remove(button)
             if (pressedButtons.isEmpty()) {
                 holdVibrationJob?.cancel()
-                vibrator.cancel()
+                if (isHoldingVibration) {
+                    vibrator.cancel()
+                    isHoldingVibration = false
+                }
             }
         }
 
