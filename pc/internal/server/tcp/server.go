@@ -3,6 +3,7 @@ package tcp
 import (
 	"encoding/binary"
 	"errors"
+	"fmt"
 	"io"
 	"log"
 	"net"
@@ -14,6 +15,11 @@ import (
 	"github.com/Tomahawk-Center/SkyMouse/pc/internal/util/version_verifier"
 	"github.com/Tomahawk-Center/SkyMouse/pc/pkg/protoapi"
 	"google.golang.org/protobuf/proto"
+)
+
+var (
+	ErrConnNotFound = errors.New("connection not found")
+	ErrNilConn      = errors.New("nil connection")
 )
 
 type Server struct {
@@ -166,6 +172,37 @@ func (s *Server) handleConnection(conn net.Conn) {
 
 		s.routeMessage(sess, &msg)
 	}
+}
+
+func (s *Server) sendProto(sessionId string, msg proto.Message) error {
+	b, err := proto.Marshal(msg)
+	if err != nil {
+		return fmt.Errorf("send protobuf message failed: %w", err)
+	}
+
+	packet := make([]byte, 4+len(b))
+	binary.BigEndian.PutUint32(packet[0:4], uint32(len(b)))
+	copy(packet[4:], b)
+
+	s.mu.Lock()
+	conn, ok := s.conns[sessionId]
+	s.mu.Unlock()
+
+	if !ok {
+		return fmt.Errorf("send protobuf message failed: %w", ErrConnNotFound)
+	}
+
+	c := conn
+	if c == nil {
+		return fmt.Errorf("send protobuf message failed: %w", ErrNilConn)
+	}
+
+	_, err = c.Write(packet)
+	if err != nil {
+		return fmt.Errorf("send protobuf message failed: %w", err)
+	}
+
+	return nil
 }
 
 func (s *Server) handlePing() error {
