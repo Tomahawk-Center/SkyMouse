@@ -76,6 +76,30 @@ public object MessageToClientKt {
     public fun hasServerEvent(): kotlin.Boolean {
       return _builder.hasServerEvent()
     }
+
+    /**
+     * `.skymouse.Pong pong = 3;`
+     */
+    public var pong: com.skymouse.skymouseclient.proto.Pong
+      @kotlin.jvm.JvmName("getPong")
+        get() = _builder.pong
+      @kotlin.jvm.JvmName("setPong")
+        set(value) {
+        _builder.pong = value
+      }
+    /**
+     * `.skymouse.Pong pong = 3;`
+     */
+    public fun clearPong() {
+      _builder.clearPong()
+    }
+    /**
+     * `.skymouse.Pong pong = 3;`
+     * @return Whether the pong field is set.
+     */
+    public fun hasPong(): kotlin.Boolean {
+      return _builder.hasPong()
+    }
     public val eventCase: com.skymouse.skymouseclient.proto.MessageToClient.EventCase
     @kotlin.jvm.JvmName("getEventCase")
       get() = _builder.getEventCase()
@@ -94,4 +118,7 @@ public val com.skymouse.skymouseclient.proto.MessageToClientOrBuilder.serverHell
 
 public val com.skymouse.skymouseclient.proto.MessageToClientOrBuilder.serverEventOrNull: com.skymouse.skymouseclient.proto.ServerEvent?
   get() = if (hasServerEvent()) getServerEvent() else null
+
+public val com.skymouse.skymouseclient.proto.MessageToClientOrBuilder.pongOrNull: com.skymouse.skymouseclient.proto.Pong?
+  get() = if (hasPong()) getPong() else null
 

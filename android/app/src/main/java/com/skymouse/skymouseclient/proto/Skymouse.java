@@ -116,24 +116,26 @@ public final class Skymouse extends com.google.protobuf.GeneratedFile {
       "vent\030\002 \001(\0132\027.skymouse.EmulatorEventH\000\022\036\n" +
       "\004ping\030\003 \001(\0132\016.skymouse.PingH\000\022\036\n\004pong\030\004 " +
       "\001(\0132\016.skymouse.PongH\000\022)\n\007command\030\005 \001(\0162\026" +
-      ".skymouse.CommandEventH\000B\007\n\005event\"c\n\022Udp" +
-      "MessageToServer\022\021\n\tudp_token\030\001 \001(\r\0221\n\016em" +
-      "ulator_event\030\002 \001(\0132\027.skymouse.EmulatorEv" +
-      "entH\000B\007\n\005event\"x\n\017MessageToClient\022-\n\014ser" +
-      "ver_hello\030\001 \001(\0132\025.skymouse.ServerHelloH\000" +
-      "\022-\n\014server_event\030\002 \001(\0132\025.skymouse.Server" +
-      "EventH\000B\007\n\005event*W\n\013MouseButton\022\022\n\016BUTTO" +
-      "N_UNKNOWN\020\000\022\017\n\013BUTTON_LEFT\020\001\022\020\n\014BUTTON_R" +
-      "IGHT\020\002\022\021\n\rBUTTON_MIDDLE\020\003*>\n\013ButtonState" +
-      "\022\021\n\rSTATE_UNKNOWN\020\000\022\016\n\nSTATE_DOWN\020\001\022\014\n\010S" +
-      "TATE_UP\020\002*S\n\017HapticEventType\022\021\n\rEVENT_UN" +
-      "KNOWN\020\000\022\031\n\025EVENT_BORDER_CROSSING\020\001\022\022\n\016EV" +
-      "ENT_EDGE_HIT\020\002*f\n\014CommandEvent\022\023\n\017COMMAN" +
-      "D_UNKNOWN\020\000\022\025\n\021COMMAND_SHUT_DOWN\020\001\022\021\n\rCO" +
-      "MMAND_SLEEP\020\002\022\027\n\023COMMAND_LOCK_SCREEN\020\003BY" +
-      "\n!com.skymouse.skymouseclient.protoP\001Z2g" +
-      "ithub.com/Tomahawk-Center/SkyMouse/proto" +
-      ";protoapib\006proto3"
+      ".skymouse.CommandEventH\000B\007\n\005event\"\203\001\n\022Ud" +
+      "pMessageToServer\022\021\n\tudp_token\030\001 \001(\r\0221\n\016e" +
+      "mulator_event\030\002 \001(\0132\027.skymouse.EmulatorE" +
+      "ventH\000\022\036\n\004ping\030\003 \001(\0132\016.skymouse.PingH\000B\007" +
+      "\n\005event\"\230\001\n\017MessageToClient\022-\n\014server_he" +
+      "llo\030\001 \001(\0132\025.skymouse.ServerHelloH\000\022-\n\014se" +
+      "rver_event\030\002 \001(\0132\025.skymouse.ServerEventH" +
+      "\000\022\036\n\004pong\030\003 \001(\0132\016.skymouse.PongH\000B\007\n\005eve" +
+      "nt*W\n\013MouseButton\022\022\n\016BUTTON_UNKNOWN\020\000\022\017\n" +
+      "\013BUTTON_LEFT\020\001\022\020\n\014BUTTON_RIGHT\020\002\022\021\n\rBUTT" +
+      "ON_MIDDLE\020\003*>\n\013ButtonState\022\021\n\rSTATE_UNKN" +
+      "OWN\020\000\022\016\n\nSTATE_DOWN\020\001\022\014\n\010STATE_UP\020\002*S\n\017H" +
+      "apticEventType\022\021\n\rEVENT_UNKNOWN\020\000\022\031\n\025EVE" +
+      "NT_BORDER_CROSSING\020\001\022\022\n\016EVENT_EDGE_HIT\020\002" +
+      "*f\n\014CommandEvent\022\023\n\017COMMAND_UNKNOWN\020\000\022\025\n" +
+      "\021COMMAND_SHUT_DOWN\020\001\022\021\n\rCOMMAND_SLEEP\020\002\022" +
+      "\027\n\023COMMAND_LOCK_SCREEN\020\003BY\n!com.skymouse" +
+      ".skymouseclient.protoP\001Z2github.com/Toma" +
+      "hawk-Center/SkyMouse/proto;protoapib\006pro" +
+      "to3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -204,13 +206,13 @@ public final class Skymouse extends com.google.protobuf.GeneratedFile {
     internal_static_skymouse_UdpMessageToServer_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_skymouse_UdpMessageToServer_descriptor,
-        new java.lang.String[] { "UdpToken", "EmulatorEvent", "Event", });
+        new java.lang.String[] { "UdpToken", "EmulatorEvent", "Ping", "Event", });
     internal_static_skymouse_MessageToClient_descriptor =
       getDescriptor().getMessageType(11);
     internal_static_skymouse_MessageToClient_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_skymouse_MessageToClient_descriptor,
-        new java.lang.String[] { "ServerHello", "ServerEvent", "Event", });
+        new java.lang.String[] { "ServerHello", "ServerEvent", "Pong", "Event", });
     descriptor.resolveAllFeaturesImmutable();
   }
 
