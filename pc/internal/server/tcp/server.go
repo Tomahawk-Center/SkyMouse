@@ -229,26 +229,7 @@ func (s *Server) handleClientHello(sess *session.Session, clientHelloMsg *protoa
 		},
 	}
 
-	b, err := proto.Marshal(msg)
-	if err != nil {
-		return err
-	}
-
-	packet := make([]byte, 4+len(b))
-
-	binary.BigEndian.PutUint32(packet[0:4], uint32(len(b))) // TODO perf may be improved
-	copy(packet[4:], b)
-	s.mu.Lock()
-	conn, ok := s.conns[sess.Id()]
-	s.mu.Unlock()
-	if !ok {
-		return errors.New("connection not found")
-	}
-	c := conn
-	if c == nil {
-		return errors.New("nil connection")
-	}
-	_, err = c.Write(packet)
+	err = s.sendProto(sess.Id(), msg)
 	if err != nil {
 		return err
 	}
