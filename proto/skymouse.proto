@@ -94,6 +94,7 @@ message UdpMessageToServer {
     uint32 udp_token = 1;
     oneof event {
         EmulatorEvent emulator_event = 2;
+        Ping ping = 3;
     }
 }
 
@@ -101,5 +102,6 @@ message MessageToClient {
     oneof event {
         ServerHello server_hello = 1;
         ServerEvent server_event = 2;
+        Pong pong = 3;
     }
 }
