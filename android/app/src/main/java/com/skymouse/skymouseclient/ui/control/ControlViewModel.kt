@@ -113,6 +113,21 @@ class ControlViewModel(
                 if (isHoldingVibration) {
                     vibrator.cancel()
                     isHoldingVibration = false
+
+                    viewModelScope.launch {
+                        delay(5.milliseconds)
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                            vibrateLocal(
+                                VibrationEffect.EFFECT_TICK,
+                                VibrationEffect.Composition.PRIMITIVE_LOW_TICK,
+                                0.5f
+                            )
+                        } else {
+                            vibrateLocal(VibrationEffect.EFFECT_TICK, 0, 0.5f)
+                        }
+                    }
+
                 }
             }
         }
