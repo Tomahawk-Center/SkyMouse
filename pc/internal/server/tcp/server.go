@@ -205,24 +205,12 @@ func (s *Server) sendProto(sessionId string, msg proto.Message) error {
 	return nil
 }
 
-func (s *Server) handlePing() error {
-	//TODO
-	return errors.New("ping-pong not implemented yet")
+func (s *Server) handlePing(sessionId string) error {
+	msg := &protoapi.MessageToClient{
+		Event: &protoapi.MessageToClient_Pong{},
+	}
 
-	//pong := &protoapi.Pong{}
-	//
-	////TODO wrap pong in MessageToClient
-	//
-	//b, err := proto.Marshal(pong)
-	//if err != nil {
-	//	return err
-	//}
-	//
-	//_, err = sess.conn.Write(b)
-	//if err != nil {
-	//	return err
-	//}
-	//return nil
+	return s.sendProto(sessionId, msg)
 }
 
 func (s *Server) handleClientHello(sess *session.Session, clientHelloMsg *protoapi.ClientHello) error {
@@ -302,7 +290,7 @@ func (s *Server) routeMessage(sess *session.Session, m *protoapi.MessageToServer
 		}
 
 	case *protoapi.MessageToServer_Ping:
-		err := s.handlePing()
+		err := s.handlePing(sess.Id())
 		if err != nil {
 			log.Printf("Send pong failed: %v\n", err)
 		}
