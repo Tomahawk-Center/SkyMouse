@@ -205,9 +205,14 @@ func (s *Server) sendProto(sessionId string, msg proto.Message) error {
 	return nil
 }
 
-func (s *Server) handlePing(sessionId string) error {
+func (s *Server) handlePing(sessionId string, ping *protoapi.Ping) error {
 	msg := &protoapi.MessageToClient{
-		Event: &protoapi.MessageToClient_Pong{},
+		Event: &protoapi.MessageToClient_Pong{
+			Pong: &protoapi.Pong{
+				SequenceId:  ping.SequenceId,
+				TimestampMs: ping.TimestampMs,
+			},
+		},
 	}
 
 	return s.sendProto(sessionId, msg)
@@ -271,7 +276,7 @@ func (s *Server) routeMessage(sess *session.Session, m *protoapi.MessageToServer
 		}
 
 	case *protoapi.MessageToServer_Ping:
-		err := s.handlePing(sess.Id())
+		err := s.handlePing(sess.Id(), m.GetPing())
 		if err != nil {
 			log.Printf("Send pong failed: %v\n", err)
 		}
