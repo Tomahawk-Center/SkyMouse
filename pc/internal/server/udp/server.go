@@ -144,8 +144,21 @@ func (s *Server) acceptLoop() {
 			continue
 		}
 
-		emEv := msg.GetEmulatorEvent()
-		if emEv != nil {
+		switch ev := msg.Event.(type) {
+		case *protoapi.UdpMessageToServer_Ping:
+
+			msg := &protoapi.MessageToClient{
+				Event: &protoapi.MessageToClient_Pong{},
+			}
+
+			err := s.SendProto(sess.Id(), msg)
+			if err != nil {
+				log.Println("UDP SendProto error:", err)
+			}
+
+		case *protoapi.UdpMessageToServer_EmulatorEvent:
+
+			emEv := ev.EmulatorEvent
 			mouseEv := emEv.GetMouse()
 			if mouseEv != nil {
 				if !sess.UdpState.VerifyAndSetNewSequenceId(mouseEv.SequenceId) {
@@ -154,7 +167,9 @@ func (s *Server) acceptLoop() {
 			}
 
 			s.handler.Handle(sess.Id(), emEv)
+
 		}
 
 	}
+
 }
