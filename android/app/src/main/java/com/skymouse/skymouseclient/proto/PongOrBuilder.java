@@ -9,4 +9,16 @@ package com.skymouse.skymouseclient.proto;
 public interface PongOrBuilder extends
     // @@protoc_insertion_point(interface_extends:skymouse.Pong)
     com.google.protobuf.MessageOrBuilder {
+
+  /**
+   * <code>int64 sequence_id = 1;</code>
+   * @return The sequenceId.
+   */
+  long getSequenceId();
+
+  /**
+   * <code>int64 timestamp_ms = 2;</code>
+   * @return The timestampMs.
+   */
+  long getTimestampMs();
 }
