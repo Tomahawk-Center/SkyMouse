@@ -44,6 +44,15 @@ class UdpClientManager {
         sendProto(msg)
     }
 
+    suspend fun sendPing(ping: com.skymouse.skymouseclient.proto.Ping) = withContext(Dispatchers.IO) {
+        val msg = com.skymouse.skymouseclient.proto.udpMessageToServer {
+            this.udpToken = token
+            this.ping = ping
+        }
+
+        sendProto(msg)
+    }
+
     private suspend fun sendProto(proto: com.google.protobuf.MessageLite) = withContext(Dispatchers.IO) {
         val s = socket
         val address = serverAddress
