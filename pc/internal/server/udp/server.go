@@ -77,7 +77,6 @@ func (s *Server) Port() (int, error) {
 	return addr.Port, nil
 }
 
-// SendProto sends protobuf message to last connected IP addr
 func (s *Server) SendProto(sessionId string, msg proto.Message) error {
 	c := s.conn
 	if c == nil {
