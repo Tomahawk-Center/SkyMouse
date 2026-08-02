@@ -147,8 +147,15 @@ func (s *Server) acceptLoop() {
 		switch ev := msg.Event.(type) {
 		case *protoapi.UdpMessageToServer_Ping:
 
+			ping := ev.Ping
+
 			msg := &protoapi.MessageToClient{
-				Event: &protoapi.MessageToClient_Pong{},
+				Event: &protoapi.MessageToClient_Pong{
+					Pong: &protoapi.Pong{
+						SequenceId:  ping.SequenceId,
+						TimestampMs: ping.TimestampMs,
+					},
+				},
 			}
 
 			err := s.SendProto(sess.Id(), msg)
