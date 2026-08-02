@@ -405,6 +405,8 @@ func (x *ScrollEvent) GetTimestampMs() int64 {
 
 type Ping struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	SequenceId    int64                  `protobuf:"varint,1,opt,name=sequence_id,json=sequenceId,proto3" json:"sequence_id,omitempty"`
+	TimestampMs   int64                  `protobuf:"varint,2,opt,name=timestamp_ms,json=timestampMs,proto3" json:"timestamp_ms,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -439,8 +441,24 @@ func (*Ping) Descriptor() ([]byte, []int) {
 	return file_skymouse_proto_rawDescGZIP(), []int{3}
 }
 
+func (x *Ping) GetSequenceId() int64 {
+	if x != nil {
+		return x.SequenceId
+	}
+	return 0
+}
+
+func (x *Ping) GetTimestampMs() int64 {
+	if x != nil {
+		return x.TimestampMs
+	}
+	return 0
+}
+
 type Pong struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	SequenceId    int64                  `protobuf:"varint,1,opt,name=sequence_id,json=sequenceId,proto3" json:"sequence_id,omitempty"`
+	TimestampMs   int64                  `protobuf:"varint,2,opt,name=timestamp_ms,json=timestampMs,proto3" json:"timestamp_ms,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -473,6 +491,20 @@ func (x *Pong) ProtoReflect() protoreflect.Message {
 // Deprecated: Use Pong.ProtoReflect.Descriptor instead.
 func (*Pong) Descriptor() ([]byte, []int) {
 	return file_skymouse_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *Pong) GetSequenceId() int64 {
+	if x != nil {
+		return x.SequenceId
+	}
+	return 0
+}
+
+func (x *Pong) GetTimestampMs() int64 {
+	if x != nil {
+		return x.TimestampMs
+	}
+	return 0
 }
 
 type ClientHello struct {
@@ -1066,9 +1098,15 @@ const file_skymouse_proto_rawDesc = "" +
 	"\ftimestamp_ms\x18\x03 \x01(\x03R\vtimestampMs\"I\n" +
 	"\vScrollEvent\x12\x17\n" +
 	"\adelta_y\x18\x01 \x01(\x05R\x06deltaY\x12!\n" +
-	"\ftimestamp_ms\x18\x02 \x01(\x03R\vtimestampMs\"\x06\n" +
-	"\x04Ping\"\x06\n" +
-	"\x04Pong\"4\n" +
+	"\ftimestamp_ms\x18\x02 \x01(\x03R\vtimestampMs\"J\n" +
+	"\x04Ping\x12\x1f\n" +
+	"\vsequence_id\x18\x01 \x01(\x03R\n" +
+	"sequenceId\x12!\n" +
+	"\ftimestamp_ms\x18\x02 \x01(\x03R\vtimestampMs\"J\n" +
+	"\x04Pong\x12\x1f\n" +
+	"\vsequence_id\x18\x01 \x01(\x03R\n" +
+	"sequenceId\x12!\n" +
+	"\ftimestamp_ms\x18\x02 \x01(\x03R\vtimestampMs\"4\n" +
 	"\vClientHello\x12%\n" +
 	"\x0eclient_version\x18\x01 \x01(\tR\rclientVersion\"l\n" +
 	"\vServerHello\x12%\n" +
