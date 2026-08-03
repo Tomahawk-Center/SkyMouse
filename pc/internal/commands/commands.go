@@ -12,10 +12,12 @@ func Shutdown() error {
 	return cmd.Run()
 }
 
-func Sleep() error {
-	powrprof := syscall.NewLazyDLL("powrprof.dll")
-	setSuspendState := powrprof.NewProc("SetSuspendState")
+var (
+	powrprof        = syscall.NewLazyDLL("powrprof.dll")
+	setSuspendState = powrprof.NewProc("SetSuspendState")
+)
 
+func Sleep() error {
 	ret, _, err := setSuspendState.Call(
 		uintptr(0),
 		uintptr(0),
