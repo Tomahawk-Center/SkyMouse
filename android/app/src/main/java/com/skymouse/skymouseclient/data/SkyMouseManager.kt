@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 object SkyMouseManager {
     val tcpClient = TcpClientManager()
     val udpClient = UdpClientManager()
+    val pingManager = PingManager(tcpClient, udpClient)
 
     private val _settingsState = MutableStateFlow(SettingsState())
     val settingsState: StateFlow<SettingsState> = _settingsState
