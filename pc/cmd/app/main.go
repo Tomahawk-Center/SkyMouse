@@ -75,6 +75,8 @@ func main() {
 		log.Fatal(err)
 	}
 
+	log.Println("protobuf contract version:", protobufVersion)
+
 	go func() {
 		if err := tcpServer.Start(); err != nil {
 			log.Fatalf("TCP server start failed: %v\n", err)
