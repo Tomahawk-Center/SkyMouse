@@ -144,7 +144,7 @@ fun ControlScreen(
                 )
 
                 val onCommandSelected: (CommandEvent)->Unit = { event ->
-                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    haptic.performHapticFeedback(HapticFeedbackType.SegmentTick)
                     pendingCommand = event
                 }
 
@@ -233,7 +233,7 @@ fun ControlScreen(
                     Spacer(modifier = Modifier.height(24.dp))
                     Button(
                         onClick = {
-                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            haptic.performHapticFeedback(HapticFeedbackType.SegmentTick)
                             viewModel.startPingTests()
                                   },
                         modifier = Modifier.padding(horizontal = 16.dp)
