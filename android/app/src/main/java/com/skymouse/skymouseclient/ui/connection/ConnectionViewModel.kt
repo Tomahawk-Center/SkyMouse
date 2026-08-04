@@ -47,7 +47,7 @@ class ConnectionViewModel(application: Application) : AndroidViewModel(applicati
 
     fun onConnectClicked() {
         val portInt = port.toIntOrNull() ?: return
-        val clientVersionStr = "3.1"
+        val clientVersionStr = "3.2"
 
         prefs.edit {
             putString("ip_address", ipAddress)
