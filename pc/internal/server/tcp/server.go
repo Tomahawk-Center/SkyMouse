@@ -133,6 +133,7 @@ func (s *Server) handleConnection(conn net.Conn) {
 		delete(s.conns, id)
 		s.mu.Unlock()
 		s.sm.RemoveSession(id)
+		log.Println("Removed session:", id)
 	}()
 
 	s.mu.Lock()
