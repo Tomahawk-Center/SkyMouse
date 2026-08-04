@@ -96,6 +96,7 @@ class ConnectionViewModel(application: Application) : AndroidViewModel(applicati
                     udpClientManager.connect(ipAddress, udpPortFromServer, udpToken)
                     startReceivingServerEvents()
                 } else {
+                    Toast.makeText(getApplication(), "Handshake response timed out", Toast.LENGTH_LONG).show()
                     tcpClientManager.disconnect()
                 }
             }
