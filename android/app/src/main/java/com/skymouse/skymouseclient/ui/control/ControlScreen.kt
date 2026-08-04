@@ -37,6 +37,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -74,6 +75,8 @@ fun ControlScreen(
     val haptic = LocalHapticFeedback.current
 
     val bottomSheetState = rememberModalBottomSheetState()
+    val pingCheckBottomSheetState = rememberModalBottomSheetState()
+
     val scope = rememberCoroutineScope()
     var pendingCommand by remember { mutableStateOf<CommandEvent?>(null) }
 
@@ -169,6 +172,75 @@ fun ControlScreen(
                     }
                 )
 
+            }
+        }
+    }
+
+    if (viewModel.isPingCheckSheetShown) {
+        if (!(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && SdkExtensions.getExtensionVersion(
+                Build.VERSION_CODES.S
+            ) >= 13)
+        ) {
+            viewModel.isPingCheckSheetShown = false
+            return
+        }
+
+        LaunchedEffect(Unit) {
+            viewModel.startPingTests()
+        }
+
+        val udpState by viewModel.udpPingState.collectAsStateWithLifecycle()
+        val tcpState by viewModel.tcpPingState.collectAsStateWithLifecycle()
+
+        ModalBottomSheet(
+            onDismissRequest = {
+                viewModel.isPingCheckSheetShown = false
+                viewModel.stopPingTests()
+                               },
+            sheetState = pingCheckBottomSheetState
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 32.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    "Ping check",
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(16.dp)
+                )
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    PingResultColumn(
+                        label = "UDP",
+                        state = udpState,
+                        modifier = Modifier.weight(1f)
+                    )
+                    PingResultColumn(
+                        label = "TCP",
+                        state = tcpState,
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+
+                if (!udpState.isRunning && !tcpState.isRunning) {
+                    Spacer(modifier = Modifier.height(24.dp))
+                    Button(
+                        onClick = {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            viewModel.startPingTests()
+                                  },
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    ) {
+                        Text("Restart Test")
+                    }
+                }
             }
         }
     }
@@ -344,6 +416,52 @@ fun ControlScreen(
         ) {
             Text("Disconnect", style = MaterialTheme.typography.titleMedium)
         }
+    }
+}
+
+@Composable
+fun PingResultColumn(
+    label: String,
+    state: com.skymouse.skymouseclient.data.PingState,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.primary
+        )
+        
+        Spacer(modifier = Modifier.height(8.dp))
+
+        if (state.stats?.isComplete == true) {
+            val stats = state.stats
+            PingStatRow("Avg", "${stats.avg} ms")
+            PingStatRow("Min", "${stats.min} ms")
+            PingStatRow("Max", "${stats.max} ms")
+            PingStatRow("Loss", "${stats.lossPercentage.toInt()}%")
+        } else if (state.isRunning) {
+            Text(
+                text = state.lastPingMs?.let { "$it ms" } ?: "...",
+                style = MaterialTheme.typography.headlineMedium
+            )
+        } else {
+            Text("Ready", style = MaterialTheme.typography.bodyMedium)
+        }
+    }
+}
+
+@Composable
+fun PingStatRow(label: String, value: String) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(label, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(value, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurface)
     }
 }
 
