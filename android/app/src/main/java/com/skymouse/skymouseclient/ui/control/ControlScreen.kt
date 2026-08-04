@@ -425,6 +425,8 @@ fun PingResultColumn(
     state: com.skymouse.skymouseclient.data.PingState,
     modifier: Modifier = Modifier
 ) {
+    val haptic = LocalHapticFeedback.current
+
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -438,12 +440,14 @@ fun PingResultColumn(
         Spacer(modifier = Modifier.height(8.dp))
 
         if (state.stats?.isComplete == true) {
+            haptic.performHapticFeedback(HapticFeedbackType.SegmentTick)
             val stats = state.stats
             PingStatRow("Avg", "${stats.avg} ms")
             PingStatRow("Min", "${stats.min} ms")
             PingStatRow("Max", "${stats.max} ms")
             PingStatRow("Loss", "${stats.lossPercentage.toInt()}%")
         } else if (state.isRunning) {
+            if (state.lastPingMs != null) haptic.performHapticFeedback(HapticFeedbackType.SegmentFrequentTick)
             Text(
                 text = state.lastPingMs?.let { "$it ms" } ?: "...",
                 style = MaterialTheme.typography.headlineMedium
