@@ -19,6 +19,7 @@ import com.skymouse.skymouseclient.data.util.VersionVerificationResult
 import com.skymouse.skymouseclient.data.util.VersionVerifier
 import com.skymouse.skymouseclient.proto.HapticEventType
 import com.skymouse.skymouseclient.proto.ServerEvent
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.filter
@@ -36,6 +37,8 @@ class ConnectionViewModel(application: Application) : AndroidViewModel(applicati
 
     private val tcpClientManager = SkyMouseManager.tcpClient
     private val udpClientManager = SkyMouseManager.udpClient
+
+    private var hapticJob: Job? = null
 
     private val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         val vibratorManager = application.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
@@ -108,6 +111,8 @@ class ConnectionViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     fun disconnect() {
+        hapticJob?.cancel()
+        hapticJob = null
         viewModelScope.launch {
             udpClientManager.disconnect()
             tcpClientManager.disconnect()
@@ -115,7 +120,8 @@ class ConnectionViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     private fun startReceivingServerEvents() {
-        viewModelScope.launch {
+        hapticJob?.cancel()
+        hapticJob = viewModelScope.launch {
             udpClientManager.incomingMessages
                 .filter { it.hasServerEvent() }
                 .collect { msg ->
