@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardCommandKey
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Speed
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -56,6 +57,22 @@ fun MainScreen(
                 title = { Text("SkyMouse Client") },
                 actions = {
                     if (isConnected) {
+
+                        // Ping check
+                        IconButton(
+                            onClick = {
+                                haptic.performHapticFeedback(HapticFeedbackType.SegmentTick)
+                                controlViewModel.isPingCheckSheetShown = true
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Speed,
+                                contentDescription = "Ping check",
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                        }
+
+                        // Commands
                         IconButton(
                             onClick = {
                                 haptic.performHapticFeedback(HapticFeedbackType.SegmentTick)

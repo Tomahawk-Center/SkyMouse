@@ -48,6 +48,28 @@ private static final long serialVersionUID = 0L;
             com.skymouse.skymouseclient.proto.Ping.class, com.skymouse.skymouseclient.proto.Ping.Builder.class);
   }
 
+  public static final int SEQUENCE_ID_FIELD_NUMBER = 1;
+  private long sequenceId_ = 0L;
+  /**
+   * <code>int64 sequence_id = 1;</code>
+   * @return The sequenceId.
+   */
+  @java.lang.Override
+  public long getSequenceId() {
+    return sequenceId_;
+  }
+
+  public static final int TIMESTAMP_MS_FIELD_NUMBER = 2;
+  private long timestampMs_ = 0L;
+  /**
+   * <code>int64 timestamp_ms = 2;</code>
+   * @return The timestampMs.
+   */
+  @java.lang.Override
+  public long getTimestampMs() {
+    return timestampMs_;
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -62,7 +84,25 @@ private static final long serialVersionUID = 0L;
   @java.lang.Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
+    if (sequenceId_ != 0L) {
+      output.writeInt64(1, sequenceId_);
+    }
+    if (timestampMs_ != 0L) {
+      output.writeInt64(2, timestampMs_);
+    }
     getUnknownFields().writeTo(output);
+  }
+  private int computeSerializedSize_0() {
+    int size = 0;
+    if (sequenceId_ != 0L) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt64Size(1, sequenceId_);
+    }
+    if (timestampMs_ != 0L) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt64Size(2, timestampMs_);
+    }
+    return size;
   }
   @java.lang.Override
   public int getSerializedSize() {
@@ -70,6 +110,7 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
+    size += computeSerializedSize_0();
     size += getUnknownFields().getSerializedSize();
     memoizedSize = size;
     return size;
@@ -85,6 +126,10 @@ private static final long serialVersionUID = 0L;
     }
     com.skymouse.skymouseclient.proto.Ping other = (com.skymouse.skymouseclient.proto.Ping) obj;
 
+    if (getSequenceId()
+        != other.getSequenceId()) return false;
+    if (getTimestampMs()
+        != other.getTimestampMs()) return false;
     if (!getUnknownFields().equals(other.getUnknownFields())) return false;
     return true;
   }
@@ -96,6 +141,12 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
+    hash = (37 * hash) + SEQUENCE_ID_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getSequenceId());
+    hash = (37 * hash) + TIMESTAMP_MS_FIELD_NUMBER;
+    hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+        getTimestampMs());
     hash = (29 * hash) + getUnknownFields().hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -226,6 +277,9 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public Builder clear() {
       super.clear();
+      bitField0_ = 0;
+      sequenceId_ = 0L;
+      timestampMs_ = 0L;
       return this;
     }
 
@@ -252,8 +306,19 @@ private static final long serialVersionUID = 0L;
     @java.lang.Override
     public com.skymouse.skymouseclient.proto.Ping buildPartial() {
       com.skymouse.skymouseclient.proto.Ping result = new com.skymouse.skymouseclient.proto.Ping(this);
+      if (bitField0_ != 0) { buildPartial0(result); }
       onBuilt();
       return result;
+    }
+
+    private void buildPartial0(com.skymouse.skymouseclient.proto.Ping result) {
+      int from_bitField0_ = bitField0_;
+      if (((from_bitField0_ & 0x00000001) != 0)) {
+        result.sequenceId_ = sequenceId_;
+      }
+      if (((from_bitField0_ & 0x00000002) != 0)) {
+        result.timestampMs_ = timestampMs_;
+      }
     }
 
     @java.lang.Override
@@ -268,6 +333,12 @@ private static final long serialVersionUID = 0L;
 
     public Builder mergeFrom(com.skymouse.skymouseclient.proto.Ping other) {
       if (other == com.skymouse.skymouseclient.proto.Ping.getDefaultInstance()) return this;
+      if (other.getSequenceId() != 0L) {
+        setSequenceId(other.getSequenceId());
+      }
+      if (other.getTimestampMs() != 0L) {
+        setTimestampMs(other.getTimestampMs());
+      }
       this.mergeUnknownFields(other.getUnknownFields());
       onChanged();
       return this;
@@ -294,6 +365,16 @@ private static final long serialVersionUID = 0L;
             case 0:
               done = true;
               break;
+            case 8: {
+              sequenceId_ = input.readInt64();
+              bitField0_ |= 0x00000001;
+              break;
+            } // case 8
+            case 16: {
+              timestampMs_ = input.readInt64();
+              bitField0_ |= 0x00000002;
+              break;
+            } // case 16
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -307,6 +388,71 @@ private static final long serialVersionUID = 0L;
       } finally {
         onChanged();
       } // finally
+      return this;
+    }
+    private int bitField0_;
+
+    private long sequenceId_ ;
+    /**
+     * <code>int64 sequence_id = 1;</code>
+     * @return The sequenceId.
+     */
+    @java.lang.Override
+    public long getSequenceId() {
+      return sequenceId_;
+    }
+    /**
+     * <code>int64 sequence_id = 1;</code>
+     * @param value The sequenceId to set.
+     * @return This builder for chaining.
+     */
+    public Builder setSequenceId(long value) {
+
+      sequenceId_ = value;
+      bitField0_ |= 0x00000001;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int64 sequence_id = 1;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearSequenceId() {
+      bitField0_ = (bitField0_ & ~0x00000001);
+      sequenceId_ = 0L;
+      onChanged();
+      return this;
+    }
+
+    private long timestampMs_ ;
+    /**
+     * <code>int64 timestamp_ms = 2;</code>
+     * @return The timestampMs.
+     */
+    @java.lang.Override
+    public long getTimestampMs() {
+      return timestampMs_;
+    }
+    /**
+     * <code>int64 timestamp_ms = 2;</code>
+     * @param value The timestampMs to set.
+     * @return This builder for chaining.
+     */
+    public Builder setTimestampMs(long value) {
+
+      timestampMs_ = value;
+      bitField0_ |= 0x00000002;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>int64 timestamp_ms = 2;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearTimestampMs() {
+      bitField0_ = (bitField0_ & ~0x00000002);
+      timestampMs_ = 0L;
+      onChanged();
       return this;
     }
 

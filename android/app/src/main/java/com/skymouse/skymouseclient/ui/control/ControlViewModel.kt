@@ -15,6 +15,7 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import com.skymouse.skymouseclient.data.GyroscopeProvider
+import com.skymouse.skymouseclient.data.PingType
 import com.skymouse.skymouseclient.data.SkyMouseManager
 import com.skymouse.skymouseclient.proto.CommandEvent
 import com.skymouse.skymouseclient.proto.MouseButton
@@ -36,6 +37,10 @@ class ControlViewModel(
     private val settingsState = SkyMouseManager.settingsState
     private val tcpClientManager = SkyMouseManager.tcpClient
     private val udpClientManager = SkyMouseManager.udpClient
+    private val pingManager = SkyMouseManager.pingManager
+
+    val udpPingState = pingManager.udpState
+    val tcpPingState = pingManager.tcpState
 
     private val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         val vibratorManager = application.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
@@ -235,4 +240,17 @@ class ControlViewModel(
             tcpClientManager.sendProto(msg)
         }
     }
+
+    var isPingCheckSheetShown by mutableStateOf(false)
+
+    fun startPingTests() {
+        pingManager.startPingTest(PingType.UDP)
+        pingManager.startPingTest(PingType.TCP)
+    }
+
+    fun stopPingTests() {
+        pingManager.stopPingTest(PingType.UDP)
+        pingManager.stopPingTest(PingType.TCP)
+    }
+
 }

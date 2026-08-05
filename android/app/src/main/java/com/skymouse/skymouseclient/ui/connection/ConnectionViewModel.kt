@@ -15,12 +15,18 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.skymouse.skymouseclient.data.SkyMouseManager
 import com.skymouse.skymouseclient.data.TcpConnectionState
-import com.skymouse.skymouseclient.data.UdpConnectionState
 import com.skymouse.skymouseclient.data.util.VersionVerificationResult
 import com.skymouse.skymouseclient.data.util.VersionVerifier
 import com.skymouse.skymouseclient.proto.HapticEventType
 import com.skymouse.skymouseclient.proto.ServerEvent
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
+import kotlin.time.Duration.Companion.seconds
 
 class ConnectionViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -32,6 +38,8 @@ class ConnectionViewModel(application: Application) : AndroidViewModel(applicati
     private val tcpClientManager = SkyMouseManager.tcpClient
     private val udpClientManager = SkyMouseManager.udpClient
 
+    private var hapticJob: Job? = null
+
     private val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         val vibratorManager = application.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
         vibratorManager.defaultVibrator
@@ -42,7 +50,7 @@ class ConnectionViewModel(application: Application) : AndroidViewModel(applicati
 
     fun onConnectClicked() {
         val portInt = port.toIntOrNull() ?: return
-        val clientVersionStr = "3.1"
+        val clientVersionStr = "3.2"
 
         prefs.edit {
             putString("ip_address", ipAddress)
@@ -59,9 +67,16 @@ class ConnectionViewModel(application: Application) : AndroidViewModel(applicati
                     }
                 }
 
-                tcpClientManager.sendProto(helloMsg)
+                val response = withTimeoutOrNull(5.seconds) {
+                    coroutineScope {
+                        val responseDeferred = async {
+                            tcpClientManager.incomingMessages.first { it.hasServerHello() }
+                        }
+                        tcpClientManager.sendProto(helloMsg)
+                        responseDeferred.await()
+                    }
+                }
 
-                val response = tcpClientManager.receiveProto()
                 if (response != null && response.hasServerHello()) {
                     val serverVersion = response.serverHello.serverVersion
                     val versionVerificationResult = VersionVerifier.verify(clientVersionStr, serverVersion)
@@ -84,6 +99,7 @@ class ConnectionViewModel(application: Application) : AndroidViewModel(applicati
                     udpClientManager.connect(ipAddress, udpPortFromServer, udpToken)
                     startReceivingServerEvents()
                 } else {
+                    Toast.makeText(getApplication(), "Handshake response timed out", Toast.LENGTH_LONG).show()
                     tcpClientManager.disconnect()
                 }
             }
@@ -91,11 +107,12 @@ class ConnectionViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     fun onDisconnectClicked() {
-        // called from UI to disconnect
         disconnect()
     }
 
     fun disconnect() {
+        hapticJob?.cancel()
+        hapticJob = null
         viewModelScope.launch {
             udpClientManager.disconnect()
             tcpClientManager.disconnect()
@@ -103,13 +120,13 @@ class ConnectionViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     private fun startReceivingServerEvents() {
-        viewModelScope.launch {
-            while (udpClientManager.connectionState.value is UdpConnectionState.Connected) {
-                val msg = udpClientManager.receiveProto() ?: break
-                if (msg.hasServerEvent()) {
+        hapticJob?.cancel()
+        hapticJob = viewModelScope.launch {
+            udpClientManager.incomingMessages
+                .filter { it.hasServerEvent() }
+                .collect { msg ->
                     triggerHaptic(msg.serverEvent)
                 }
-            }
         }
     }
 

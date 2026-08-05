@@ -55,6 +55,7 @@ private static final long serialVersionUID = 0L;
       implements com.google.protobuf.Internal.EnumLite,
           com.google.protobuf.AbstractMessage.InternalOneOfEnum {
     EMULATOR_EVENT(2),
+    PING(3),
     EVENT_NOT_SET(0);
     private final int value;
     private EventCase(int value) {
@@ -73,6 +74,7 @@ private static final long serialVersionUID = 0L;
     public static EventCase forNumber(int value) {
       switch (value) {
         case 2: return EMULATOR_EVENT;
+        case 3: return PING;
         case 0: return EVENT_NOT_SET;
         default: return null;
       }
@@ -130,6 +132,37 @@ private static final long serialVersionUID = 0L;
     return com.skymouse.skymouseclient.proto.EmulatorEvent.getDefaultInstance();
   }
 
+  public static final int PING_FIELD_NUMBER = 3;
+  /**
+   * <code>.skymouse.Ping ping = 3;</code>
+   * @return Whether the ping field is set.
+   */
+  @java.lang.Override
+  public boolean hasPing() {
+    return eventCase_ == 3;
+  }
+  /**
+   * <code>.skymouse.Ping ping = 3;</code>
+   * @return The ping.
+   */
+  @java.lang.Override
+  public com.skymouse.skymouseclient.proto.Ping getPing() {
+    if (eventCase_ == 3) {
+       return (com.skymouse.skymouseclient.proto.Ping) event_;
+    }
+    return com.skymouse.skymouseclient.proto.Ping.getDefaultInstance();
+  }
+  /**
+   * <code>.skymouse.Ping ping = 3;</code>
+   */
+  @java.lang.Override
+  public com.skymouse.skymouseclient.proto.PingOrBuilder getPingOrBuilder() {
+    if (eventCase_ == 3) {
+       return (com.skymouse.skymouseclient.proto.Ping) event_;
+    }
+    return com.skymouse.skymouseclient.proto.Ping.getDefaultInstance();
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -150,6 +183,9 @@ private static final long serialVersionUID = 0L;
     if (eventCase_ == 2) {
       output.writeMessage(2, (com.skymouse.skymouseclient.proto.EmulatorEvent) event_);
     }
+    if (eventCase_ == 3) {
+      output.writeMessage(3, (com.skymouse.skymouseclient.proto.Ping) event_);
+    }
     getUnknownFields().writeTo(output);
   }
   private int computeSerializedSize_0() {
@@ -161,6 +197,10 @@ private static final long serialVersionUID = 0L;
     if (eventCase_ == 2) {
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(2, (com.skymouse.skymouseclient.proto.EmulatorEvent) event_);
+    }
+    if (eventCase_ == 3) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(3, (com.skymouse.skymouseclient.proto.Ping) event_);
     }
     return size;
   }
@@ -194,6 +234,10 @@ private static final long serialVersionUID = 0L;
         if (!getEmulatorEvent()
             .equals(other.getEmulatorEvent())) return false;
         break;
+      case 3:
+        if (!getPing()
+            .equals(other.getPing())) return false;
+        break;
       case 0:
       default:
     }
@@ -214,6 +258,10 @@ private static final long serialVersionUID = 0L;
       case 2:
         hash = (37 * hash) + EMULATOR_EVENT_FIELD_NUMBER;
         hash = (53 * hash) + getEmulatorEvent().hashCode();
+        break;
+      case 3:
+        hash = (37 * hash) + PING_FIELD_NUMBER;
+        hash = (53 * hash) + getPing().hashCode();
         break;
       case 0:
       default:
@@ -353,6 +401,9 @@ private static final long serialVersionUID = 0L;
       if (emulatorEventBuilder_ != null) {
         emulatorEventBuilder_.clear();
       }
+      if (pingBuilder_ != null) {
+        pingBuilder_.clear();
+      }
       eventCase_ = 0;
       event_ = null;
       return this;
@@ -401,6 +452,10 @@ private static final long serialVersionUID = 0L;
           emulatorEventBuilder_ != null) {
         result.event_ = emulatorEventBuilder_.build();
       }
+      if (eventCase_ == 3 &&
+          pingBuilder_ != null) {
+        result.event_ = pingBuilder_.build();
+      }
     }
 
     @java.lang.Override
@@ -421,6 +476,10 @@ private static final long serialVersionUID = 0L;
       switch (other.getEventCase()) {
         case EMULATOR_EVENT: {
           mergeEmulatorEvent(other.getEmulatorEvent());
+          break;
+        }
+        case PING: {
+          mergePing(other.getPing());
           break;
         }
         case EVENT_NOT_SET: {
@@ -465,6 +524,13 @@ private static final long serialVersionUID = 0L;
               eventCase_ = 2;
               break;
             } // case 18
+            case 26: {
+              input.readMessage(
+                  internalGetPingFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              eventCase_ = 3;
+              break;
+            } // case 26
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -669,6 +735,148 @@ private static final long serialVersionUID = 0L;
       eventCase_ = 2;
       onChanged();
       return emulatorEventBuilder_;
+    }
+
+    private com.google.protobuf.SingleFieldBuilder<
+        com.skymouse.skymouseclient.proto.Ping, com.skymouse.skymouseclient.proto.Ping.Builder, com.skymouse.skymouseclient.proto.PingOrBuilder> pingBuilder_;
+    /**
+     * <code>.skymouse.Ping ping = 3;</code>
+     * @return Whether the ping field is set.
+     */
+    @java.lang.Override
+    public boolean hasPing() {
+      return eventCase_ == 3;
+    }
+    /**
+     * <code>.skymouse.Ping ping = 3;</code>
+     * @return The ping.
+     */
+    @java.lang.Override
+    public com.skymouse.skymouseclient.proto.Ping getPing() {
+      if (pingBuilder_ == null) {
+        if (eventCase_ == 3) {
+          return (com.skymouse.skymouseclient.proto.Ping) event_;
+        }
+        return com.skymouse.skymouseclient.proto.Ping.getDefaultInstance();
+      } else {
+        if (eventCase_ == 3) {
+          return pingBuilder_.getMessage();
+        }
+        return com.skymouse.skymouseclient.proto.Ping.getDefaultInstance();
+      }
+    }
+    /**
+     * <code>.skymouse.Ping ping = 3;</code>
+     */
+    public Builder setPing(com.skymouse.skymouseclient.proto.Ping value) {
+      if (pingBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        event_ = value;
+        onChanged();
+      } else {
+        pingBuilder_.setMessage(value);
+      }
+      eventCase_ = 3;
+      return this;
+    }
+    /**
+     * <code>.skymouse.Ping ping = 3;</code>
+     */
+    public Builder setPing(
+        com.skymouse.skymouseclient.proto.Ping.Builder builderForValue) {
+      if (pingBuilder_ == null) {
+        event_ = builderForValue.build();
+        onChanged();
+      } else {
+        pingBuilder_.setMessage(builderForValue.build());
+      }
+      eventCase_ = 3;
+      return this;
+    }
+    /**
+     * <code>.skymouse.Ping ping = 3;</code>
+     */
+    public Builder mergePing(com.skymouse.skymouseclient.proto.Ping value) {
+      if (pingBuilder_ == null) {
+        if (eventCase_ == 3 &&
+            event_ != com.skymouse.skymouseclient.proto.Ping.getDefaultInstance()) {
+          event_ = com.skymouse.skymouseclient.proto.Ping.newBuilder((com.skymouse.skymouseclient.proto.Ping) event_)
+              .mergeFrom(value).buildPartial();
+        } else {
+          event_ = value;
+        }
+        onChanged();
+      } else {
+        if (eventCase_ == 3) {
+          pingBuilder_.mergeFrom(value);
+        } else {
+          pingBuilder_.setMessage(value);
+        }
+      }
+      eventCase_ = 3;
+      return this;
+    }
+    /**
+     * <code>.skymouse.Ping ping = 3;</code>
+     */
+    public Builder clearPing() {
+      if (pingBuilder_ == null) {
+        if (eventCase_ == 3) {
+          eventCase_ = 0;
+          event_ = null;
+          onChanged();
+        }
+      } else {
+        if (eventCase_ == 3) {
+          eventCase_ = 0;
+          event_ = null;
+        }
+        pingBuilder_.clear();
+      }
+      return this;
+    }
+    /**
+     * <code>.skymouse.Ping ping = 3;</code>
+     */
+    public com.skymouse.skymouseclient.proto.Ping.Builder getPingBuilder() {
+      return internalGetPingFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.skymouse.Ping ping = 3;</code>
+     */
+    @java.lang.Override
+    public com.skymouse.skymouseclient.proto.PingOrBuilder getPingOrBuilder() {
+      if ((eventCase_ == 3) && (pingBuilder_ != null)) {
+        return pingBuilder_.getMessageOrBuilder();
+      } else {
+        if (eventCase_ == 3) {
+          return (com.skymouse.skymouseclient.proto.Ping) event_;
+        }
+        return com.skymouse.skymouseclient.proto.Ping.getDefaultInstance();
+      }
+    }
+    /**
+     * <code>.skymouse.Ping ping = 3;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilder<
+        com.skymouse.skymouseclient.proto.Ping, com.skymouse.skymouseclient.proto.Ping.Builder, com.skymouse.skymouseclient.proto.PingOrBuilder> 
+        internalGetPingFieldBuilder() {
+      if (pingBuilder_ == null) {
+        if (!(eventCase_ == 3)) {
+          event_ = com.skymouse.skymouseclient.proto.Ping.getDefaultInstance();
+        }
+        pingBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+            com.skymouse.skymouseclient.proto.Ping, com.skymouse.skymouseclient.proto.Ping.Builder, com.skymouse.skymouseclient.proto.PingOrBuilder>(
+                (com.skymouse.skymouseclient.proto.Ping) event_,
+                getParentForChildren(),
+                isClean());
+        event_ = null;
+      }
+      eventCase_ = 3;
+      onChanged();
+      return pingBuilder_;
     }
 
     // @@protoc_insertion_point(builder_scope:skymouse.UdpMessageToServer)

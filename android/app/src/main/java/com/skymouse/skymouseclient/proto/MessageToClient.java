@@ -56,6 +56,7 @@ private static final long serialVersionUID = 0L;
           com.google.protobuf.AbstractMessage.InternalOneOfEnum {
     SERVER_HELLO(1),
     SERVER_EVENT(2),
+    PONG(3),
     EVENT_NOT_SET(0);
     private final int value;
     private EventCase(int value) {
@@ -75,6 +76,7 @@ private static final long serialVersionUID = 0L;
       switch (value) {
         case 1: return SERVER_HELLO;
         case 2: return SERVER_EVENT;
+        case 3: return PONG;
         case 0: return EVENT_NOT_SET;
         default: return null;
       }
@@ -152,6 +154,37 @@ private static final long serialVersionUID = 0L;
     return com.skymouse.skymouseclient.proto.ServerEvent.getDefaultInstance();
   }
 
+  public static final int PONG_FIELD_NUMBER = 3;
+  /**
+   * <code>.skymouse.Pong pong = 3;</code>
+   * @return Whether the pong field is set.
+   */
+  @java.lang.Override
+  public boolean hasPong() {
+    return eventCase_ == 3;
+  }
+  /**
+   * <code>.skymouse.Pong pong = 3;</code>
+   * @return The pong.
+   */
+  @java.lang.Override
+  public com.skymouse.skymouseclient.proto.Pong getPong() {
+    if (eventCase_ == 3) {
+       return (com.skymouse.skymouseclient.proto.Pong) event_;
+    }
+    return com.skymouse.skymouseclient.proto.Pong.getDefaultInstance();
+  }
+  /**
+   * <code>.skymouse.Pong pong = 3;</code>
+   */
+  @java.lang.Override
+  public com.skymouse.skymouseclient.proto.PongOrBuilder getPongOrBuilder() {
+    if (eventCase_ == 3) {
+       return (com.skymouse.skymouseclient.proto.Pong) event_;
+    }
+    return com.skymouse.skymouseclient.proto.Pong.getDefaultInstance();
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -172,6 +205,9 @@ private static final long serialVersionUID = 0L;
     if (eventCase_ == 2) {
       output.writeMessage(2, (com.skymouse.skymouseclient.proto.ServerEvent) event_);
     }
+    if (eventCase_ == 3) {
+      output.writeMessage(3, (com.skymouse.skymouseclient.proto.Pong) event_);
+    }
     getUnknownFields().writeTo(output);
   }
   private int computeSerializedSize_0() {
@@ -183,6 +219,10 @@ private static final long serialVersionUID = 0L;
     if (eventCase_ == 2) {
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(2, (com.skymouse.skymouseclient.proto.ServerEvent) event_);
+    }
+    if (eventCase_ == 3) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(3, (com.skymouse.skymouseclient.proto.Pong) event_);
     }
     return size;
   }
@@ -218,6 +258,10 @@ private static final long serialVersionUID = 0L;
         if (!getServerEvent()
             .equals(other.getServerEvent())) return false;
         break;
+      case 3:
+        if (!getPong()
+            .equals(other.getPong())) return false;
+        break;
       case 0:
       default:
     }
@@ -240,6 +284,10 @@ private static final long serialVersionUID = 0L;
       case 2:
         hash = (37 * hash) + SERVER_EVENT_FIELD_NUMBER;
         hash = (53 * hash) + getServerEvent().hashCode();
+        break;
+      case 3:
+        hash = (37 * hash) + PONG_FIELD_NUMBER;
+        hash = (53 * hash) + getPong().hashCode();
         break;
       case 0:
       default:
@@ -381,6 +429,9 @@ private static final long serialVersionUID = 0L;
       if (serverEventBuilder_ != null) {
         serverEventBuilder_.clear();
       }
+      if (pongBuilder_ != null) {
+        pongBuilder_.clear();
+      }
       eventCase_ = 0;
       event_ = null;
       return this;
@@ -430,6 +481,10 @@ private static final long serialVersionUID = 0L;
           serverEventBuilder_ != null) {
         result.event_ = serverEventBuilder_.build();
       }
+      if (eventCase_ == 3 &&
+          pongBuilder_ != null) {
+        result.event_ = pongBuilder_.build();
+      }
     }
 
     @java.lang.Override
@@ -451,6 +506,10 @@ private static final long serialVersionUID = 0L;
         }
         case SERVER_EVENT: {
           mergeServerEvent(other.getServerEvent());
+          break;
+        }
+        case PONG: {
+          mergePong(other.getPong());
           break;
         }
         case EVENT_NOT_SET: {
@@ -497,6 +556,13 @@ private static final long serialVersionUID = 0L;
               eventCase_ = 2;
               break;
             } // case 18
+            case 26: {
+              input.readMessage(
+                  internalGetPongFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              eventCase_ = 3;
+              break;
+            } // case 26
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -811,6 +877,148 @@ private static final long serialVersionUID = 0L;
       eventCase_ = 2;
       onChanged();
       return serverEventBuilder_;
+    }
+
+    private com.google.protobuf.SingleFieldBuilder<
+        com.skymouse.skymouseclient.proto.Pong, com.skymouse.skymouseclient.proto.Pong.Builder, com.skymouse.skymouseclient.proto.PongOrBuilder> pongBuilder_;
+    /**
+     * <code>.skymouse.Pong pong = 3;</code>
+     * @return Whether the pong field is set.
+     */
+    @java.lang.Override
+    public boolean hasPong() {
+      return eventCase_ == 3;
+    }
+    /**
+     * <code>.skymouse.Pong pong = 3;</code>
+     * @return The pong.
+     */
+    @java.lang.Override
+    public com.skymouse.skymouseclient.proto.Pong getPong() {
+      if (pongBuilder_ == null) {
+        if (eventCase_ == 3) {
+          return (com.skymouse.skymouseclient.proto.Pong) event_;
+        }
+        return com.skymouse.skymouseclient.proto.Pong.getDefaultInstance();
+      } else {
+        if (eventCase_ == 3) {
+          return pongBuilder_.getMessage();
+        }
+        return com.skymouse.skymouseclient.proto.Pong.getDefaultInstance();
+      }
+    }
+    /**
+     * <code>.skymouse.Pong pong = 3;</code>
+     */
+    public Builder setPong(com.skymouse.skymouseclient.proto.Pong value) {
+      if (pongBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        event_ = value;
+        onChanged();
+      } else {
+        pongBuilder_.setMessage(value);
+      }
+      eventCase_ = 3;
+      return this;
+    }
+    /**
+     * <code>.skymouse.Pong pong = 3;</code>
+     */
+    public Builder setPong(
+        com.skymouse.skymouseclient.proto.Pong.Builder builderForValue) {
+      if (pongBuilder_ == null) {
+        event_ = builderForValue.build();
+        onChanged();
+      } else {
+        pongBuilder_.setMessage(builderForValue.build());
+      }
+      eventCase_ = 3;
+      return this;
+    }
+    /**
+     * <code>.skymouse.Pong pong = 3;</code>
+     */
+    public Builder mergePong(com.skymouse.skymouseclient.proto.Pong value) {
+      if (pongBuilder_ == null) {
+        if (eventCase_ == 3 &&
+            event_ != com.skymouse.skymouseclient.proto.Pong.getDefaultInstance()) {
+          event_ = com.skymouse.skymouseclient.proto.Pong.newBuilder((com.skymouse.skymouseclient.proto.Pong) event_)
+              .mergeFrom(value).buildPartial();
+        } else {
+          event_ = value;
+        }
+        onChanged();
+      } else {
+        if (eventCase_ == 3) {
+          pongBuilder_.mergeFrom(value);
+        } else {
+          pongBuilder_.setMessage(value);
+        }
+      }
+      eventCase_ = 3;
+      return this;
+    }
+    /**
+     * <code>.skymouse.Pong pong = 3;</code>
+     */
+    public Builder clearPong() {
+      if (pongBuilder_ == null) {
+        if (eventCase_ == 3) {
+          eventCase_ = 0;
+          event_ = null;
+          onChanged();
+        }
+      } else {
+        if (eventCase_ == 3) {
+          eventCase_ = 0;
+          event_ = null;
+        }
+        pongBuilder_.clear();
+      }
+      return this;
+    }
+    /**
+     * <code>.skymouse.Pong pong = 3;</code>
+     */
+    public com.skymouse.skymouseclient.proto.Pong.Builder getPongBuilder() {
+      return internalGetPongFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.skymouse.Pong pong = 3;</code>
+     */
+    @java.lang.Override
+    public com.skymouse.skymouseclient.proto.PongOrBuilder getPongOrBuilder() {
+      if ((eventCase_ == 3) && (pongBuilder_ != null)) {
+        return pongBuilder_.getMessageOrBuilder();
+      } else {
+        if (eventCase_ == 3) {
+          return (com.skymouse.skymouseclient.proto.Pong) event_;
+        }
+        return com.skymouse.skymouseclient.proto.Pong.getDefaultInstance();
+      }
+    }
+    /**
+     * <code>.skymouse.Pong pong = 3;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilder<
+        com.skymouse.skymouseclient.proto.Pong, com.skymouse.skymouseclient.proto.Pong.Builder, com.skymouse.skymouseclient.proto.PongOrBuilder> 
+        internalGetPongFieldBuilder() {
+      if (pongBuilder_ == null) {
+        if (!(eventCase_ == 3)) {
+          event_ = com.skymouse.skymouseclient.proto.Pong.getDefaultInstance();
+        }
+        pongBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+            com.skymouse.skymouseclient.proto.Pong, com.skymouse.skymouseclient.proto.Pong.Builder, com.skymouse.skymouseclient.proto.PongOrBuilder>(
+                (com.skymouse.skymouseclient.proto.Pong) event_,
+                getParentForChildren(),
+                isClean());
+        event_ = null;
+      }
+      eventCase_ = 3;
+      onChanged();
+      return pongBuilder_;
     }
 
     // @@protoc_insertion_point(builder_scope:skymouse.MessageToClient)

@@ -3,6 +3,7 @@ package tcp
 import (
 	"encoding/binary"
 	"errors"
+	"fmt"
 	"io"
 	"log"
 	"net"
@@ -14,6 +15,11 @@ import (
 	"github.com/Tomahawk-Center/SkyMouse/pc/internal/util/version_verifier"
 	"github.com/Tomahawk-Center/SkyMouse/pc/pkg/protoapi"
 	"google.golang.org/protobuf/proto"
+)
+
+var (
+	ErrConnNotFound = errors.New("connection not found")
+	ErrNilConn      = errors.New("nil connection")
 )
 
 type Server struct {
@@ -127,6 +133,7 @@ func (s *Server) handleConnection(conn net.Conn) {
 		delete(s.conns, id)
 		s.mu.Unlock()
 		s.sm.RemoveSession(id)
+		log.Println("Removed session:", id)
 	}()
 
 	s.mu.Lock()
@@ -168,24 +175,48 @@ func (s *Server) handleConnection(conn net.Conn) {
 	}
 }
 
-func (s *Server) handlePing() error {
-	//TODO
-	return errors.New("ping-pong not implemented yet")
+func (s *Server) sendProto(sessionId string, msg proto.Message) error {
+	b, err := proto.Marshal(msg)
+	if err != nil {
+		return fmt.Errorf("send protobuf message failed: %w", err)
+	}
 
-	//pong := &protoapi.Pong{}
-	//
-	////TODO wrap pong in MessageToClient
-	//
-	//b, err := proto.Marshal(pong)
-	//if err != nil {
-	//	return err
-	//}
-	//
-	//_, err = sess.conn.Write(b)
-	//if err != nil {
-	//	return err
-	//}
-	//return nil
+	packet := make([]byte, 4+len(b))
+	binary.BigEndian.PutUint32(packet[0:4], uint32(len(b)))
+	copy(packet[4:], b)
+
+	s.mu.Lock()
+	conn, ok := s.conns[sessionId]
+	s.mu.Unlock()
+
+	if !ok {
+		return fmt.Errorf("send protobuf message failed: %w", ErrConnNotFound)
+	}
+
+	c := conn
+	if c == nil {
+		return fmt.Errorf("send protobuf message failed: %w", ErrNilConn)
+	}
+
+	_, err = c.Write(packet)
+	if err != nil {
+		return fmt.Errorf("send protobuf message failed: %w", err)
+	}
+
+	return nil
+}
+
+func (s *Server) handlePing(sessionId string, ping *protoapi.Ping) error {
+	msg := &protoapi.MessageToClient{
+		Event: &protoapi.MessageToClient_Pong{
+			Pong: &protoapi.Pong{
+				SequenceId:  ping.SequenceId,
+				TimestampMs: ping.TimestampMs,
+			},
+		},
+	}
+
+	return s.sendProto(sessionId, msg)
 }
 
 func (s *Server) handleClientHello(sess *session.Session, clientHelloMsg *protoapi.ClientHello) error {
@@ -204,26 +235,7 @@ func (s *Server) handleClientHello(sess *session.Session, clientHelloMsg *protoa
 		},
 	}
 
-	b, err := proto.Marshal(msg)
-	if err != nil {
-		return err
-	}
-
-	packet := make([]byte, 4+len(b))
-
-	binary.BigEndian.PutUint32(packet[0:4], uint32(len(b))) // TODO perf may be improved
-	copy(packet[4:], b)
-	s.mu.Lock()
-	conn, ok := s.conns[sess.Id()]
-	s.mu.Unlock()
-	if !ok {
-		return errors.New("connection not found")
-	}
-	c := conn
-	if c == nil {
-		return errors.New("nil connection")
-	}
-	_, err = c.Write(packet)
+	err = s.sendProto(sess.Id(), msg)
 	if err != nil {
 		return err
 	}
@@ -265,7 +277,7 @@ func (s *Server) routeMessage(sess *session.Session, m *protoapi.MessageToServer
 		}
 
 	case *protoapi.MessageToServer_Ping:
-		err := s.handlePing()
+		err := s.handlePing(sess.Id(), m.GetPing())
 		if err != nil {
 			log.Printf("Send pong failed: %v\n", err)
 		}
