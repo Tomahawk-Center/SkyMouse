@@ -73,6 +73,13 @@ enum CommandEvent {
     COMMAND_LOCK_SCREEN = 3;
 }
 
+message ClipboardShareEvent {
+    oneof content {
+        string text = 1;
+        // for images in future updates
+    }
+}
+
 message ServerEvent {
     HapticEventType type = 1;
     int64 timestamp_ms = 2;
@@ -93,6 +100,7 @@ message MessageToServer {
         Ping ping = 3;
         Pong pong = 4;
         CommandEvent command = 5;
+        ClipboardShareEvent clipboard_share = 6;
     }
 }
 
