@@ -155,6 +155,30 @@ public object MessageToServerKt {
     public fun hasCommand(): kotlin.Boolean {
       return _builder.hasCommand()
     }
+
+    /**
+     * `.skymouse.ClipboardShareEvent clipboard_share = 6;`
+     */
+    public var clipboardShare: com.skymouse.skymouseclient.proto.ClipboardShareEvent
+      @kotlin.jvm.JvmName("getClipboardShare")
+        get() = _builder.clipboardShare
+      @kotlin.jvm.JvmName("setClipboardShare")
+        set(value) {
+        _builder.clipboardShare = value
+      }
+    /**
+     * `.skymouse.ClipboardShareEvent clipboard_share = 6;`
+     */
+    public fun clearClipboardShare() {
+      _builder.clearClipboardShare()
+    }
+    /**
+     * `.skymouse.ClipboardShareEvent clipboard_share = 6;`
+     * @return Whether the clipboardShare field is set.
+     */
+    public fun hasClipboardShare(): kotlin.Boolean {
+      return _builder.hasClipboardShare()
+    }
     public val eventCase: com.skymouse.skymouseclient.proto.MessageToServer.EventCase
     @kotlin.jvm.JvmName("getEventCase")
       get() = _builder.getEventCase()
@@ -179,4 +203,7 @@ public val com.skymouse.skymouseclient.proto.MessageToServerOrBuilder.pingOrNull
 
 public val com.skymouse.skymouseclient.proto.MessageToServerOrBuilder.pongOrNull: com.skymouse.skymouseclient.proto.Pong?
   get() = if (hasPong()) getPong() else null
+
+public val com.skymouse.skymouseclient.proto.MessageToServerOrBuilder.clipboardShareOrNull: com.skymouse.skymouseclient.proto.ClipboardShareEvent?
+  get() = if (hasClipboardShare()) getClipboardShare() else null
 
