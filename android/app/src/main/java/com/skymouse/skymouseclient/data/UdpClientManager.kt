@@ -11,6 +11,8 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import java.net.DatagramPacket
 import java.net.DatagramSocket
@@ -23,6 +25,7 @@ class UdpClientManager {
     private var serverPort: Int = 8080
     private var token: Int = 0
 
+    private val connectMutex = Mutex()
     private val clientScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     private val _connectionState = MutableStateFlow<UdpConnectionState>(UdpConnectionState.Disconnected)
@@ -32,18 +35,31 @@ class UdpClientManager {
     val incomingMessages: SharedFlow<MessageToClient> = _incomingMessages.asSharedFlow()
 
     suspend fun connect(ip: String, port: Int, udpToken: Int) = withContext(Dispatchers.IO) {
-        _connectionState.value = UdpConnectionState.Connecting
-        try {
-            serverAddress = InetAddress.getByName(ip)
-            serverPort = port
-            socket = DatagramSocket()
-            token = udpToken
+        connectMutex.withLock {
+            val currentState = _connectionState.value
+            if (currentState is UdpConnectionState.Connected || currentState is UdpConnectionState.Connecting) {
+                return@withContext
+            }
 
-            _connectionState.value = UdpConnectionState.Connected
+            cleanupInternal()
 
-            startListening()
-        } catch (e: Exception) {
-            _connectionState.value = UdpConnectionState.Error(e.localizedMessage ?: "UDP Init Failed")
+            _connectionState.value = UdpConnectionState.Connecting
+            try {
+                val resolvedAddress = InetAddress.getByName(ip)
+                val newSocket = DatagramSocket()
+
+                serverAddress = resolvedAddress
+                serverPort = port
+                token = udpToken
+                socket = newSocket
+
+                _connectionState.value = UdpConnectionState.Connected
+
+                startListening()
+            } catch (e: Exception) {
+                cleanupInternal()
+                _connectionState.value = UdpConnectionState.Error(e.localizedMessage ?: "UDP Init Failed")
+            }
         }
     }
 
@@ -81,9 +97,6 @@ class UdpClientManager {
         }
     }
 
-    /**
-     * Sends an EmulatorEvent to the server with token
-     */
     suspend fun sendEmulatorEvent(event: com.skymouse.skymouseclient.proto.EmulatorEvent) = withContext(Dispatchers.IO) {
         val msg = com.skymouse.skymouseclient.proto.udpMessageToServer {
             this.udpToken = token
@@ -118,9 +131,14 @@ class UdpClientManager {
 
     fun disconnect() {
         clientScope.coroutineContext.cancelChildren()
+        cleanupInternal()
+        _connectionState.value = UdpConnectionState.Disconnected
+    }
+
+    private fun cleanupInternal() {
+        clientScope.coroutineContext.cancelChildren()
         socket?.close()
         socket = null
         serverAddress = null
-        _connectionState.value = UdpConnectionState.Disconnected
     }
 }
