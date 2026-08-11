@@ -24,6 +24,7 @@ class TcpClientManager {
     private var inputStream: InputStream? = null
 
     private val sendMutex = Mutex()
+    private val connectionMutex = Mutex()
     private val clientScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     private val _connectionState = MutableStateFlow<TcpConnectionState>(TcpConnectionState.Disconnected)
@@ -33,21 +34,30 @@ class TcpClientManager {
     val incomingMessages: SharedFlow<MessageToClient> = _incomingMessages
 
     suspend fun connect(ip: String, port: Int) = withContext(Dispatchers.IO) {
-        _connectionState.value = TcpConnectionState.Connecting
+        connectionMutex.withLock {
+            if (_connectionState.value is TcpConnectionState.Connected || _connectionState.value is TcpConnectionState.Connecting) {
+                return@withContext
+            }
 
-        try {
-            val s = Socket()
-            s.connect(InetSocketAddress(ip, port), 5000)
-            socket = s
+            closeResources()
+            _connectionState.value = TcpConnectionState.Connecting
 
-            outputStream = s.getOutputStream()
-            inputStream = s.getInputStream()
+            try {
+                val s = Socket()
+                s.connect(InetSocketAddress(ip, port), 5000)
+                socket = s
 
-            _connectionState.value = TcpConnectionState.Connected
+                outputStream = s.getOutputStream()
+                inputStream = s.getInputStream()
 
-            startListening()
-        } catch (error: Exception) {
-            _connectionState.value = TcpConnectionState.Error(error.localizedMessage ?: "Tcp connection failed")
+                _connectionState.value = TcpConnectionState.Connected
+
+                startListening()
+            } catch (error: Exception) {
+                closeResources()
+                _connectionState.value =
+                    TcpConnectionState.Error(error.localizedMessage ?: "Tcp connection failed")
+            }
         }
     }
 
@@ -70,8 +80,8 @@ class TcpClientManager {
         try {
             val header = ByteArray(4)
             var totalReadHeader = 0
-            while (totalReadHeader<4) {
-                val read = stream.read(header, totalReadHeader, 4-totalReadHeader)
+            while (totalReadHeader < 4) {
+                val read = stream.read(header, totalReadHeader, 4 - totalReadHeader)
                 if (read == -1) {
                     return@withContext null
                 }
@@ -130,20 +140,27 @@ class TcpClientManager {
         }
     }
 
-     suspend fun disconnect() =withContext(Dispatchers.IO) {
-         clientScope.coroutineContext.cancelChildren()
+    suspend fun disconnect() = withContext(Dispatchers.IO) {
+        connectionMutex.withLock {
+            closeResources()
+            _connectionState.value = TcpConnectionState.Disconnected
+        }
+    }
+
+    private fun closeResources() {
+        clientScope.coroutineContext.cancelChildren()
         try {
             socket?.shutdownOutput()
         } catch (_: Exception) { }
 
-         try {
+        try {
             outputStream?.close()
             socket?.close()
-        } catch (_: Exception) {}
+        } catch (_: Exception) {
+        }
 
-         outputStream = null
-         inputStream = null
-         socket = null
-         _connectionState.value = TcpConnectionState.Disconnected
+        outputStream = null
+        inputStream = null
+        socket = null
     }
 }
