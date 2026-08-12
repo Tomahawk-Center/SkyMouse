@@ -229,23 +229,23 @@ func (s *Server) handleClientHello(sess *session.Session, clientHelloMsg *protoa
 	serverHello.UdpPort = int32(udpPort)
 	serverHello.UdpToken = sess.UdpToken()
 
-	msg := &protoapi.MessageToClient{
-		Event: &protoapi.MessageToClient_ServerHello{
-			ServerHello: serverHello,
-		},
-	}
-
-	err = s.sendProto(sess.Id(), msg)
-	if err != nil {
-		return err
-	}
-
 	err = version_verifier.VerifyClientVersion(clientHelloMsg.ClientVersion, s.protobufVer)
 	if err != nil {
 		log.Printf("Handshake state is not set because version check failed for session: %s, reason: %v", sess.Id(), err)
 	} else {
 		sess.SetIsHandshake(true)
 		log.Println("Handshake state set to true for session:", sess.Id())
+
+		msg := &protoapi.MessageToClient{
+			Event: &protoapi.MessageToClient_ServerHello{
+				ServerHello: serverHello,
+			},
+		}
+
+		err = s.sendProto(sess.Id(), msg)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
