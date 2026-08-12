@@ -41,7 +41,6 @@ func NewEmulator(ch chan Event) (*Emulator, error) {
 		d = append(d, b)
 
 		bS, err := calculateBoundsWithPadding(b, 4)
-		fmt.Println(bS)
 		if err != nil {
 			return nil, err
 		}
