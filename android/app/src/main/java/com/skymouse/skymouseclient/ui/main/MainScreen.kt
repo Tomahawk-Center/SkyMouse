@@ -22,8 +22,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
-import com.skymouse.skymouseclient.data.TcpConnectionState
-import com.skymouse.skymouseclient.data.UdpConnectionState
 import com.skymouse.skymouseclient.data.util.KeepScreenAwakeInGyroMode
 import com.skymouse.skymouseclient.ui.connection.ConnectionScreen
 import com.skymouse.skymouseclient.ui.connection.ConnectionViewModel
@@ -38,11 +36,9 @@ fun MainScreen(
     controlViewModel: ControlViewModel,
     onNavigateToSettings: () -> Unit
 ) {
-    val tcpState by mainViewModel.tcpConnectionState.collectAsState()
-    val udpState by mainViewModel.udpConnectionState.collectAsState()
     val haptic = LocalHapticFeedback.current
 
-    val isConnected = tcpState is TcpConnectionState.Connected && udpState is UdpConnectionState.Connected
+    val isConnected by connectionViewModel.isConnected.collectAsState()
 
     val isGyroActive by controlViewModel.isGyroActive.collectAsState()
 
