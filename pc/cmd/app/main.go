@@ -61,7 +61,10 @@ func main() {
 	}
 
 	emuEventsCh := make(chan emulator.Event, 20)
-	emu := emulator.NewEmulator(emuEventsCh)
+	emu, err := emulator.NewEmulator(emuEventsCh)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	sessMgr := session.NewSessionManager()
 
