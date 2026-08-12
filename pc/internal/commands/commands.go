@@ -3,7 +3,10 @@ package commands
 import (
 	"fmt"
 	"os/exec"
+	"sync"
 	"syscall"
+
+	"golang.design/x/clipboard"
 )
 
 func Shutdown() error {
@@ -33,4 +36,16 @@ func Sleep() error {
 func LockScreen() error {
 	cmd := exec.Command("rundll32.exe", "user32.dll,LockWorkStation")
 	return cmd.Run()
+}
+
+var initClipboard = sync.OnceValue(clipboard.Init)
+
+func WriteToClipboard(text string) error {
+	err := initClipboard()
+	if err != nil {
+		return err
+	}
+
+	clipboard.Write(clipboard.FmtText, []byte(text))
+	return nil // TODO add err handling on Write call
 }
