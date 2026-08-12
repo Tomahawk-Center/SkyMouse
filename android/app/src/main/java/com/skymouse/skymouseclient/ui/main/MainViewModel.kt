@@ -5,13 +5,12 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.skymouse.skymouseclient.data.SkyMouseManager
-import com.skymouse.skymouseclient.data.TcpConnectionState
 
 class MainViewModel(application: Application) : AndroidViewModel(application), DefaultLifecycleObserver {
 
     val settingsState = SkyMouseManager.settingsState
-    val tcpConnectionState = SkyMouseManager.tcpClient.connectionState
-    val udpConnectionState = SkyMouseManager.udpClient.connectionState
+
+    var isConnectingProvider: (()-> Boolean)? = null
 
     private var shouldAutoReconnect = false
     private var isFirstStart = true
@@ -26,15 +25,19 @@ class MainViewModel(application: Application) : AndroidViewModel(application), D
         val shouldConnect = (isFirstStart && autoConnectOnStartup) || shouldAutoReconnect
         isFirstStart = false
 
-        if (shouldConnect && tcpConnectionState.value !is TcpConnectionState.Connected) {
+        val currentlyConnected = isConnectingProvider?.invoke() ?: false
+
+        if (shouldConnect && !currentlyConnected) {
             onAutoConnect?.invoke()
         }
     }
 
     override fun onStop(owner: LifecycleOwner) {
         super.onStop(owner)
+
+        val currentlyConnected = isConnectingProvider?.invoke() ?: false
         
-        if (tcpConnectionState.value is TcpConnectionState.Connected) {
+        if (currentlyConnected) {
             if (settingsState.value.autoReconnect) {
                 shouldAutoReconnect = true
             }
