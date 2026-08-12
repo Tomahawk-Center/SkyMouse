@@ -15,6 +15,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.skymouse.skymouseclient.data.SkyMouseManager
 import com.skymouse.skymouseclient.data.TcpConnectionState
+import com.skymouse.skymouseclient.data.UdpConnectionState
 import com.skymouse.skymouseclient.data.util.VersionVerificationResult
 import com.skymouse.skymouseclient.data.util.VersionVerifier
 import com.skymouse.skymouseclient.proto.HapticEventType
@@ -22,9 +23,15 @@ import com.skymouse.skymouseclient.proto.ServerEvent
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.time.Duration.Companion.seconds
 
@@ -38,6 +45,20 @@ class ConnectionViewModel(application: Application) : AndroidViewModel(applicati
     private val tcpClientManager = SkyMouseManager.tcpClient
     private val udpClientManager = SkyMouseManager.udpClient
 
+    private val connectMutex = Mutex()
+
+    val isConnected: StateFlow<Boolean> = combine(
+        tcpClientManager.connectionState,
+        udpClientManager.connectionState
+    ) {
+            tcp, udp ->
+        tcp is TcpConnectionState.Connected && udp is UdpConnectionState.Connected
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = false
+    )
+
     private var hapticJob: Job? = null
 
     private val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -50,7 +71,7 @@ class ConnectionViewModel(application: Application) : AndroidViewModel(applicati
 
     fun onConnectClicked() {
         val portInt = port.toIntOrNull() ?: return
-        val clientVersionStr = "3.2"
+        val clientVersionStr = "3.3"
 
         prefs.edit {
             putString("ip_address", ipAddress)
@@ -58,49 +79,53 @@ class ConnectionViewModel(application: Application) : AndroidViewModel(applicati
         }
 
         viewModelScope.launch {
-            tcpClientManager.connect(ipAddress, portInt)
+            connectMutex.withLock {
+                if (isConnected.value) return@withLock
 
-            if (tcpClientManager.connectionState.value is TcpConnectionState.Connected) {
-                val helloMsg = com.skymouse.skymouseclient.proto.messageToServer {
-                    clientHello = com.skymouse.skymouseclient.proto.clientHello {
-                        clientVersion = clientVersionStr
-                    }
-                }
+                tcpClientManager.connect(ipAddress, portInt)
 
-                val response = withTimeoutOrNull(5.seconds) {
-                    coroutineScope {
-                        val responseDeferred = async {
-                            tcpClientManager.incomingMessages.first { it.hasServerHello() }
+                if (tcpClientManager.connectionState.value is TcpConnectionState.Connected) {
+                    val helloMsg = com.skymouse.skymouseclient.proto.messageToServer {
+                        clientHello = com.skymouse.skymouseclient.proto.clientHello {
+                            clientVersion = clientVersionStr
                         }
-                        tcpClientManager.sendProto(helloMsg)
-                        responseDeferred.await()
                     }
-                }
 
-                if (response != null && response.hasServerHello()) {
-                    val serverVersion = response.serverHello.serverVersion
-                    val versionVerificationResult = VersionVerifier.verify(clientVersionStr, serverVersion)
+                    val response = withTimeoutOrNull(5.seconds) {
+                        coroutineScope {
+                            val responseDeferred = async {
+                                tcpClientManager.incomingMessages.first { it.hasServerHello() }
+                            }
+                            tcpClientManager.sendProto(helloMsg)
+                            responseDeferred.await()
+                        }
+                    }
 
-                    if (versionVerificationResult is VersionVerificationResult.Mismatch) {
-                        Toast.makeText(getApplication(), versionVerificationResult.reason, Toast.LENGTH_LONG).show()
+                    if (response != null && response.hasServerHello()) {
+                        val serverVersion = response.serverHello.serverVersion
+                        val versionVerificationResult = VersionVerifier.verify(clientVersionStr, serverVersion)
+
+                        if (versionVerificationResult is VersionVerificationResult.Mismatch) {
+                            Toast.makeText(getApplication(), versionVerificationResult.reason, Toast.LENGTH_LONG).show()
+                            tcpClientManager.disconnect()
+                            return@withLock
+                        } else if (versionVerificationResult is VersionVerificationResult.Warning) {
+                            Toast.makeText(getApplication(), versionVerificationResult.message, Toast.LENGTH_LONG).show()
+                        }
+
+                        val udpPortFromServer = response.serverHello.udpPort
+                        val udpToken = response.serverHello.udpToken
+                        if (udpToken == 0) {
+                            Toast.makeText(getApplication(), "Server sent an invalid UDP token", Toast.LENGTH_LONG).show()
+                            tcpClientManager.disconnect()
+                            return@withLock
+                        }
+                        udpClientManager.connect(ipAddress, udpPortFromServer, udpToken)
+                        startReceivingServerEvents()
+                    } else {
+                        Toast.makeText(getApplication(), "Handshake response timed out", Toast.LENGTH_LONG).show()
                         tcpClientManager.disconnect()
-                        return@launch
-                    } else if (versionVerificationResult is VersionVerificationResult.Warning) {
-                        Toast.makeText(getApplication(), versionVerificationResult.message, Toast.LENGTH_LONG).show()
                     }
-
-                    val udpPortFromServer = response.serverHello.udpPort
-                    val udpToken = response.serverHello.udpToken
-                    if (udpToken == 0) {
-                        Toast.makeText(getApplication(), "Server sent an invalid UDP token", Toast.LENGTH_LONG).show()
-                        tcpClientManager.disconnect()
-                        return@launch
-                    }
-                    udpClientManager.connect(ipAddress, udpPortFromServer, udpToken)
-                    startReceivingServerEvents()
-                } else {
-                    Toast.makeText(getApplication(), "Handshake response timed out", Toast.LENGTH_LONG).show()
-                    tcpClientManager.disconnect()
                 }
             }
         }

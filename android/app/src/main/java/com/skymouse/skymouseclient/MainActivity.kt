@@ -1,5 +1,6 @@
 package com.skymouse.skymouseclient
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -21,11 +22,14 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.lifecycleScope
 import com.skymouse.skymouseclient.data.SkyMouseManager
 import com.skymouse.skymouseclient.ui.connection.ConnectionViewModel
 import com.skymouse.skymouseclient.ui.control.ControlViewModel
 import com.skymouse.skymouseclient.ui.main.MainViewModel
 import com.skymouse.skymouseclient.ui.navigation.Navigation
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     private val mainViewModel: MainViewModel by viewModels()
@@ -38,6 +42,26 @@ class MainActivity : ComponentActivity() {
       if (!isGranted) {
           Toast.makeText(this, "Permission denied, please grant access to local network", Toast.LENGTH_SHORT).show()
       }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleShareIntent(intent)
+    }
+
+    private fun handleShareIntent(intent: Intent?) {
+        if (intent?.action == Intent.ACTION_SEND && intent.type == "text/plain") {
+            intent.getStringExtra(Intent.EXTRA_TEXT)?.let { sharedText ->
+                lifecycleScope.launch {
+                    if (!connectionViewModel.isConnected.value) {
+                        connectionViewModel.onConnectClicked()
+                    }
+
+                    connectionViewModel.isConnected.first {it}
+                    controlViewModel.sendClipboardText(sharedText)
+                }
+            }
+        }
     }
 
     private fun checkAndRequestLocalNetwork() {
@@ -57,6 +81,9 @@ class MainActivity : ComponentActivity() {
 
         mainViewModel.onAutoConnect = { connectionViewModel.onConnectClicked() }
         mainViewModel.onDisconnect = { connectionViewModel.disconnect() }
+        mainViewModel.isConnectingProvider = { connectionViewModel.isConnected.value }
+
+        handleShareIntent(intent)
 
         setContent {
             val darkTheme = isSystemInDarkTheme()

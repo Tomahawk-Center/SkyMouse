@@ -59,6 +59,7 @@ private static final long serialVersionUID = 0L;
     PING(3),
     PONG(4),
     COMMAND(5),
+    CLIPBOARD_SHARE(6),
     EVENT_NOT_SET(0);
     private final int value;
     private EventCase(int value) {
@@ -81,6 +82,7 @@ private static final long serialVersionUID = 0L;
         case 3: return PING;
         case 4: return PONG;
         case 5: return COMMAND;
+        case 6: return CLIPBOARD_SHARE;
         case 0: return EVENT_NOT_SET;
         default: return null;
       }
@@ -251,6 +253,37 @@ private static final long serialVersionUID = 0L;
     return com.skymouse.skymouseclient.proto.CommandEvent.COMMAND_UNKNOWN;
   }
 
+  public static final int CLIPBOARD_SHARE_FIELD_NUMBER = 6;
+  /**
+   * <code>.skymouse.ClipboardShareEvent clipboard_share = 6;</code>
+   * @return Whether the clipboardShare field is set.
+   */
+  @java.lang.Override
+  public boolean hasClipboardShare() {
+    return eventCase_ == 6;
+  }
+  /**
+   * <code>.skymouse.ClipboardShareEvent clipboard_share = 6;</code>
+   * @return The clipboardShare.
+   */
+  @java.lang.Override
+  public com.skymouse.skymouseclient.proto.ClipboardShareEvent getClipboardShare() {
+    if (eventCase_ == 6) {
+       return (com.skymouse.skymouseclient.proto.ClipboardShareEvent) event_;
+    }
+    return com.skymouse.skymouseclient.proto.ClipboardShareEvent.getDefaultInstance();
+  }
+  /**
+   * <code>.skymouse.ClipboardShareEvent clipboard_share = 6;</code>
+   */
+  @java.lang.Override
+  public com.skymouse.skymouseclient.proto.ClipboardShareEventOrBuilder getClipboardShareOrBuilder() {
+    if (eventCase_ == 6) {
+       return (com.skymouse.skymouseclient.proto.ClipboardShareEvent) event_;
+    }
+    return com.skymouse.skymouseclient.proto.ClipboardShareEvent.getDefaultInstance();
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -280,6 +313,9 @@ private static final long serialVersionUID = 0L;
     if (eventCase_ == 5) {
       output.writeEnum(5, ((java.lang.Integer) event_));
     }
+    if (eventCase_ == 6) {
+      output.writeMessage(6, (com.skymouse.skymouseclient.proto.ClipboardShareEvent) event_);
+    }
     getUnknownFields().writeTo(output);
   }
   private int computeSerializedSize_0() {
@@ -303,6 +339,10 @@ private static final long serialVersionUID = 0L;
     if (eventCase_ == 5) {
       size += com.google.protobuf.CodedOutputStream
         .computeEnumSize(5, ((java.lang.Integer) event_));
+    }
+    if (eventCase_ == 6) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(6, (com.skymouse.skymouseclient.proto.ClipboardShareEvent) event_);
     }
     return size;
   }
@@ -350,6 +390,10 @@ private static final long serialVersionUID = 0L;
         if (getCommandValue()
             != other.getCommandValue()) return false;
         break;
+      case 6:
+        if (!getClipboardShare()
+            .equals(other.getClipboardShare())) return false;
+        break;
       case 0:
       default:
     }
@@ -384,6 +428,10 @@ private static final long serialVersionUID = 0L;
       case 5:
         hash = (37 * hash) + COMMAND_FIELD_NUMBER;
         hash = (53 * hash) + getCommandValue();
+        break;
+      case 6:
+        hash = (37 * hash) + CLIPBOARD_SHARE_FIELD_NUMBER;
+        hash = (53 * hash) + getClipboardShare().hashCode();
         break;
       case 0:
       default:
@@ -531,6 +579,9 @@ private static final long serialVersionUID = 0L;
       if (pongBuilder_ != null) {
         pongBuilder_.clear();
       }
+      if (clipboardShareBuilder_ != null) {
+        clipboardShareBuilder_.clear();
+      }
       eventCase_ = 0;
       event_ = null;
       return this;
@@ -588,6 +639,10 @@ private static final long serialVersionUID = 0L;
           pongBuilder_ != null) {
         result.event_ = pongBuilder_.build();
       }
+      if (eventCase_ == 6 &&
+          clipboardShareBuilder_ != null) {
+        result.event_ = clipboardShareBuilder_.build();
+      }
     }
 
     @java.lang.Override
@@ -621,6 +676,10 @@ private static final long serialVersionUID = 0L;
         }
         case COMMAND: {
           setCommandValue(other.getCommandValue());
+          break;
+        }
+        case CLIPBOARD_SHARE: {
+          mergeClipboardShare(other.getClipboardShare());
           break;
         }
         case EVENT_NOT_SET: {
@@ -687,6 +746,13 @@ private static final long serialVersionUID = 0L;
               event_ = rawValue;
               break;
             } // case 40
+            case 50: {
+              input.readMessage(
+                  internalGetClipboardShareFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              eventCase_ = 6;
+              break;
+            } // case 50
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -1354,6 +1420,148 @@ private static final long serialVersionUID = 0L;
         onChanged();
       }
       return this;
+    }
+
+    private com.google.protobuf.SingleFieldBuilder<
+        com.skymouse.skymouseclient.proto.ClipboardShareEvent, com.skymouse.skymouseclient.proto.ClipboardShareEvent.Builder, com.skymouse.skymouseclient.proto.ClipboardShareEventOrBuilder> clipboardShareBuilder_;
+    /**
+     * <code>.skymouse.ClipboardShareEvent clipboard_share = 6;</code>
+     * @return Whether the clipboardShare field is set.
+     */
+    @java.lang.Override
+    public boolean hasClipboardShare() {
+      return eventCase_ == 6;
+    }
+    /**
+     * <code>.skymouse.ClipboardShareEvent clipboard_share = 6;</code>
+     * @return The clipboardShare.
+     */
+    @java.lang.Override
+    public com.skymouse.skymouseclient.proto.ClipboardShareEvent getClipboardShare() {
+      if (clipboardShareBuilder_ == null) {
+        if (eventCase_ == 6) {
+          return (com.skymouse.skymouseclient.proto.ClipboardShareEvent) event_;
+        }
+        return com.skymouse.skymouseclient.proto.ClipboardShareEvent.getDefaultInstance();
+      } else {
+        if (eventCase_ == 6) {
+          return clipboardShareBuilder_.getMessage();
+        }
+        return com.skymouse.skymouseclient.proto.ClipboardShareEvent.getDefaultInstance();
+      }
+    }
+    /**
+     * <code>.skymouse.ClipboardShareEvent clipboard_share = 6;</code>
+     */
+    public Builder setClipboardShare(com.skymouse.skymouseclient.proto.ClipboardShareEvent value) {
+      if (clipboardShareBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        event_ = value;
+        onChanged();
+      } else {
+        clipboardShareBuilder_.setMessage(value);
+      }
+      eventCase_ = 6;
+      return this;
+    }
+    /**
+     * <code>.skymouse.ClipboardShareEvent clipboard_share = 6;</code>
+     */
+    public Builder setClipboardShare(
+        com.skymouse.skymouseclient.proto.ClipboardShareEvent.Builder builderForValue) {
+      if (clipboardShareBuilder_ == null) {
+        event_ = builderForValue.build();
+        onChanged();
+      } else {
+        clipboardShareBuilder_.setMessage(builderForValue.build());
+      }
+      eventCase_ = 6;
+      return this;
+    }
+    /**
+     * <code>.skymouse.ClipboardShareEvent clipboard_share = 6;</code>
+     */
+    public Builder mergeClipboardShare(com.skymouse.skymouseclient.proto.ClipboardShareEvent value) {
+      if (clipboardShareBuilder_ == null) {
+        if (eventCase_ == 6 &&
+            event_ != com.skymouse.skymouseclient.proto.ClipboardShareEvent.getDefaultInstance()) {
+          event_ = com.skymouse.skymouseclient.proto.ClipboardShareEvent.newBuilder((com.skymouse.skymouseclient.proto.ClipboardShareEvent) event_)
+              .mergeFrom(value).buildPartial();
+        } else {
+          event_ = value;
+        }
+        onChanged();
+      } else {
+        if (eventCase_ == 6) {
+          clipboardShareBuilder_.mergeFrom(value);
+        } else {
+          clipboardShareBuilder_.setMessage(value);
+        }
+      }
+      eventCase_ = 6;
+      return this;
+    }
+    /**
+     * <code>.skymouse.ClipboardShareEvent clipboard_share = 6;</code>
+     */
+    public Builder clearClipboardShare() {
+      if (clipboardShareBuilder_ == null) {
+        if (eventCase_ == 6) {
+          eventCase_ = 0;
+          event_ = null;
+          onChanged();
+        }
+      } else {
+        if (eventCase_ == 6) {
+          eventCase_ = 0;
+          event_ = null;
+        }
+        clipboardShareBuilder_.clear();
+      }
+      return this;
+    }
+    /**
+     * <code>.skymouse.ClipboardShareEvent clipboard_share = 6;</code>
+     */
+    public com.skymouse.skymouseclient.proto.ClipboardShareEvent.Builder getClipboardShareBuilder() {
+      return internalGetClipboardShareFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.skymouse.ClipboardShareEvent clipboard_share = 6;</code>
+     */
+    @java.lang.Override
+    public com.skymouse.skymouseclient.proto.ClipboardShareEventOrBuilder getClipboardShareOrBuilder() {
+      if ((eventCase_ == 6) && (clipboardShareBuilder_ != null)) {
+        return clipboardShareBuilder_.getMessageOrBuilder();
+      } else {
+        if (eventCase_ == 6) {
+          return (com.skymouse.skymouseclient.proto.ClipboardShareEvent) event_;
+        }
+        return com.skymouse.skymouseclient.proto.ClipboardShareEvent.getDefaultInstance();
+      }
+    }
+    /**
+     * <code>.skymouse.ClipboardShareEvent clipboard_share = 6;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilder<
+        com.skymouse.skymouseclient.proto.ClipboardShareEvent, com.skymouse.skymouseclient.proto.ClipboardShareEvent.Builder, com.skymouse.skymouseclient.proto.ClipboardShareEventOrBuilder> 
+        internalGetClipboardShareFieldBuilder() {
+      if (clipboardShareBuilder_ == null) {
+        if (!(eventCase_ == 6)) {
+          event_ = com.skymouse.skymouseclient.proto.ClipboardShareEvent.getDefaultInstance();
+        }
+        clipboardShareBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+            com.skymouse.skymouseclient.proto.ClipboardShareEvent, com.skymouse.skymouseclient.proto.ClipboardShareEvent.Builder, com.skymouse.skymouseclient.proto.ClipboardShareEventOrBuilder>(
+                (com.skymouse.skymouseclient.proto.ClipboardShareEvent) event_,
+                getParentForChildren(),
+                isClean());
+        event_ = null;
+      }
+      eventCase_ = 6;
+      onChanged();
+      return clipboardShareBuilder_;
     }
 
     // @@protoc_insertion_point(builder_scope:skymouse.MessageToServer)

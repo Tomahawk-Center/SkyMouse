@@ -1,6 +1,7 @@
 package com.skymouse.skymouseclient.ui.control
 
 import android.app.Application
+import android.content.ClipboardManager
 import android.content.Context
 import android.os.Build
 import android.os.VibrationEffect
@@ -19,6 +20,7 @@ import com.skymouse.skymouseclient.data.PingType
 import com.skymouse.skymouseclient.data.SkyMouseManager
 import com.skymouse.skymouseclient.proto.CommandEvent
 import com.skymouse.skymouseclient.proto.MouseButton
+import com.skymouse.skymouseclient.proto.clipboardShareEvent
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow
@@ -251,6 +253,29 @@ class ControlViewModel(
     fun stopPingTests() {
         pingManager.stopPingTest(PingType.UDP)
         pingManager.stopPingTest(PingType.TCP)
+    }
+
+    fun onClipboardShare() {
+        val clipboard = getApplication<Application>().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = clipboard.primaryClip
+        if (clip != null && clip.itemCount > 0) {
+            val text = clip.getItemAt(0).text?.toString()
+            if (!text.isNullOrBlank()) {
+                sendClipboardText(text)
+            }
+        }
+    }
+
+    fun sendClipboardText(text: String) {
+        viewModelScope.launch {
+
+            val msg = com.skymouse.skymouseclient.proto.messageToServer {
+                clipboardShare = clipboardShareEvent {
+                    this.text = text
+                }
+            }
+            tcpClientManager.sendProto(msg)
+        }
     }
 
 }
