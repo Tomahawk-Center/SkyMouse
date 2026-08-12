@@ -418,9 +418,9 @@ fun ControlScreen(
                 ),
                 shape = MaterialTheme.shapes.medium
             ) {
-                Text( // TODO
+                Text(
                     if (viewModel.isGyroEnabled) "Switch to Touchpad"
-                    else "Switch to Gyroscope and Accelerometer"
+                    else "Switch to Gyroscope"
                 )
             }
         }
