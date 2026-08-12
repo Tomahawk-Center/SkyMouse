@@ -258,6 +258,17 @@ func (s *Server) routeMessage(sess *session.Session, m *protoapi.MessageToServer
 			s.handler.Handle(sess.Id(), m.GetEmulatorEvent())
 		}
 
+	case *protoapi.MessageToServer_ClipboardShare:
+		if sess.IsHandshake() {
+			text := m.GetClipboardShare().GetText()
+			if text != "" {
+				err := commands.WriteToClipboard(text)
+				if err != nil {
+					log.Printf("Write to clipboard failed: %v\n", err)
+				}
+			}
+		}
+
 	case *protoapi.MessageToServer_Command:
 		if sess.IsHandshake() {
 			var err error
