@@ -11,7 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -29,6 +30,7 @@ import com.skymouse.skymouseclient.data.SkyMouseManager
 import com.skymouse.skymouseclient.data.TcpConnectionState
 import com.skymouse.skymouseclient.data.UdpConnectionState
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun ConnectionScreen(viewModel: ConnectionViewModel) {
     val tcpState by SkyMouseManager.tcpClient.connectionState.collectAsState()
@@ -92,7 +94,7 @@ fun ConnectionScreen(viewModel: ConnectionViewModel) {
         Spacer(modifier = Modifier.height(24.dp))
 
         if (isConnecting) {
-            CircularProgressIndicator(modifier = Modifier.size(48.dp))
+            LoadingIndicator(modifier = Modifier.size(64.dp))
         } else {
             Button(
                 onClick = {
