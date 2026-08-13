@@ -11,6 +11,7 @@ composeBom = "2026.08.00"
 protobuf = "4.35.1"
 materialIconsExtended = "1.7.8"
 navigationCompose = "2.9.8"
+material3 = "1.5.0-alpha26"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -26,7 +27,7 @@ androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
-androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "material3" }
 protobuf-java = { group = "com.google.protobuf", name = "protobuf-java", version.ref = "protobuf"}
 protobuf-kotlin = {group = "com.google.protobuf", name = "protobuf-kotlin", version.ref = "protobuf"}
 androidx-compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "materialIconsExtended" }
