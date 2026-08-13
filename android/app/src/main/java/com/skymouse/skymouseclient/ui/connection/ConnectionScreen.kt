@@ -104,7 +104,7 @@ fun ConnectionScreen(viewModel: ConnectionViewModel) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
-                shape = MaterialTheme.shapes.large
+                shape = MaterialTheme.shapes.extraLarge
             ) {
                 Text(text = "Connect", style = MaterialTheme.typography.titleMedium)
             }
