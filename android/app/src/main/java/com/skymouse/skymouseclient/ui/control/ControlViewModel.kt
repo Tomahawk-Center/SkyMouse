@@ -1,6 +1,7 @@
 package com.skymouse.skymouseclient.ui.control
 
 import android.app.Application
+import android.content.ClipboardManager
 import android.content.Context
 import android.os.Build
 import android.os.VibrationEffect
@@ -15,9 +16,11 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
 import com.skymouse.skymouseclient.data.GyroscopeProvider
+import com.skymouse.skymouseclient.data.PingType
 import com.skymouse.skymouseclient.data.SkyMouseManager
 import com.skymouse.skymouseclient.proto.CommandEvent
 import com.skymouse.skymouseclient.proto.MouseButton
+import com.skymouse.skymouseclient.proto.clipboardShareEvent
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow
@@ -36,6 +39,10 @@ class ControlViewModel(
     private val settingsState = SkyMouseManager.settingsState
     private val tcpClientManager = SkyMouseManager.tcpClient
     private val udpClientManager = SkyMouseManager.udpClient
+    private val pingManager = SkyMouseManager.pingManager
+
+    val udpPingState = pingManager.udpState
+    val tcpPingState = pingManager.tcpState
 
     private val vibrator = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         val vibratorManager = application.getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
@@ -53,6 +60,7 @@ class ControlViewModel(
 
     private val pressedButtons = mutableSetOf<MouseButton>()
     private var holdVibrationJob: Job? = null
+    private var isHoldingVibration = false
 
     init {
         viewModelScope.launch {
@@ -91,16 +99,17 @@ class ControlViewModel(
             val isFirstButton = pressedButtons.isEmpty()
             pressedButtons.add(button)
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.BAKLAVA) {
-                vibrateLocal(VibrationEffect.EFFECT_CLICK, VibrationEffect.Composition.DELAY_TYPE_RELATIVE_START_OFFSET, 0.7f)
-            } else {
-                vibrateLocal(VibrationEffect.EFFECT_CLICK, 0, 0.8f)
-            }
-
             if (isFirstButton) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    vibrateLocal(VibrationEffect.EFFECT_CLICK, VibrationEffect.Composition.PRIMITIVE_CLICK, 0.7f)
+                } else {
+                    vibrateLocal(VibrationEffect.EFFECT_CLICK, 0, 0.8f)
+                }
+
                 holdVibrationJob?.cancel()
                 holdVibrationJob = viewModelScope.launch {
-                    delay(150.milliseconds)
+                    delay(200.milliseconds)
+                    isHoldingVibration = true
                     startHoldVibration()
                 }
             }
@@ -108,7 +117,25 @@ class ControlViewModel(
             pressedButtons.remove(button)
             if (pressedButtons.isEmpty()) {
                 holdVibrationJob?.cancel()
-                vibrator.cancel()
+                if (isHoldingVibration) {
+                    vibrator.cancel()
+                    isHoldingVibration = false
+
+                    viewModelScope.launch {
+                        delay(5.milliseconds)
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                            vibrateLocal(
+                                VibrationEffect.EFFECT_TICK,
+                                VibrationEffect.Composition.PRIMITIVE_LOW_TICK,
+                                0.5f
+                            )
+                        } else {
+                            vibrateLocal(VibrationEffect.EFFECT_TICK, 0, 0.5f)
+                        }
+                    }
+
+                }
             }
         }
 
@@ -215,4 +242,40 @@ class ControlViewModel(
             tcpClientManager.sendProto(msg)
         }
     }
+
+    var isPingCheckSheetShown by mutableStateOf(false)
+
+    fun startPingTests() {
+        pingManager.startPingTest(PingType.UDP)
+        pingManager.startPingTest(PingType.TCP)
+    }
+
+    fun stopPingTests() {
+        pingManager.stopPingTest(PingType.UDP)
+        pingManager.stopPingTest(PingType.TCP)
+    }
+
+    fun onClipboardShare() {
+        val clipboard = getApplication<Application>().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = clipboard.primaryClip
+        if (clip != null && clip.itemCount > 0) {
+            val text = clip.getItemAt(0).text?.toString()
+            if (!text.isNullOrBlank()) {
+                sendClipboardText(text)
+            }
+        }
+    }
+
+    fun sendClipboardText(text: String) {
+        viewModelScope.launch {
+
+            val msg = com.skymouse.skymouseclient.proto.messageToServer {
+                clipboardShare = clipboardShareEvent {
+                    this.text = text
+                }
+            }
+            tcpClientManager.sendProto(msg)
+        }
+    }
+
 }

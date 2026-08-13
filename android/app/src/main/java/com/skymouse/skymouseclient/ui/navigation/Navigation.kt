@@ -18,6 +18,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
@@ -38,6 +40,8 @@ fun Navigation(
 ) {
     val navController = rememberNavController()
     val settingsViewModel: SettingsViewModel = viewModel()
+
+    val haptic = LocalHapticFeedback.current
 
     Box(
         modifier = Modifier
@@ -102,7 +106,9 @@ fun Navigation(
                 AnimatedCardWrapper {
                     SettingsScreen(
                         viewModel = settingsViewModel,
-                        onNavigateBack = { navController.popBackStack() }
+                        onNavigateBack = {
+                            haptic.performHapticFeedback(HapticFeedbackType.SegmentTick)
+                            navController.popBackStack() }
                     )
                 }
             }

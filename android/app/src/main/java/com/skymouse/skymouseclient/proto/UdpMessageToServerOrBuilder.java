@@ -31,5 +31,20 @@ public interface UdpMessageToServerOrBuilder extends
    */
   com.skymouse.skymouseclient.proto.EmulatorEventOrBuilder getEmulatorEventOrBuilder();
 
+  /**
+   * <code>.skymouse.Ping ping = 3;</code>
+   * @return Whether the ping field is set.
+   */
+  boolean hasPing();
+  /**
+   * <code>.skymouse.Ping ping = 3;</code>
+   * @return The ping.
+   */
+  com.skymouse.skymouseclient.proto.Ping getPing();
+  /**
+   * <code>.skymouse.Ping ping = 3;</code>
+   */
+  com.skymouse.skymouseclient.proto.PingOrBuilder getPingOrBuilder();
+
   com.skymouse.skymouseclient.proto.UdpMessageToServer.EventCase getEventCase();
 }

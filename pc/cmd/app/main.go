@@ -17,7 +17,7 @@ import (
 	"github.com/Tomahawk-Center/SkyMouse/pc/pkg/protoapi"
 )
 
-const protobufVersion = "3.1"
+const protobufVersion = "3.3"
 
 func main() {
 	log.SetOutput(os.Stdout)
@@ -61,7 +61,10 @@ func main() {
 	}
 
 	emuEventsCh := make(chan emulator.Event, 20)
-	emu := emulator.NewEmulator(emuEventsCh)
+	emu, err := emulator.NewEmulator(emuEventsCh)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	sessMgr := session.NewSessionManager()
 
@@ -74,6 +77,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	log.Println("protobuf contract version:", protobufVersion)
 
 	go func() {
 		if err := tcpServer.Start(); err != nil {
@@ -110,7 +115,7 @@ func main() {
 	udpServer.Stop()
 
 	log.Println("Shutting down TCP")
-	tcpServer.Stop()
+	tcpServer.StopForce()
 
 	log.Println("Bye")
 }

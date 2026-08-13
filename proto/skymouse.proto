@@ -38,9 +38,15 @@ message ScrollEvent {
     int64 timestamp_ms = 2;
 }
 
-message Ping {}
+message Ping {
+    int64 sequence_id = 1;
+    int64 timestamp_ms = 2;
+}
 
-message Pong {}
+message Pong {
+    int64 sequence_id = 1;
+    int64 timestamp_ms = 2;
+}
 
 message ClientHello {
     string client_version = 1;
@@ -67,6 +73,13 @@ enum CommandEvent {
     COMMAND_LOCK_SCREEN = 3;
 }
 
+message ClipboardShareEvent {
+    oneof content {
+        string text = 1;
+        // for images in future updates
+    }
+}
+
 message ServerEvent {
     HapticEventType type = 1;
     int64 timestamp_ms = 2;
@@ -87,6 +100,7 @@ message MessageToServer {
         Ping ping = 3;
         Pong pong = 4;
         CommandEvent command = 5;
+        ClipboardShareEvent clipboard_share = 6;
     }
 }
 
@@ -94,6 +108,7 @@ message UdpMessageToServer {
     uint32 udp_token = 1;
     oneof event {
         EmulatorEvent emulator_event = 2;
+        Ping ping = 3;
     }
 }
 
@@ -101,5 +116,6 @@ message MessageToClient {
     oneof event {
         ServerHello server_hello = 1;
         ServerEvent server_event = 2;
+        Pong pong = 3;
     }
 }

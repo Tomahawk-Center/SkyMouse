@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardCommandKey
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Speed
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -21,8 +22,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
-import com.skymouse.skymouseclient.data.TcpConnectionState
-import com.skymouse.skymouseclient.data.UdpConnectionState
 import com.skymouse.skymouseclient.data.util.KeepScreenAwakeInGyroMode
 import com.skymouse.skymouseclient.ui.connection.ConnectionScreen
 import com.skymouse.skymouseclient.ui.connection.ConnectionViewModel
@@ -37,11 +36,9 @@ fun MainScreen(
     controlViewModel: ControlViewModel,
     onNavigateToSettings: () -> Unit
 ) {
-    val tcpState by mainViewModel.tcpConnectionState.collectAsState()
-    val udpState by mainViewModel.udpConnectionState.collectAsState()
     val haptic = LocalHapticFeedback.current
 
-    val isConnected = tcpState is TcpConnectionState.Connected && udpState is UdpConnectionState.Connected
+    val isConnected by connectionViewModel.isConnected.collectAsState()
 
     val isGyroActive by controlViewModel.isGyroActive.collectAsState()
 
@@ -56,6 +53,22 @@ fun MainScreen(
                 title = { Text("SkyMouse Client") },
                 actions = {
                     if (isConnected) {
+
+                        // Ping check
+                        IconButton(
+                            onClick = {
+                                haptic.performHapticFeedback(HapticFeedbackType.SegmentTick)
+                                controlViewModel.isPingCheckSheetShown = true
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Speed,
+                                contentDescription = "Ping check",
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                        }
+
+                        // Commands
                         IconButton(
                             onClick = {
                                 haptic.performHapticFeedback(HapticFeedbackType.SegmentTick)

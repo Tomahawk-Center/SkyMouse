@@ -69,6 +69,30 @@ public object UdpMessageToServerKt {
     public fun hasEmulatorEvent(): kotlin.Boolean {
       return _builder.hasEmulatorEvent()
     }
+
+    /**
+     * `.skymouse.Ping ping = 3;`
+     */
+    public var ping: com.skymouse.skymouseclient.proto.Ping
+      @kotlin.jvm.JvmName("getPing")
+        get() = _builder.ping
+      @kotlin.jvm.JvmName("setPing")
+        set(value) {
+        _builder.ping = value
+      }
+    /**
+     * `.skymouse.Ping ping = 3;`
+     */
+    public fun clearPing() {
+      _builder.clearPing()
+    }
+    /**
+     * `.skymouse.Ping ping = 3;`
+     * @return Whether the ping field is set.
+     */
+    public fun hasPing(): kotlin.Boolean {
+      return _builder.hasPing()
+    }
     public val eventCase: com.skymouse.skymouseclient.proto.UdpMessageToServer.EventCase
     @kotlin.jvm.JvmName("getEventCase")
       get() = _builder.getEventCase()
@@ -84,4 +108,7 @@ public inline fun com.skymouse.skymouseclient.proto.UdpMessageToServer.copy(bloc
 
 public val com.skymouse.skymouseclient.proto.UdpMessageToServerOrBuilder.emulatorEventOrNull: com.skymouse.skymouseclient.proto.EmulatorEvent?
   get() = if (hasEmulatorEvent()) getEmulatorEvent() else null
+
+public val com.skymouse.skymouseclient.proto.UdpMessageToServerOrBuilder.pingOrNull: com.skymouse.skymouseclient.proto.Ping?
+  get() = if (hasPing()) getPing() else null
 

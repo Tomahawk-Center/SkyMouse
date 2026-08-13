@@ -40,5 +40,20 @@ public interface MessageToClientOrBuilder extends
    */
   com.skymouse.skymouseclient.proto.ServerEventOrBuilder getServerEventOrBuilder();
 
+  /**
+   * <code>.skymouse.Pong pong = 3;</code>
+   * @return Whether the pong field is set.
+   */
+  boolean hasPong();
+  /**
+   * <code>.skymouse.Pong pong = 3;</code>
+   * @return The pong.
+   */
+  com.skymouse.skymouseclient.proto.Pong getPong();
+  /**
+   * <code>.skymouse.Pong pong = 3;</code>
+   */
+  com.skymouse.skymouseclient.proto.PongOrBuilder getPongOrBuilder();
+
   com.skymouse.skymouseclient.proto.MessageToClient.EventCase getEventCase();
 }

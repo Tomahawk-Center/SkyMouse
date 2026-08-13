@@ -28,6 +28,40 @@ public object PingKt {
     @kotlin.jvm.JvmSynthetic
   @kotlin.PublishedApi
     internal fun _build(): com.skymouse.skymouseclient.proto.Ping = _builder.build()
+
+    /**
+     * `int64 sequence_id = 1;`
+     */
+    public var sequenceId: kotlin.Long
+      @kotlin.jvm.JvmName("getSequenceId")
+        get() = _builder.sequenceId
+      @kotlin.jvm.JvmName("setSequenceId")
+        set(value) {
+        _builder.sequenceId = value
+      }
+    /**
+     * `int64 sequence_id = 1;`
+     */
+    public fun clearSequenceId() {
+      _builder.clearSequenceId()
+    }
+
+    /**
+     * `int64 timestamp_ms = 2;`
+     */
+    public var timestampMs: kotlin.Long
+      @kotlin.jvm.JvmName("getTimestampMs")
+        get() = _builder.timestampMs
+      @kotlin.jvm.JvmName("setTimestampMs")
+        set(value) {
+        _builder.timestampMs = value
+      }
+    /**
+     * `int64 timestamp_ms = 2;`
+     */
+    public fun clearTimestampMs() {
+      _builder.clearTimestampMs()
+    }
   }
 }
 @kotlin.jvm.JvmSynthetic

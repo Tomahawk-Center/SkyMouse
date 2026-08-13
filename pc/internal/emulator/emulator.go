@@ -1,6 +1,7 @@
 package emulator
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -14,22 +15,44 @@ type Event struct {
 }
 
 type Emulator struct {
-	eventsChan     chan Event
-	displaysBounds []screenBounds
-	isBorderHit    bool
+	eventsChan        chan Event
+	displaysBounds    []screenBounds
+	displaysSafeZones []screenBounds
+	isBorderHit       bool
 }
 
-func NewEmulator(ch chan Event) *Emulator {
+func calculateBoundsWithPadding(bounds screenBounds, padding int) (screenBounds, error) {
+	if padding < 0 {
+		return screenBounds{}, fmt.Errorf("padding must be non-negative")
+	}
+	bounds.x += padding
+	bounds.y += padding
+	bounds.w -= padding * 2
+	bounds.h -= padding * 2
+	return bounds, nil
+}
+
+func NewEmulator(ch chan Event) (*Emulator, error) {
 	var d []screenBounds
+	var dS []screenBounds
 	for i := range robotgo.DisplaysNum() {
 		x, y, w, h := robotgo.GetDisplayBounds(i)
-		d = append(d, screenBounds{x, y, w, h})
+		b := screenBounds{x, y, w, h}
+		d = append(d, b)
+
+		bS, err := calculateBoundsWithPadding(b, 4)
+		if err != nil {
+			return nil, err
+		}
+		dS = append(dS, bS)
+		// best variables naming ever...
 	}
 
 	return &Emulator{
-		eventsChan:     ch,
-		displaysBounds: d,
-	}
+		eventsChan:        ch,
+		displaysBounds:    d,
+		displaysSafeZones: dS,
+	}, nil
 }
 
 // getDisplayIndex returns the index of the display where the cursor is located;
@@ -42,6 +65,11 @@ func (e *Emulator) getDisplayIndex(x, y int) int {
 		}
 	}
 	return -1
+}
+
+func (e *Emulator) isInSafeZone(displayIndex, x, y int) bool {
+	bS := e.displaysSafeZones[displayIndex]
+	return x >= bS.x && x < bS.x+bS.w && y >= bS.y && y < bS.y+bS.h
 }
 
 func (e *Emulator) Handle(sessionId string, event *protoapi.EmulatorEvent) {
@@ -83,6 +111,7 @@ func (e *Emulator) handleMouse(sessionId string, ev *protoapi.MouseEvent) {
 		}
 
 		e.isBorderHit = true
+
 	} else if iOld != iNew {
 		ev := Event{SessionId: sessionId, Data: &protoapi.ServerEvent{
 			Type:        protoapi.HapticEventType_EVENT_BORDER_CROSSING,
@@ -93,7 +122,11 @@ func (e *Emulator) handleMouse(sessionId string, ev *protoapi.MouseEvent) {
 		default:
 		}
 	} else {
-		e.isBorderHit = false
+
+		if e.isInSafeZone(iNew, x, y) {
+			e.isBorderHit = false
+		}
+
 	}
 
 	robotgo.Move(newX, newY)

@@ -86,5 +86,20 @@ public interface MessageToServerOrBuilder extends
    */
   com.skymouse.skymouseclient.proto.CommandEvent getCommand();
 
+  /**
+   * <code>.skymouse.ClipboardShareEvent clipboard_share = 6;</code>
+   * @return Whether the clipboardShare field is set.
+   */
+  boolean hasClipboardShare();
+  /**
+   * <code>.skymouse.ClipboardShareEvent clipboard_share = 6;</code>
+   * @return The clipboardShare.
+   */
+  com.skymouse.skymouseclient.proto.ClipboardShareEvent getClipboardShare();
+  /**
+   * <code>.skymouse.ClipboardShareEvent clipboard_share = 6;</code>
+   */
+  com.skymouse.skymouseclient.proto.ClipboardShareEventOrBuilder getClipboardShareOrBuilder();
+
   com.skymouse.skymouseclient.proto.MessageToServer.EventCase getEventCase();
 }
