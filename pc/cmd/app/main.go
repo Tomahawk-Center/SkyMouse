@@ -115,7 +115,7 @@ func main() {
 	udpServer.Stop()
 
 	log.Println("Shutting down TCP")
-	tcpServer.Stop()
+	tcpServer.StopForce()
 
 	log.Println("Bye")
 }
