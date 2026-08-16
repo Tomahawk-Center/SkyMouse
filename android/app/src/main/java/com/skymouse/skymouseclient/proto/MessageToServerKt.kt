@@ -179,6 +179,102 @@ public object MessageToServerKt {
     public fun hasClipboardShare(): kotlin.Boolean {
       return _builder.hasClipboardShare()
     }
+
+    /**
+     * `.skymouse.GetCursorScaleEvent get_cursor_scale = 7;`
+     */
+    public var getCursorScale: com.skymouse.skymouseclient.proto.GetCursorScaleEvent
+      @kotlin.jvm.JvmName("getGetCursorScale")
+        get() = _builder.getCursorScale
+      @kotlin.jvm.JvmName("setGetCursorScale")
+        set(value) {
+        _builder.getCursorScale = value
+      }
+    /**
+     * `.skymouse.GetCursorScaleEvent get_cursor_scale = 7;`
+     */
+    public fun clearGetCursorScale() {
+      _builder.clearGetCursorScale()
+    }
+    /**
+     * `.skymouse.GetCursorScaleEvent get_cursor_scale = 7;`
+     * @return Whether the getCursorScale field is set.
+     */
+    public fun hasGetCursorScale(): kotlin.Boolean {
+      return _builder.hasGetCursorScale()
+    }
+
+    /**
+     * `.skymouse.SetCursorScaleEvent set_cursor_scale = 8;`
+     */
+    public var setCursorScale: com.skymouse.skymouseclient.proto.SetCursorScaleEvent
+      @kotlin.jvm.JvmName("getSetCursorScale")
+        get() = _builder.setCursorScale
+      @kotlin.jvm.JvmName("setSetCursorScale")
+        set(value) {
+        _builder.setCursorScale = value
+      }
+    /**
+     * `.skymouse.SetCursorScaleEvent set_cursor_scale = 8;`
+     */
+    public fun clearSetCursorScale() {
+      _builder.clearSetCursorScale()
+    }
+    /**
+     * `.skymouse.SetCursorScaleEvent set_cursor_scale = 8;`
+     * @return Whether the setCursorScale field is set.
+     */
+    public fun hasSetCursorScale(): kotlin.Boolean {
+      return _builder.hasSetCursorScale()
+    }
+
+    /**
+     * `.skymouse.KeyboardStringEvent keyboard_string_event = 9;`
+     */
+    public var keyboardStringEvent: com.skymouse.skymouseclient.proto.KeyboardStringEvent
+      @kotlin.jvm.JvmName("getKeyboardStringEvent")
+        get() = _builder.keyboardStringEvent
+      @kotlin.jvm.JvmName("setKeyboardStringEvent")
+        set(value) {
+        _builder.keyboardStringEvent = value
+      }
+    /**
+     * `.skymouse.KeyboardStringEvent keyboard_string_event = 9;`
+     */
+    public fun clearKeyboardStringEvent() {
+      _builder.clearKeyboardStringEvent()
+    }
+    /**
+     * `.skymouse.KeyboardStringEvent keyboard_string_event = 9;`
+     * @return Whether the keyboardStringEvent field is set.
+     */
+    public fun hasKeyboardStringEvent(): kotlin.Boolean {
+      return _builder.hasKeyboardStringEvent()
+    }
+
+    /**
+     * `.skymouse.KeyboardTapEvent keyboard_tap_event = 10;`
+     */
+    public var keyboardTapEvent: com.skymouse.skymouseclient.proto.KeyboardTapEvent
+      @kotlin.jvm.JvmName("getKeyboardTapEvent")
+        get() = _builder.keyboardTapEvent
+      @kotlin.jvm.JvmName("setKeyboardTapEvent")
+        set(value) {
+        _builder.keyboardTapEvent = value
+      }
+    /**
+     * `.skymouse.KeyboardTapEvent keyboard_tap_event = 10;`
+     */
+    public fun clearKeyboardTapEvent() {
+      _builder.clearKeyboardTapEvent()
+    }
+    /**
+     * `.skymouse.KeyboardTapEvent keyboard_tap_event = 10;`
+     * @return Whether the keyboardTapEvent field is set.
+     */
+    public fun hasKeyboardTapEvent(): kotlin.Boolean {
+      return _builder.hasKeyboardTapEvent()
+    }
     public val eventCase: com.skymouse.skymouseclient.proto.MessageToServer.EventCase
     @kotlin.jvm.JvmName("getEventCase")
       get() = _builder.getEventCase()
@@ -206,4 +302,16 @@ public val com.skymouse.skymouseclient.proto.MessageToServerOrBuilder.pongOrNull
 
 public val com.skymouse.skymouseclient.proto.MessageToServerOrBuilder.clipboardShareOrNull: com.skymouse.skymouseclient.proto.ClipboardShareEvent?
   get() = if (hasClipboardShare()) getClipboardShare() else null
+
+public val com.skymouse.skymouseclient.proto.MessageToServerOrBuilder.getCursorScaleOrNull: com.skymouse.skymouseclient.proto.GetCursorScaleEvent?
+  get() = if (hasGetCursorScale()) getGetCursorScale() else null
+
+public val com.skymouse.skymouseclient.proto.MessageToServerOrBuilder.setCursorScaleOrNull: com.skymouse.skymouseclient.proto.SetCursorScaleEvent?
+  get() = if (hasSetCursorScale()) getSetCursorScale() else null
+
+public val com.skymouse.skymouseclient.proto.MessageToServerOrBuilder.keyboardStringEventOrNull: com.skymouse.skymouseclient.proto.KeyboardStringEvent?
+  get() = if (hasKeyboardStringEvent()) getKeyboardStringEvent() else null
+
+public val com.skymouse.skymouseclient.proto.MessageToServerOrBuilder.keyboardTapEventOrNull: com.skymouse.skymouseclient.proto.KeyboardTapEvent?
+  get() = if (hasKeyboardTapEvent()) getKeyboardTapEvent() else null
 

@@ -100,6 +100,30 @@ public object MessageToClientKt {
     public fun hasPong(): kotlin.Boolean {
       return _builder.hasPong()
     }
+
+    /**
+     * `.skymouse.CurrentCursorScaleAnswer current_cursor_scale_answer = 4;`
+     */
+    public var currentCursorScaleAnswer: com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswer
+      @kotlin.jvm.JvmName("getCurrentCursorScaleAnswer")
+        get() = _builder.currentCursorScaleAnswer
+      @kotlin.jvm.JvmName("setCurrentCursorScaleAnswer")
+        set(value) {
+        _builder.currentCursorScaleAnswer = value
+      }
+    /**
+     * `.skymouse.CurrentCursorScaleAnswer current_cursor_scale_answer = 4;`
+     */
+    public fun clearCurrentCursorScaleAnswer() {
+      _builder.clearCurrentCursorScaleAnswer()
+    }
+    /**
+     * `.skymouse.CurrentCursorScaleAnswer current_cursor_scale_answer = 4;`
+     * @return Whether the currentCursorScaleAnswer field is set.
+     */
+    public fun hasCurrentCursorScaleAnswer(): kotlin.Boolean {
+      return _builder.hasCurrentCursorScaleAnswer()
+    }
     public val eventCase: com.skymouse.skymouseclient.proto.MessageToClient.EventCase
     @kotlin.jvm.JvmName("getEventCase")
       get() = _builder.getEventCase()
@@ -121,4 +145,7 @@ public val com.skymouse.skymouseclient.proto.MessageToClientOrBuilder.serverEven
 
 public val com.skymouse.skymouseclient.proto.MessageToClientOrBuilder.pongOrNull: com.skymouse.skymouseclient.proto.Pong?
   get() = if (hasPong()) getPong() else null
+
+public val com.skymouse.skymouseclient.proto.MessageToClientOrBuilder.currentCursorScaleAnswerOrNull: com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswer?
+  get() = if (hasCurrentCursorScaleAnswer()) getCurrentCursorScaleAnswer() else null
 

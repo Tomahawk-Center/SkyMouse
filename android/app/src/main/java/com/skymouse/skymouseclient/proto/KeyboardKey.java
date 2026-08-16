@@ -6,27 +6,23 @@
 package com.skymouse.skymouseclient.proto;
 
 /**
- * Protobuf enum {@code skymouse.CommandEvent}
+ * Protobuf enum {@code skymouse.KeyboardKey}
  */
 @com.google.protobuf.Generated
-public enum CommandEvent
+public enum KeyboardKey
     implements com.google.protobuf.ProtocolMessageEnum {
   /**
-   * <code>COMMAND_UNKNOWN = 0;</code>
+   * <code>KEY_UNKNOWN = 0;</code>
    */
-  COMMAND_UNKNOWN(0),
+  KEY_UNKNOWN(0),
   /**
-   * <code>COMMAND_SHUT_DOWN = 1;</code>
+   * <code>KEY_ENTER = 1;</code>
    */
-  COMMAND_SHUT_DOWN(1),
+  KEY_ENTER(1),
   /**
-   * <code>COMMAND_SLEEP = 2;</code>
+   * <code>KEY_BACKSPACE = 2;</code>
    */
-  COMMAND_SLEEP(2),
-  /**
-   * <code>COMMAND_LOCK_SCREEN = 3;</code>
-   */
-  COMMAND_LOCK_SCREEN(3),
+  KEY_BACKSPACE(2),
   UNRECOGNIZED(-1),
   ;
 
@@ -37,24 +33,20 @@ public enum CommandEvent
       /* minor= */ 35,
       /* patch= */ 1,
       /* suffix= */ "",
-      "CommandEvent");
+      "KeyboardKey");
   }
   /**
-   * <code>COMMAND_UNKNOWN = 0;</code>
+   * <code>KEY_UNKNOWN = 0;</code>
    */
-  public static final int COMMAND_UNKNOWN_VALUE = 0;
+  public static final int KEY_UNKNOWN_VALUE = 0;
   /**
-   * <code>COMMAND_SHUT_DOWN = 1;</code>
+   * <code>KEY_ENTER = 1;</code>
    */
-  public static final int COMMAND_SHUT_DOWN_VALUE = 1;
+  public static final int KEY_ENTER_VALUE = 1;
   /**
-   * <code>COMMAND_SLEEP = 2;</code>
+   * <code>KEY_BACKSPACE = 2;</code>
    */
-  public static final int COMMAND_SLEEP_VALUE = 2;
-  /**
-   * <code>COMMAND_LOCK_SCREEN = 3;</code>
-   */
-  public static final int COMMAND_LOCK_SCREEN_VALUE = 3;
+  public static final int KEY_BACKSPACE_VALUE = 2;
 
 
   public final int getNumber() {
@@ -71,7 +63,7 @@ public enum CommandEvent
    * @deprecated Use {@link #forNumber(int)} instead.
    */
   @java.lang.Deprecated
-  public static CommandEvent valueOf(int value) {
+  public static KeyboardKey valueOf(int value) {
     return forNumber(value);
   }
 
@@ -79,25 +71,24 @@ public enum CommandEvent
    * @param value The numeric wire value of the corresponding enum entry.
    * @return The enum associated with the given numeric wire value.
    */
-  public static CommandEvent forNumber(int value) {
+  public static KeyboardKey forNumber(int value) {
     switch (value) {
-      case 0: return COMMAND_UNKNOWN;
-      case 1: return COMMAND_SHUT_DOWN;
-      case 2: return COMMAND_SLEEP;
-      case 3: return COMMAND_LOCK_SCREEN;
+      case 0: return KEY_UNKNOWN;
+      case 1: return KEY_ENTER;
+      case 2: return KEY_BACKSPACE;
       default: return null;
     }
   }
 
-  public static com.google.protobuf.Internal.EnumLiteMap<CommandEvent>
+  public static com.google.protobuf.Internal.EnumLiteMap<KeyboardKey>
       internalGetValueMap() {
     return internalValueMap;
   }
   private static final com.google.protobuf.Internal.EnumLiteMap<
-      CommandEvent> internalValueMap =
-        new com.google.protobuf.Internal.EnumLiteMap<CommandEvent>() {
-          public CommandEvent findValueByNumber(int number) {
-            return CommandEvent.forNumber(number);
+      KeyboardKey> internalValueMap =
+        new com.google.protobuf.Internal.EnumLiteMap<KeyboardKey>() {
+          public KeyboardKey findValueByNumber(int number) {
+            return KeyboardKey.forNumber(number);
           }
         };
 
@@ -115,12 +106,12 @@ public enum CommandEvent
   }
   public static com.google.protobuf.Descriptors.EnumDescriptor
       getDescriptor() {
-    return com.skymouse.skymouseclient.proto.Skymouse.getDescriptor().getEnumType(4);
+    return com.skymouse.skymouseclient.proto.Skymouse.getDescriptor().getEnumType(2);
   }
 
-  private static final CommandEvent[] VALUES = values();
+  private static final KeyboardKey[] VALUES = values();
 
-  public static CommandEvent valueOf(
+  public static KeyboardKey valueOf(
       com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
     if (desc.getType() != getDescriptor()) {
       throw new java.lang.IllegalArgumentException(
@@ -134,10 +125,10 @@ public enum CommandEvent
 
   private final int value;
 
-  private CommandEvent(int value) {
+  private KeyboardKey(int value) {
     this.value = value;
   }
 
-  // @@protoc_insertion_point(enum_scope:skymouse.CommandEvent)
+  // @@protoc_insertion_point(enum_scope:skymouse.KeyboardKey)
 }
 

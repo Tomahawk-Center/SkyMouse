@@ -57,6 +57,7 @@ private static final long serialVersionUID = 0L;
     SERVER_HELLO(1),
     SERVER_EVENT(2),
     PONG(3),
+    CURRENT_CURSOR_SCALE_ANSWER(4),
     EVENT_NOT_SET(0);
     private final int value;
     private EventCase(int value) {
@@ -77,6 +78,7 @@ private static final long serialVersionUID = 0L;
         case 1: return SERVER_HELLO;
         case 2: return SERVER_EVENT;
         case 3: return PONG;
+        case 4: return CURRENT_CURSOR_SCALE_ANSWER;
         case 0: return EVENT_NOT_SET;
         default: return null;
       }
@@ -185,6 +187,37 @@ private static final long serialVersionUID = 0L;
     return com.skymouse.skymouseclient.proto.Pong.getDefaultInstance();
   }
 
+  public static final int CURRENT_CURSOR_SCALE_ANSWER_FIELD_NUMBER = 4;
+  /**
+   * <code>.skymouse.CurrentCursorScaleAnswer current_cursor_scale_answer = 4;</code>
+   * @return Whether the currentCursorScaleAnswer field is set.
+   */
+  @java.lang.Override
+  public boolean hasCurrentCursorScaleAnswer() {
+    return eventCase_ == 4;
+  }
+  /**
+   * <code>.skymouse.CurrentCursorScaleAnswer current_cursor_scale_answer = 4;</code>
+   * @return The currentCursorScaleAnswer.
+   */
+  @java.lang.Override
+  public com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswer getCurrentCursorScaleAnswer() {
+    if (eventCase_ == 4) {
+       return (com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswer) event_;
+    }
+    return com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswer.getDefaultInstance();
+  }
+  /**
+   * <code>.skymouse.CurrentCursorScaleAnswer current_cursor_scale_answer = 4;</code>
+   */
+  @java.lang.Override
+  public com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswerOrBuilder getCurrentCursorScaleAnswerOrBuilder() {
+    if (eventCase_ == 4) {
+       return (com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswer) event_;
+    }
+    return com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswer.getDefaultInstance();
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -208,6 +241,9 @@ private static final long serialVersionUID = 0L;
     if (eventCase_ == 3) {
       output.writeMessage(3, (com.skymouse.skymouseclient.proto.Pong) event_);
     }
+    if (eventCase_ == 4) {
+      output.writeMessage(4, (com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswer) event_);
+    }
     getUnknownFields().writeTo(output);
   }
   private int computeSerializedSize_0() {
@@ -223,6 +259,10 @@ private static final long serialVersionUID = 0L;
     if (eventCase_ == 3) {
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(3, (com.skymouse.skymouseclient.proto.Pong) event_);
+    }
+    if (eventCase_ == 4) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(4, (com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswer) event_);
     }
     return size;
   }
@@ -262,6 +302,10 @@ private static final long serialVersionUID = 0L;
         if (!getPong()
             .equals(other.getPong())) return false;
         break;
+      case 4:
+        if (!getCurrentCursorScaleAnswer()
+            .equals(other.getCurrentCursorScaleAnswer())) return false;
+        break;
       case 0:
       default:
     }
@@ -288,6 +332,10 @@ private static final long serialVersionUID = 0L;
       case 3:
         hash = (37 * hash) + PONG_FIELD_NUMBER;
         hash = (53 * hash) + getPong().hashCode();
+        break;
+      case 4:
+        hash = (37 * hash) + CURRENT_CURSOR_SCALE_ANSWER_FIELD_NUMBER;
+        hash = (53 * hash) + getCurrentCursorScaleAnswer().hashCode();
         break;
       case 0:
       default:
@@ -432,6 +480,9 @@ private static final long serialVersionUID = 0L;
       if (pongBuilder_ != null) {
         pongBuilder_.clear();
       }
+      if (currentCursorScaleAnswerBuilder_ != null) {
+        currentCursorScaleAnswerBuilder_.clear();
+      }
       eventCase_ = 0;
       event_ = null;
       return this;
@@ -485,6 +536,10 @@ private static final long serialVersionUID = 0L;
           pongBuilder_ != null) {
         result.event_ = pongBuilder_.build();
       }
+      if (eventCase_ == 4 &&
+          currentCursorScaleAnswerBuilder_ != null) {
+        result.event_ = currentCursorScaleAnswerBuilder_.build();
+      }
     }
 
     @java.lang.Override
@@ -510,6 +565,10 @@ private static final long serialVersionUID = 0L;
         }
         case PONG: {
           mergePong(other.getPong());
+          break;
+        }
+        case CURRENT_CURSOR_SCALE_ANSWER: {
+          mergeCurrentCursorScaleAnswer(other.getCurrentCursorScaleAnswer());
           break;
         }
         case EVENT_NOT_SET: {
@@ -563,6 +622,13 @@ private static final long serialVersionUID = 0L;
               eventCase_ = 3;
               break;
             } // case 26
+            case 34: {
+              input.readMessage(
+                  internalGetCurrentCursorScaleAnswerFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              eventCase_ = 4;
+              break;
+            } // case 34
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -1019,6 +1085,148 @@ private static final long serialVersionUID = 0L;
       eventCase_ = 3;
       onChanged();
       return pongBuilder_;
+    }
+
+    private com.google.protobuf.SingleFieldBuilder<
+        com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswer, com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswer.Builder, com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswerOrBuilder> currentCursorScaleAnswerBuilder_;
+    /**
+     * <code>.skymouse.CurrentCursorScaleAnswer current_cursor_scale_answer = 4;</code>
+     * @return Whether the currentCursorScaleAnswer field is set.
+     */
+    @java.lang.Override
+    public boolean hasCurrentCursorScaleAnswer() {
+      return eventCase_ == 4;
+    }
+    /**
+     * <code>.skymouse.CurrentCursorScaleAnswer current_cursor_scale_answer = 4;</code>
+     * @return The currentCursorScaleAnswer.
+     */
+    @java.lang.Override
+    public com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswer getCurrentCursorScaleAnswer() {
+      if (currentCursorScaleAnswerBuilder_ == null) {
+        if (eventCase_ == 4) {
+          return (com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswer) event_;
+        }
+        return com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswer.getDefaultInstance();
+      } else {
+        if (eventCase_ == 4) {
+          return currentCursorScaleAnswerBuilder_.getMessage();
+        }
+        return com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswer.getDefaultInstance();
+      }
+    }
+    /**
+     * <code>.skymouse.CurrentCursorScaleAnswer current_cursor_scale_answer = 4;</code>
+     */
+    public Builder setCurrentCursorScaleAnswer(com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswer value) {
+      if (currentCursorScaleAnswerBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        event_ = value;
+        onChanged();
+      } else {
+        currentCursorScaleAnswerBuilder_.setMessage(value);
+      }
+      eventCase_ = 4;
+      return this;
+    }
+    /**
+     * <code>.skymouse.CurrentCursorScaleAnswer current_cursor_scale_answer = 4;</code>
+     */
+    public Builder setCurrentCursorScaleAnswer(
+        com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswer.Builder builderForValue) {
+      if (currentCursorScaleAnswerBuilder_ == null) {
+        event_ = builderForValue.build();
+        onChanged();
+      } else {
+        currentCursorScaleAnswerBuilder_.setMessage(builderForValue.build());
+      }
+      eventCase_ = 4;
+      return this;
+    }
+    /**
+     * <code>.skymouse.CurrentCursorScaleAnswer current_cursor_scale_answer = 4;</code>
+     */
+    public Builder mergeCurrentCursorScaleAnswer(com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswer value) {
+      if (currentCursorScaleAnswerBuilder_ == null) {
+        if (eventCase_ == 4 &&
+            event_ != com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswer.getDefaultInstance()) {
+          event_ = com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswer.newBuilder((com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswer) event_)
+              .mergeFrom(value).buildPartial();
+        } else {
+          event_ = value;
+        }
+        onChanged();
+      } else {
+        if (eventCase_ == 4) {
+          currentCursorScaleAnswerBuilder_.mergeFrom(value);
+        } else {
+          currentCursorScaleAnswerBuilder_.setMessage(value);
+        }
+      }
+      eventCase_ = 4;
+      return this;
+    }
+    /**
+     * <code>.skymouse.CurrentCursorScaleAnswer current_cursor_scale_answer = 4;</code>
+     */
+    public Builder clearCurrentCursorScaleAnswer() {
+      if (currentCursorScaleAnswerBuilder_ == null) {
+        if (eventCase_ == 4) {
+          eventCase_ = 0;
+          event_ = null;
+          onChanged();
+        }
+      } else {
+        if (eventCase_ == 4) {
+          eventCase_ = 0;
+          event_ = null;
+        }
+        currentCursorScaleAnswerBuilder_.clear();
+      }
+      return this;
+    }
+    /**
+     * <code>.skymouse.CurrentCursorScaleAnswer current_cursor_scale_answer = 4;</code>
+     */
+    public com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswer.Builder getCurrentCursorScaleAnswerBuilder() {
+      return internalGetCurrentCursorScaleAnswerFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.skymouse.CurrentCursorScaleAnswer current_cursor_scale_answer = 4;</code>
+     */
+    @java.lang.Override
+    public com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswerOrBuilder getCurrentCursorScaleAnswerOrBuilder() {
+      if ((eventCase_ == 4) && (currentCursorScaleAnswerBuilder_ != null)) {
+        return currentCursorScaleAnswerBuilder_.getMessageOrBuilder();
+      } else {
+        if (eventCase_ == 4) {
+          return (com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswer) event_;
+        }
+        return com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswer.getDefaultInstance();
+      }
+    }
+    /**
+     * <code>.skymouse.CurrentCursorScaleAnswer current_cursor_scale_answer = 4;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilder<
+        com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswer, com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswer.Builder, com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswerOrBuilder> 
+        internalGetCurrentCursorScaleAnswerFieldBuilder() {
+      if (currentCursorScaleAnswerBuilder_ == null) {
+        if (!(eventCase_ == 4)) {
+          event_ = com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswer.getDefaultInstance();
+        }
+        currentCursorScaleAnswerBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+            com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswer, com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswer.Builder, com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswerOrBuilder>(
+                (com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswer) event_,
+                getParentForChildren(),
+                isClean());
+        event_ = null;
+      }
+      eventCase_ = 4;
+      onChanged();
+      return currentCursorScaleAnswerBuilder_;
     }
 
     // @@protoc_insertion_point(builder_scope:skymouse.MessageToClient)
