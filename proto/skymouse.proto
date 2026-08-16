@@ -80,6 +80,16 @@ message ClipboardShareEvent {
     }
 }
 
+message SetCursorScaleEvent {
+    int32 new_cursor_scale = 1;
+}
+
+message GetCursorScaleEvent {}
+
+message CurrentCursorScaleAnswer {
+    int32 current_cursor_scale = 1;
+}
+
 message ServerEvent {
     HapticEventType type = 1;
     int64 timestamp_ms = 2;
@@ -101,6 +111,8 @@ message MessageToServer {
         Pong pong = 4;
         CommandEvent command = 5;
         ClipboardShareEvent clipboard_share = 6;
+        GetCursorScaleEvent get_cursor_scale = 7;
+        SetCursorScaleEvent set_cursor_scale = 8;
     }
 }
 
@@ -117,5 +129,6 @@ message MessageToClient {
         ServerHello server_hello = 1;
         ServerEvent server_event = 2;
         Pong pong = 3;
+        CurrentCursorScaleAnswer current_cursor_scale_answer = 4;
     }
 }
