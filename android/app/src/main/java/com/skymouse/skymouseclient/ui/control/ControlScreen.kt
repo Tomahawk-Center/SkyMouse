@@ -71,6 +71,8 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -106,17 +108,21 @@ fun ControlScreen(
     BasicTextField(
         value = textInput,
         onValueChange = { newValue ->
-            if (newValue.text.length > textInput.text.length) {
-                val addedText = newValue.text.substring(textInput.text.length)
-                if (addedText == "\n") {
-                    viewModel.onKeyboardTapInput(KeyboardKey.KEY_ENTER, true)
-                    viewModel.onKeyboardTapInput(KeyboardKey.KEY_ENTER, false)
-                } else {
-                    viewModel.onKeyboardStringInput(addedText)
+            val oldText = textInput.text
+            val newText = newValue.text
+
+            if (newText.length > oldText.length) {
+                val addedText = newText.substring(oldText.length)
+                val textToSend = addedText.replace("\n", "")
+                if (textToSend.isNotEmpty()) {
+                    viewModel.onKeyboardStringInput(textToSend)
                 }
+            }
+
+            textInput = newValue
+
+            if (newText.length > 1000) {
                 textInput = TextFieldValue("")
-            } else {
-                textInput = newValue
             }
         },
         modifier = Modifier
@@ -131,11 +137,11 @@ fun ControlScreen(
                     when (keyEvent.key) {
                         Key.Backspace -> {
                             viewModel.onKeyboardTapInput(KeyboardKey.KEY_BACKSPACE, isPressed)
-                            true
+                            false
                         }
                         Key.Enter -> {
                             viewModel.onKeyboardTapInput(KeyboardKey.KEY_ENTER, isPressed)
-                            true
+                            false
                         }
                         else -> false
                     }
@@ -143,7 +149,9 @@ fun ControlScreen(
             },
         keyboardOptions = KeyboardOptions(
             autoCorrectEnabled = false,
-            imeAction = ImeAction.Send
+            imeAction = ImeAction.Send,
+            capitalization = KeyboardCapitalization.Sentences,
+            keyboardType = KeyboardType.Text
         ),
         keyboardActions = KeyboardActions(
             onSend = {
