@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bedtime
 import androidx.compose.material.icons.filled.ContentPasteGo
+import androidx.compose.material.icons.filled.Keyboard
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.PowerSettingsNew
 import androidx.compose.material3.AlertDialog
@@ -384,6 +385,7 @@ fun ControlScreen(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
+            // clipboard share
             Button(
                 onClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.SegmentTick)
@@ -404,13 +406,14 @@ fun ControlScreen(
                 )
             }
 
+            // mode switch
             Button(
                 onClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                     viewModel.toggleControlMode()
                 },
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .weight(1f)
                     .height(48.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -423,6 +426,28 @@ fun ControlScreen(
                     else "Switch to Gyroscope"
                 )
             }
+
+            // show keyboard button
+            Button(
+                onClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                    // TODO
+                },
+                modifier = Modifier
+                    .height(48.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                ),
+                shape = MaterialTheme.shapes.medium
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Keyboard,
+                    contentDescription = "show keyboard",
+                    tint = LocalContentColor.current
+                )
+            }
+
         }
 
         Spacer(modifier = Modifier.height(12.dp))
