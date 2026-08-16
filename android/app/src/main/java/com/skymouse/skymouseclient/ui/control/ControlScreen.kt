@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bedtime
@@ -107,7 +108,12 @@ fun ControlScreen(
         onValueChange = { newValue ->
             if (newValue.text.length > textInput.text.length) {
                 val addedText = newValue.text.substring(textInput.text.length)
-                viewModel.onKeyboardStringInput(addedText)
+                if (addedText == "\n") {
+                    viewModel.onKeyboardTapInput(KeyboardKey.KEY_ENTER, true)
+                    viewModel.onKeyboardTapInput(KeyboardKey.KEY_ENTER, false)
+                } else {
+                    viewModel.onKeyboardStringInput(addedText)
+                }
                 textInput = TextFieldValue("")
             } else {
                 textInput = newValue
@@ -138,6 +144,12 @@ fun ControlScreen(
         keyboardOptions = KeyboardOptions(
             autoCorrectEnabled = false,
             imeAction = ImeAction.Send
+        ),
+        keyboardActions = KeyboardActions(
+            onSend = {
+                viewModel.onKeyboardTapInput(KeyboardKey.KEY_ENTER, true)
+                viewModel.onKeyboardTapInput(KeyboardKey.KEY_ENTER, false)
+            }
         )
     )
 
