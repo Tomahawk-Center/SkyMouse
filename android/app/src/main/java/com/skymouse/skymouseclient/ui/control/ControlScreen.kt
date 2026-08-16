@@ -41,6 +41,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -58,9 +59,11 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.skymouse.skymouseclient.data.CursorScaleQueryState
 import com.skymouse.skymouseclient.data.SettingsState
 import com.skymouse.skymouseclient.proto.CommandEvent
 import com.skymouse.skymouseclient.proto.MouseButton
+import com.skymouse.skymouseclient.ui.settings.HapticSlider
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlin.math.sqrt
@@ -74,13 +77,17 @@ fun ControlScreen(
 ) {
     val settingsState by settingsStateFlow.collectAsStateWithLifecycle()
 
+    val cursorScaleState by viewModel.cursorScaleState.collectAsStateWithLifecycle()
+
     val haptic = LocalHapticFeedback.current
 
     val bottomSheetState = rememberModalBottomSheetState()
     val pingCheckBottomSheetState = rememberModalBottomSheetState()
+    val scaleBottomSheetState = rememberModalBottomSheetState()
 
     val scope = rememberCoroutineScope()
     var pendingCommand by remember { mutableStateOf<CommandEvent?>(null) }
+
 
     if (pendingCommand != null) {
         val commandName = when (pendingCommand) {
@@ -122,6 +129,73 @@ fun ControlScreen(
                 }
             }
         )
+    }
+
+    if (viewModel.isScaleSheetShown) {
+        if (!(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && SdkExtensions.getExtensionVersion(
+                Build.VERSION_CODES.S
+            ) >= 13)
+        ) {
+            viewModel.isScaleSheetShown = false
+            return
+        }
+
+        LaunchedEffect(Unit) {
+            viewModel.onCursorSizeQuery()
+        }
+
+        ModalBottomSheet(
+            onDismissRequest = { viewModel.isScaleSheetShown = false },
+            sheetState = scaleBottomSheetState
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 32.dp)
+                    .padding(horizontal = 32.dp)
+            ) {
+                Text(
+                    "Server scale settings",
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(vertical = 16.dp)
+                )
+
+
+                val serverScale =
+                    (cursorScaleState as? CursorScaleQueryState.CursorScale)?.scale ?: 0
+                var scale by remember { mutableIntStateOf(serverScale) }
+                var lastServerScale by remember { mutableIntStateOf(serverScale) }
+
+                if (serverScale != lastServerScale) {
+                    scale = serverScale
+                    lastServerScale = serverScale
+                }
+
+                Text(
+                    text = if (cursorScaleState is CursorScaleQueryState.CursorScale) {
+                        "Cursor size: $scale"
+                    } else {
+                        "Cursor size"
+                    },
+                    style = MaterialTheme.typography.titleMedium
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                HapticSlider(
+                    scale.toFloat(),
+                    onValueChange = { scale = it.toInt() },
+                    valueRange = 1.0f..15.0f,
+                    getHapticBucket = { it.toInt() },
+                    isEdge = { val intValue = it.toInt(); intValue == 1 || intValue == 15 },
+                    onValueChangeFinished = {
+                        viewModel.onCursorSizeChanged(scale)
+                    },
+                    enabled = cursorScaleState is CursorScaleQueryState.CursorScale
+                )
+
+            }
+        }
     }
 
     if (viewModel.isCommandSheetShown) {
@@ -268,7 +342,7 @@ fun ControlScreen(
                         .clip(ShapeDefaults.Large)
                         .background(MaterialTheme.colorScheme.surfaceVariant)
                         .pointerInput(Unit) {
-                            detectTapGestures (
+                            detectTapGestures(
                                 onTap = {
                                     viewModel.onMouseButtonClicked(MouseButton.BUTTON_LEFT, true)
                                     viewModel.onMouseButtonClicked(MouseButton.BUTTON_LEFT, false)
@@ -278,7 +352,8 @@ fun ControlScreen(
                         .pointerInput(Unit) {
                             detectDragGestures { change, dragAmount ->
                                 change.consume()
-                                val magnitude = sqrt(dragAmount.x*dragAmount.x + dragAmount.y*dragAmount.y)
+                                val magnitude =
+                                    sqrt(dragAmount.x * dragAmount.x + dragAmount.y * dragAmount.y)
                                 val accMul = 1f + (magnitude * settingsState.touchpadAcceleration)
                                 val sensitivity = settingsState.touchpadSensitivity
 
@@ -351,7 +426,9 @@ fun ControlScreen(
 
         // lmb, mmb, rmb
         Row(
-            modifier = Modifier.fillMaxWidth().height(80.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(80.dp),
             horizontalArrangement = Arrangement.spacedBy(2.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -513,15 +590,15 @@ fun MouseInteractionButton(
             if (isPressed) MaterialTheme.colorScheme.primaryContainer
             else MaterialTheme.colorScheme.primary
         )
-        .pointerInput(Unit){
+        .pointerInput(Unit) {
             awaitPointerEventScope {
                 while (true) {
                     val event = awaitPointerEvent()
-                    if (event.changes.any {it.changedToDown()}) {
+                    if (event.changes.any { it.changedToDown() }) {
                         isPressed = true
                         onAction(true)
                     }
-                    if (event.changes.any {it.changedToUp() || it.isConsumed}) {
+                    if (event.changes.any { it.changedToUp() || it.isConsumed }) {
                         isPressed = false
                         onAction(false)
                     }
