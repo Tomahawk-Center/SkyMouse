@@ -101,5 +101,65 @@ public interface MessageToServerOrBuilder extends
    */
   com.skymouse.skymouseclient.proto.ClipboardShareEventOrBuilder getClipboardShareOrBuilder();
 
+  /**
+   * <code>.skymouse.GetCursorScaleEvent get_cursor_scale = 7;</code>
+   * @return Whether the getCursorScale field is set.
+   */
+  boolean hasGetCursorScale();
+  /**
+   * <code>.skymouse.GetCursorScaleEvent get_cursor_scale = 7;</code>
+   * @return The getCursorScale.
+   */
+  com.skymouse.skymouseclient.proto.GetCursorScaleEvent getGetCursorScale();
+  /**
+   * <code>.skymouse.GetCursorScaleEvent get_cursor_scale = 7;</code>
+   */
+  com.skymouse.skymouseclient.proto.GetCursorScaleEventOrBuilder getGetCursorScaleOrBuilder();
+
+  /**
+   * <code>.skymouse.SetCursorScaleEvent set_cursor_scale = 8;</code>
+   * @return Whether the setCursorScale field is set.
+   */
+  boolean hasSetCursorScale();
+  /**
+   * <code>.skymouse.SetCursorScaleEvent set_cursor_scale = 8;</code>
+   * @return The setCursorScale.
+   */
+  com.skymouse.skymouseclient.proto.SetCursorScaleEvent getSetCursorScale();
+  /**
+   * <code>.skymouse.SetCursorScaleEvent set_cursor_scale = 8;</code>
+   */
+  com.skymouse.skymouseclient.proto.SetCursorScaleEventOrBuilder getSetCursorScaleOrBuilder();
+
+  /**
+   * <code>.skymouse.KeyboardStringEvent keyboard_string_event = 9;</code>
+   * @return Whether the keyboardStringEvent field is set.
+   */
+  boolean hasKeyboardStringEvent();
+  /**
+   * <code>.skymouse.KeyboardStringEvent keyboard_string_event = 9;</code>
+   * @return The keyboardStringEvent.
+   */
+  com.skymouse.skymouseclient.proto.KeyboardStringEvent getKeyboardStringEvent();
+  /**
+   * <code>.skymouse.KeyboardStringEvent keyboard_string_event = 9;</code>
+   */
+  com.skymouse.skymouseclient.proto.KeyboardStringEventOrBuilder getKeyboardStringEventOrBuilder();
+
+  /**
+   * <code>.skymouse.KeyboardTapEvent keyboard_tap_event = 10;</code>
+   * @return Whether the keyboardTapEvent field is set.
+   */
+  boolean hasKeyboardTapEvent();
+  /**
+   * <code>.skymouse.KeyboardTapEvent keyboard_tap_event = 10;</code>
+   * @return The keyboardTapEvent.
+   */
+  com.skymouse.skymouseclient.proto.KeyboardTapEvent getKeyboardTapEvent();
+  /**
+   * <code>.skymouse.KeyboardTapEvent keyboard_tap_event = 10;</code>
+   */
+  com.skymouse.skymouseclient.proto.KeyboardTapEventOrBuilder getKeyboardTapEventOrBuilder();
+
   com.skymouse.skymouseclient.proto.MessageToServer.EventCase getEventCase();
 }

@@ -60,6 +60,10 @@ private static final long serialVersionUID = 0L;
     PONG(4),
     COMMAND(5),
     CLIPBOARD_SHARE(6),
+    GET_CURSOR_SCALE(7),
+    SET_CURSOR_SCALE(8),
+    KEYBOARD_STRING_EVENT(9),
+    KEYBOARD_TAP_EVENT(10),
     EVENT_NOT_SET(0);
     private final int value;
     private EventCase(int value) {
@@ -83,6 +87,10 @@ private static final long serialVersionUID = 0L;
         case 4: return PONG;
         case 5: return COMMAND;
         case 6: return CLIPBOARD_SHARE;
+        case 7: return GET_CURSOR_SCALE;
+        case 8: return SET_CURSOR_SCALE;
+        case 9: return KEYBOARD_STRING_EVENT;
+        case 10: return KEYBOARD_TAP_EVENT;
         case 0: return EVENT_NOT_SET;
         default: return null;
       }
@@ -284,6 +292,130 @@ private static final long serialVersionUID = 0L;
     return com.skymouse.skymouseclient.proto.ClipboardShareEvent.getDefaultInstance();
   }
 
+  public static final int GET_CURSOR_SCALE_FIELD_NUMBER = 7;
+  /**
+   * <code>.skymouse.GetCursorScaleEvent get_cursor_scale = 7;</code>
+   * @return Whether the getCursorScale field is set.
+   */
+  @java.lang.Override
+  public boolean hasGetCursorScale() {
+    return eventCase_ == 7;
+  }
+  /**
+   * <code>.skymouse.GetCursorScaleEvent get_cursor_scale = 7;</code>
+   * @return The getCursorScale.
+   */
+  @java.lang.Override
+  public com.skymouse.skymouseclient.proto.GetCursorScaleEvent getGetCursorScale() {
+    if (eventCase_ == 7) {
+       return (com.skymouse.skymouseclient.proto.GetCursorScaleEvent) event_;
+    }
+    return com.skymouse.skymouseclient.proto.GetCursorScaleEvent.getDefaultInstance();
+  }
+  /**
+   * <code>.skymouse.GetCursorScaleEvent get_cursor_scale = 7;</code>
+   */
+  @java.lang.Override
+  public com.skymouse.skymouseclient.proto.GetCursorScaleEventOrBuilder getGetCursorScaleOrBuilder() {
+    if (eventCase_ == 7) {
+       return (com.skymouse.skymouseclient.proto.GetCursorScaleEvent) event_;
+    }
+    return com.skymouse.skymouseclient.proto.GetCursorScaleEvent.getDefaultInstance();
+  }
+
+  public static final int SET_CURSOR_SCALE_FIELD_NUMBER = 8;
+  /**
+   * <code>.skymouse.SetCursorScaleEvent set_cursor_scale = 8;</code>
+   * @return Whether the setCursorScale field is set.
+   */
+  @java.lang.Override
+  public boolean hasSetCursorScale() {
+    return eventCase_ == 8;
+  }
+  /**
+   * <code>.skymouse.SetCursorScaleEvent set_cursor_scale = 8;</code>
+   * @return The setCursorScale.
+   */
+  @java.lang.Override
+  public com.skymouse.skymouseclient.proto.SetCursorScaleEvent getSetCursorScale() {
+    if (eventCase_ == 8) {
+       return (com.skymouse.skymouseclient.proto.SetCursorScaleEvent) event_;
+    }
+    return com.skymouse.skymouseclient.proto.SetCursorScaleEvent.getDefaultInstance();
+  }
+  /**
+   * <code>.skymouse.SetCursorScaleEvent set_cursor_scale = 8;</code>
+   */
+  @java.lang.Override
+  public com.skymouse.skymouseclient.proto.SetCursorScaleEventOrBuilder getSetCursorScaleOrBuilder() {
+    if (eventCase_ == 8) {
+       return (com.skymouse.skymouseclient.proto.SetCursorScaleEvent) event_;
+    }
+    return com.skymouse.skymouseclient.proto.SetCursorScaleEvent.getDefaultInstance();
+  }
+
+  public static final int KEYBOARD_STRING_EVENT_FIELD_NUMBER = 9;
+  /**
+   * <code>.skymouse.KeyboardStringEvent keyboard_string_event = 9;</code>
+   * @return Whether the keyboardStringEvent field is set.
+   */
+  @java.lang.Override
+  public boolean hasKeyboardStringEvent() {
+    return eventCase_ == 9;
+  }
+  /**
+   * <code>.skymouse.KeyboardStringEvent keyboard_string_event = 9;</code>
+   * @return The keyboardStringEvent.
+   */
+  @java.lang.Override
+  public com.skymouse.skymouseclient.proto.KeyboardStringEvent getKeyboardStringEvent() {
+    if (eventCase_ == 9) {
+       return (com.skymouse.skymouseclient.proto.KeyboardStringEvent) event_;
+    }
+    return com.skymouse.skymouseclient.proto.KeyboardStringEvent.getDefaultInstance();
+  }
+  /**
+   * <code>.skymouse.KeyboardStringEvent keyboard_string_event = 9;</code>
+   */
+  @java.lang.Override
+  public com.skymouse.skymouseclient.proto.KeyboardStringEventOrBuilder getKeyboardStringEventOrBuilder() {
+    if (eventCase_ == 9) {
+       return (com.skymouse.skymouseclient.proto.KeyboardStringEvent) event_;
+    }
+    return com.skymouse.skymouseclient.proto.KeyboardStringEvent.getDefaultInstance();
+  }
+
+  public static final int KEYBOARD_TAP_EVENT_FIELD_NUMBER = 10;
+  /**
+   * <code>.skymouse.KeyboardTapEvent keyboard_tap_event = 10;</code>
+   * @return Whether the keyboardTapEvent field is set.
+   */
+  @java.lang.Override
+  public boolean hasKeyboardTapEvent() {
+    return eventCase_ == 10;
+  }
+  /**
+   * <code>.skymouse.KeyboardTapEvent keyboard_tap_event = 10;</code>
+   * @return The keyboardTapEvent.
+   */
+  @java.lang.Override
+  public com.skymouse.skymouseclient.proto.KeyboardTapEvent getKeyboardTapEvent() {
+    if (eventCase_ == 10) {
+       return (com.skymouse.skymouseclient.proto.KeyboardTapEvent) event_;
+    }
+    return com.skymouse.skymouseclient.proto.KeyboardTapEvent.getDefaultInstance();
+  }
+  /**
+   * <code>.skymouse.KeyboardTapEvent keyboard_tap_event = 10;</code>
+   */
+  @java.lang.Override
+  public com.skymouse.skymouseclient.proto.KeyboardTapEventOrBuilder getKeyboardTapEventOrBuilder() {
+    if (eventCase_ == 10) {
+       return (com.skymouse.skymouseclient.proto.KeyboardTapEvent) event_;
+    }
+    return com.skymouse.skymouseclient.proto.KeyboardTapEvent.getDefaultInstance();
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -316,6 +448,18 @@ private static final long serialVersionUID = 0L;
     if (eventCase_ == 6) {
       output.writeMessage(6, (com.skymouse.skymouseclient.proto.ClipboardShareEvent) event_);
     }
+    if (eventCase_ == 7) {
+      output.writeMessage(7, (com.skymouse.skymouseclient.proto.GetCursorScaleEvent) event_);
+    }
+    if (eventCase_ == 8) {
+      output.writeMessage(8, (com.skymouse.skymouseclient.proto.SetCursorScaleEvent) event_);
+    }
+    if (eventCase_ == 9) {
+      output.writeMessage(9, (com.skymouse.skymouseclient.proto.KeyboardStringEvent) event_);
+    }
+    if (eventCase_ == 10) {
+      output.writeMessage(10, (com.skymouse.skymouseclient.proto.KeyboardTapEvent) event_);
+    }
     getUnknownFields().writeTo(output);
   }
   private int computeSerializedSize_0() {
@@ -343,6 +487,22 @@ private static final long serialVersionUID = 0L;
     if (eventCase_ == 6) {
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(6, (com.skymouse.skymouseclient.proto.ClipboardShareEvent) event_);
+    }
+    if (eventCase_ == 7) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(7, (com.skymouse.skymouseclient.proto.GetCursorScaleEvent) event_);
+    }
+    if (eventCase_ == 8) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(8, (com.skymouse.skymouseclient.proto.SetCursorScaleEvent) event_);
+    }
+    if (eventCase_ == 9) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(9, (com.skymouse.skymouseclient.proto.KeyboardStringEvent) event_);
+    }
+    if (eventCase_ == 10) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(10, (com.skymouse.skymouseclient.proto.KeyboardTapEvent) event_);
     }
     return size;
   }
@@ -394,6 +554,22 @@ private static final long serialVersionUID = 0L;
         if (!getClipboardShare()
             .equals(other.getClipboardShare())) return false;
         break;
+      case 7:
+        if (!getGetCursorScale()
+            .equals(other.getGetCursorScale())) return false;
+        break;
+      case 8:
+        if (!getSetCursorScale()
+            .equals(other.getSetCursorScale())) return false;
+        break;
+      case 9:
+        if (!getKeyboardStringEvent()
+            .equals(other.getKeyboardStringEvent())) return false;
+        break;
+      case 10:
+        if (!getKeyboardTapEvent()
+            .equals(other.getKeyboardTapEvent())) return false;
+        break;
       case 0:
       default:
     }
@@ -432,6 +608,22 @@ private static final long serialVersionUID = 0L;
       case 6:
         hash = (37 * hash) + CLIPBOARD_SHARE_FIELD_NUMBER;
         hash = (53 * hash) + getClipboardShare().hashCode();
+        break;
+      case 7:
+        hash = (37 * hash) + GET_CURSOR_SCALE_FIELD_NUMBER;
+        hash = (53 * hash) + getGetCursorScale().hashCode();
+        break;
+      case 8:
+        hash = (37 * hash) + SET_CURSOR_SCALE_FIELD_NUMBER;
+        hash = (53 * hash) + getSetCursorScale().hashCode();
+        break;
+      case 9:
+        hash = (37 * hash) + KEYBOARD_STRING_EVENT_FIELD_NUMBER;
+        hash = (53 * hash) + getKeyboardStringEvent().hashCode();
+        break;
+      case 10:
+        hash = (37 * hash) + KEYBOARD_TAP_EVENT_FIELD_NUMBER;
+        hash = (53 * hash) + getKeyboardTapEvent().hashCode();
         break;
       case 0:
       default:
@@ -582,6 +774,18 @@ private static final long serialVersionUID = 0L;
       if (clipboardShareBuilder_ != null) {
         clipboardShareBuilder_.clear();
       }
+      if (getCursorScaleBuilder_ != null) {
+        getCursorScaleBuilder_.clear();
+      }
+      if (setCursorScaleBuilder_ != null) {
+        setCursorScaleBuilder_.clear();
+      }
+      if (keyboardStringEventBuilder_ != null) {
+        keyboardStringEventBuilder_.clear();
+      }
+      if (keyboardTapEventBuilder_ != null) {
+        keyboardTapEventBuilder_.clear();
+      }
       eventCase_ = 0;
       event_ = null;
       return this;
@@ -643,6 +847,22 @@ private static final long serialVersionUID = 0L;
           clipboardShareBuilder_ != null) {
         result.event_ = clipboardShareBuilder_.build();
       }
+      if (eventCase_ == 7 &&
+          getCursorScaleBuilder_ != null) {
+        result.event_ = getCursorScaleBuilder_.build();
+      }
+      if (eventCase_ == 8 &&
+          setCursorScaleBuilder_ != null) {
+        result.event_ = setCursorScaleBuilder_.build();
+      }
+      if (eventCase_ == 9 &&
+          keyboardStringEventBuilder_ != null) {
+        result.event_ = keyboardStringEventBuilder_.build();
+      }
+      if (eventCase_ == 10 &&
+          keyboardTapEventBuilder_ != null) {
+        result.event_ = keyboardTapEventBuilder_.build();
+      }
     }
 
     @java.lang.Override
@@ -680,6 +900,22 @@ private static final long serialVersionUID = 0L;
         }
         case CLIPBOARD_SHARE: {
           mergeClipboardShare(other.getClipboardShare());
+          break;
+        }
+        case GET_CURSOR_SCALE: {
+          mergeGetCursorScale(other.getGetCursorScale());
+          break;
+        }
+        case SET_CURSOR_SCALE: {
+          mergeSetCursorScale(other.getSetCursorScale());
+          break;
+        }
+        case KEYBOARD_STRING_EVENT: {
+          mergeKeyboardStringEvent(other.getKeyboardStringEvent());
+          break;
+        }
+        case KEYBOARD_TAP_EVENT: {
+          mergeKeyboardTapEvent(other.getKeyboardTapEvent());
           break;
         }
         case EVENT_NOT_SET: {
@@ -753,6 +989,34 @@ private static final long serialVersionUID = 0L;
               eventCase_ = 6;
               break;
             } // case 50
+            case 58: {
+              input.readMessage(
+                  internalGetGetCursorScaleFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              eventCase_ = 7;
+              break;
+            } // case 58
+            case 66: {
+              input.readMessage(
+                  internalGetSetCursorScaleFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              eventCase_ = 8;
+              break;
+            } // case 66
+            case 74: {
+              input.readMessage(
+                  internalGetKeyboardStringEventFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              eventCase_ = 9;
+              break;
+            } // case 74
+            case 82: {
+              input.readMessage(
+                  internalGetKeyboardTapEventFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              eventCase_ = 10;
+              break;
+            } // case 82
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -1562,6 +1826,574 @@ private static final long serialVersionUID = 0L;
       eventCase_ = 6;
       onChanged();
       return clipboardShareBuilder_;
+    }
+
+    private com.google.protobuf.SingleFieldBuilder<
+        com.skymouse.skymouseclient.proto.GetCursorScaleEvent, com.skymouse.skymouseclient.proto.GetCursorScaleEvent.Builder, com.skymouse.skymouseclient.proto.GetCursorScaleEventOrBuilder> getCursorScaleBuilder_;
+    /**
+     * <code>.skymouse.GetCursorScaleEvent get_cursor_scale = 7;</code>
+     * @return Whether the getCursorScale field is set.
+     */
+    @java.lang.Override
+    public boolean hasGetCursorScale() {
+      return eventCase_ == 7;
+    }
+    /**
+     * <code>.skymouse.GetCursorScaleEvent get_cursor_scale = 7;</code>
+     * @return The getCursorScale.
+     */
+    @java.lang.Override
+    public com.skymouse.skymouseclient.proto.GetCursorScaleEvent getGetCursorScale() {
+      if (getCursorScaleBuilder_ == null) {
+        if (eventCase_ == 7) {
+          return (com.skymouse.skymouseclient.proto.GetCursorScaleEvent) event_;
+        }
+        return com.skymouse.skymouseclient.proto.GetCursorScaleEvent.getDefaultInstance();
+      } else {
+        if (eventCase_ == 7) {
+          return getCursorScaleBuilder_.getMessage();
+        }
+        return com.skymouse.skymouseclient.proto.GetCursorScaleEvent.getDefaultInstance();
+      }
+    }
+    /**
+     * <code>.skymouse.GetCursorScaleEvent get_cursor_scale = 7;</code>
+     */
+    public Builder setGetCursorScale(com.skymouse.skymouseclient.proto.GetCursorScaleEvent value) {
+      if (getCursorScaleBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        event_ = value;
+        onChanged();
+      } else {
+        getCursorScaleBuilder_.setMessage(value);
+      }
+      eventCase_ = 7;
+      return this;
+    }
+    /**
+     * <code>.skymouse.GetCursorScaleEvent get_cursor_scale = 7;</code>
+     */
+    public Builder setGetCursorScale(
+        com.skymouse.skymouseclient.proto.GetCursorScaleEvent.Builder builderForValue) {
+      if (getCursorScaleBuilder_ == null) {
+        event_ = builderForValue.build();
+        onChanged();
+      } else {
+        getCursorScaleBuilder_.setMessage(builderForValue.build());
+      }
+      eventCase_ = 7;
+      return this;
+    }
+    /**
+     * <code>.skymouse.GetCursorScaleEvent get_cursor_scale = 7;</code>
+     */
+    public Builder mergeGetCursorScale(com.skymouse.skymouseclient.proto.GetCursorScaleEvent value) {
+      if (getCursorScaleBuilder_ == null) {
+        if (eventCase_ == 7 &&
+            event_ != com.skymouse.skymouseclient.proto.GetCursorScaleEvent.getDefaultInstance()) {
+          event_ = com.skymouse.skymouseclient.proto.GetCursorScaleEvent.newBuilder((com.skymouse.skymouseclient.proto.GetCursorScaleEvent) event_)
+              .mergeFrom(value).buildPartial();
+        } else {
+          event_ = value;
+        }
+        onChanged();
+      } else {
+        if (eventCase_ == 7) {
+          getCursorScaleBuilder_.mergeFrom(value);
+        } else {
+          getCursorScaleBuilder_.setMessage(value);
+        }
+      }
+      eventCase_ = 7;
+      return this;
+    }
+    /**
+     * <code>.skymouse.GetCursorScaleEvent get_cursor_scale = 7;</code>
+     */
+    public Builder clearGetCursorScale() {
+      if (getCursorScaleBuilder_ == null) {
+        if (eventCase_ == 7) {
+          eventCase_ = 0;
+          event_ = null;
+          onChanged();
+        }
+      } else {
+        if (eventCase_ == 7) {
+          eventCase_ = 0;
+          event_ = null;
+        }
+        getCursorScaleBuilder_.clear();
+      }
+      return this;
+    }
+    /**
+     * <code>.skymouse.GetCursorScaleEvent get_cursor_scale = 7;</code>
+     */
+    public com.skymouse.skymouseclient.proto.GetCursorScaleEvent.Builder getGetCursorScaleBuilder() {
+      return internalGetGetCursorScaleFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.skymouse.GetCursorScaleEvent get_cursor_scale = 7;</code>
+     */
+    @java.lang.Override
+    public com.skymouse.skymouseclient.proto.GetCursorScaleEventOrBuilder getGetCursorScaleOrBuilder() {
+      if ((eventCase_ == 7) && (getCursorScaleBuilder_ != null)) {
+        return getCursorScaleBuilder_.getMessageOrBuilder();
+      } else {
+        if (eventCase_ == 7) {
+          return (com.skymouse.skymouseclient.proto.GetCursorScaleEvent) event_;
+        }
+        return com.skymouse.skymouseclient.proto.GetCursorScaleEvent.getDefaultInstance();
+      }
+    }
+    /**
+     * <code>.skymouse.GetCursorScaleEvent get_cursor_scale = 7;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilder<
+        com.skymouse.skymouseclient.proto.GetCursorScaleEvent, com.skymouse.skymouseclient.proto.GetCursorScaleEvent.Builder, com.skymouse.skymouseclient.proto.GetCursorScaleEventOrBuilder> 
+        internalGetGetCursorScaleFieldBuilder() {
+      if (getCursorScaleBuilder_ == null) {
+        if (!(eventCase_ == 7)) {
+          event_ = com.skymouse.skymouseclient.proto.GetCursorScaleEvent.getDefaultInstance();
+        }
+        getCursorScaleBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+            com.skymouse.skymouseclient.proto.GetCursorScaleEvent, com.skymouse.skymouseclient.proto.GetCursorScaleEvent.Builder, com.skymouse.skymouseclient.proto.GetCursorScaleEventOrBuilder>(
+                (com.skymouse.skymouseclient.proto.GetCursorScaleEvent) event_,
+                getParentForChildren(),
+                isClean());
+        event_ = null;
+      }
+      eventCase_ = 7;
+      onChanged();
+      return getCursorScaleBuilder_;
+    }
+
+    private com.google.protobuf.SingleFieldBuilder<
+        com.skymouse.skymouseclient.proto.SetCursorScaleEvent, com.skymouse.skymouseclient.proto.SetCursorScaleEvent.Builder, com.skymouse.skymouseclient.proto.SetCursorScaleEventOrBuilder> setCursorScaleBuilder_;
+    /**
+     * <code>.skymouse.SetCursorScaleEvent set_cursor_scale = 8;</code>
+     * @return Whether the setCursorScale field is set.
+     */
+    @java.lang.Override
+    public boolean hasSetCursorScale() {
+      return eventCase_ == 8;
+    }
+    /**
+     * <code>.skymouse.SetCursorScaleEvent set_cursor_scale = 8;</code>
+     * @return The setCursorScale.
+     */
+    @java.lang.Override
+    public com.skymouse.skymouseclient.proto.SetCursorScaleEvent getSetCursorScale() {
+      if (setCursorScaleBuilder_ == null) {
+        if (eventCase_ == 8) {
+          return (com.skymouse.skymouseclient.proto.SetCursorScaleEvent) event_;
+        }
+        return com.skymouse.skymouseclient.proto.SetCursorScaleEvent.getDefaultInstance();
+      } else {
+        if (eventCase_ == 8) {
+          return setCursorScaleBuilder_.getMessage();
+        }
+        return com.skymouse.skymouseclient.proto.SetCursorScaleEvent.getDefaultInstance();
+      }
+    }
+    /**
+     * <code>.skymouse.SetCursorScaleEvent set_cursor_scale = 8;</code>
+     */
+    public Builder setSetCursorScale(com.skymouse.skymouseclient.proto.SetCursorScaleEvent value) {
+      if (setCursorScaleBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        event_ = value;
+        onChanged();
+      } else {
+        setCursorScaleBuilder_.setMessage(value);
+      }
+      eventCase_ = 8;
+      return this;
+    }
+    /**
+     * <code>.skymouse.SetCursorScaleEvent set_cursor_scale = 8;</code>
+     */
+    public Builder setSetCursorScale(
+        com.skymouse.skymouseclient.proto.SetCursorScaleEvent.Builder builderForValue) {
+      if (setCursorScaleBuilder_ == null) {
+        event_ = builderForValue.build();
+        onChanged();
+      } else {
+        setCursorScaleBuilder_.setMessage(builderForValue.build());
+      }
+      eventCase_ = 8;
+      return this;
+    }
+    /**
+     * <code>.skymouse.SetCursorScaleEvent set_cursor_scale = 8;</code>
+     */
+    public Builder mergeSetCursorScale(com.skymouse.skymouseclient.proto.SetCursorScaleEvent value) {
+      if (setCursorScaleBuilder_ == null) {
+        if (eventCase_ == 8 &&
+            event_ != com.skymouse.skymouseclient.proto.SetCursorScaleEvent.getDefaultInstance()) {
+          event_ = com.skymouse.skymouseclient.proto.SetCursorScaleEvent.newBuilder((com.skymouse.skymouseclient.proto.SetCursorScaleEvent) event_)
+              .mergeFrom(value).buildPartial();
+        } else {
+          event_ = value;
+        }
+        onChanged();
+      } else {
+        if (eventCase_ == 8) {
+          setCursorScaleBuilder_.mergeFrom(value);
+        } else {
+          setCursorScaleBuilder_.setMessage(value);
+        }
+      }
+      eventCase_ = 8;
+      return this;
+    }
+    /**
+     * <code>.skymouse.SetCursorScaleEvent set_cursor_scale = 8;</code>
+     */
+    public Builder clearSetCursorScale() {
+      if (setCursorScaleBuilder_ == null) {
+        if (eventCase_ == 8) {
+          eventCase_ = 0;
+          event_ = null;
+          onChanged();
+        }
+      } else {
+        if (eventCase_ == 8) {
+          eventCase_ = 0;
+          event_ = null;
+        }
+        setCursorScaleBuilder_.clear();
+      }
+      return this;
+    }
+    /**
+     * <code>.skymouse.SetCursorScaleEvent set_cursor_scale = 8;</code>
+     */
+    public com.skymouse.skymouseclient.proto.SetCursorScaleEvent.Builder getSetCursorScaleBuilder() {
+      return internalGetSetCursorScaleFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.skymouse.SetCursorScaleEvent set_cursor_scale = 8;</code>
+     */
+    @java.lang.Override
+    public com.skymouse.skymouseclient.proto.SetCursorScaleEventOrBuilder getSetCursorScaleOrBuilder() {
+      if ((eventCase_ == 8) && (setCursorScaleBuilder_ != null)) {
+        return setCursorScaleBuilder_.getMessageOrBuilder();
+      } else {
+        if (eventCase_ == 8) {
+          return (com.skymouse.skymouseclient.proto.SetCursorScaleEvent) event_;
+        }
+        return com.skymouse.skymouseclient.proto.SetCursorScaleEvent.getDefaultInstance();
+      }
+    }
+    /**
+     * <code>.skymouse.SetCursorScaleEvent set_cursor_scale = 8;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilder<
+        com.skymouse.skymouseclient.proto.SetCursorScaleEvent, com.skymouse.skymouseclient.proto.SetCursorScaleEvent.Builder, com.skymouse.skymouseclient.proto.SetCursorScaleEventOrBuilder> 
+        internalGetSetCursorScaleFieldBuilder() {
+      if (setCursorScaleBuilder_ == null) {
+        if (!(eventCase_ == 8)) {
+          event_ = com.skymouse.skymouseclient.proto.SetCursorScaleEvent.getDefaultInstance();
+        }
+        setCursorScaleBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+            com.skymouse.skymouseclient.proto.SetCursorScaleEvent, com.skymouse.skymouseclient.proto.SetCursorScaleEvent.Builder, com.skymouse.skymouseclient.proto.SetCursorScaleEventOrBuilder>(
+                (com.skymouse.skymouseclient.proto.SetCursorScaleEvent) event_,
+                getParentForChildren(),
+                isClean());
+        event_ = null;
+      }
+      eventCase_ = 8;
+      onChanged();
+      return setCursorScaleBuilder_;
+    }
+
+    private com.google.protobuf.SingleFieldBuilder<
+        com.skymouse.skymouseclient.proto.KeyboardStringEvent, com.skymouse.skymouseclient.proto.KeyboardStringEvent.Builder, com.skymouse.skymouseclient.proto.KeyboardStringEventOrBuilder> keyboardStringEventBuilder_;
+    /**
+     * <code>.skymouse.KeyboardStringEvent keyboard_string_event = 9;</code>
+     * @return Whether the keyboardStringEvent field is set.
+     */
+    @java.lang.Override
+    public boolean hasKeyboardStringEvent() {
+      return eventCase_ == 9;
+    }
+    /**
+     * <code>.skymouse.KeyboardStringEvent keyboard_string_event = 9;</code>
+     * @return The keyboardStringEvent.
+     */
+    @java.lang.Override
+    public com.skymouse.skymouseclient.proto.KeyboardStringEvent getKeyboardStringEvent() {
+      if (keyboardStringEventBuilder_ == null) {
+        if (eventCase_ == 9) {
+          return (com.skymouse.skymouseclient.proto.KeyboardStringEvent) event_;
+        }
+        return com.skymouse.skymouseclient.proto.KeyboardStringEvent.getDefaultInstance();
+      } else {
+        if (eventCase_ == 9) {
+          return keyboardStringEventBuilder_.getMessage();
+        }
+        return com.skymouse.skymouseclient.proto.KeyboardStringEvent.getDefaultInstance();
+      }
+    }
+    /**
+     * <code>.skymouse.KeyboardStringEvent keyboard_string_event = 9;</code>
+     */
+    public Builder setKeyboardStringEvent(com.skymouse.skymouseclient.proto.KeyboardStringEvent value) {
+      if (keyboardStringEventBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        event_ = value;
+        onChanged();
+      } else {
+        keyboardStringEventBuilder_.setMessage(value);
+      }
+      eventCase_ = 9;
+      return this;
+    }
+    /**
+     * <code>.skymouse.KeyboardStringEvent keyboard_string_event = 9;</code>
+     */
+    public Builder setKeyboardStringEvent(
+        com.skymouse.skymouseclient.proto.KeyboardStringEvent.Builder builderForValue) {
+      if (keyboardStringEventBuilder_ == null) {
+        event_ = builderForValue.build();
+        onChanged();
+      } else {
+        keyboardStringEventBuilder_.setMessage(builderForValue.build());
+      }
+      eventCase_ = 9;
+      return this;
+    }
+    /**
+     * <code>.skymouse.KeyboardStringEvent keyboard_string_event = 9;</code>
+     */
+    public Builder mergeKeyboardStringEvent(com.skymouse.skymouseclient.proto.KeyboardStringEvent value) {
+      if (keyboardStringEventBuilder_ == null) {
+        if (eventCase_ == 9 &&
+            event_ != com.skymouse.skymouseclient.proto.KeyboardStringEvent.getDefaultInstance()) {
+          event_ = com.skymouse.skymouseclient.proto.KeyboardStringEvent.newBuilder((com.skymouse.skymouseclient.proto.KeyboardStringEvent) event_)
+              .mergeFrom(value).buildPartial();
+        } else {
+          event_ = value;
+        }
+        onChanged();
+      } else {
+        if (eventCase_ == 9) {
+          keyboardStringEventBuilder_.mergeFrom(value);
+        } else {
+          keyboardStringEventBuilder_.setMessage(value);
+        }
+      }
+      eventCase_ = 9;
+      return this;
+    }
+    /**
+     * <code>.skymouse.KeyboardStringEvent keyboard_string_event = 9;</code>
+     */
+    public Builder clearKeyboardStringEvent() {
+      if (keyboardStringEventBuilder_ == null) {
+        if (eventCase_ == 9) {
+          eventCase_ = 0;
+          event_ = null;
+          onChanged();
+        }
+      } else {
+        if (eventCase_ == 9) {
+          eventCase_ = 0;
+          event_ = null;
+        }
+        keyboardStringEventBuilder_.clear();
+      }
+      return this;
+    }
+    /**
+     * <code>.skymouse.KeyboardStringEvent keyboard_string_event = 9;</code>
+     */
+    public com.skymouse.skymouseclient.proto.KeyboardStringEvent.Builder getKeyboardStringEventBuilder() {
+      return internalGetKeyboardStringEventFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.skymouse.KeyboardStringEvent keyboard_string_event = 9;</code>
+     */
+    @java.lang.Override
+    public com.skymouse.skymouseclient.proto.KeyboardStringEventOrBuilder getKeyboardStringEventOrBuilder() {
+      if ((eventCase_ == 9) && (keyboardStringEventBuilder_ != null)) {
+        return keyboardStringEventBuilder_.getMessageOrBuilder();
+      } else {
+        if (eventCase_ == 9) {
+          return (com.skymouse.skymouseclient.proto.KeyboardStringEvent) event_;
+        }
+        return com.skymouse.skymouseclient.proto.KeyboardStringEvent.getDefaultInstance();
+      }
+    }
+    /**
+     * <code>.skymouse.KeyboardStringEvent keyboard_string_event = 9;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilder<
+        com.skymouse.skymouseclient.proto.KeyboardStringEvent, com.skymouse.skymouseclient.proto.KeyboardStringEvent.Builder, com.skymouse.skymouseclient.proto.KeyboardStringEventOrBuilder> 
+        internalGetKeyboardStringEventFieldBuilder() {
+      if (keyboardStringEventBuilder_ == null) {
+        if (!(eventCase_ == 9)) {
+          event_ = com.skymouse.skymouseclient.proto.KeyboardStringEvent.getDefaultInstance();
+        }
+        keyboardStringEventBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+            com.skymouse.skymouseclient.proto.KeyboardStringEvent, com.skymouse.skymouseclient.proto.KeyboardStringEvent.Builder, com.skymouse.skymouseclient.proto.KeyboardStringEventOrBuilder>(
+                (com.skymouse.skymouseclient.proto.KeyboardStringEvent) event_,
+                getParentForChildren(),
+                isClean());
+        event_ = null;
+      }
+      eventCase_ = 9;
+      onChanged();
+      return keyboardStringEventBuilder_;
+    }
+
+    private com.google.protobuf.SingleFieldBuilder<
+        com.skymouse.skymouseclient.proto.KeyboardTapEvent, com.skymouse.skymouseclient.proto.KeyboardTapEvent.Builder, com.skymouse.skymouseclient.proto.KeyboardTapEventOrBuilder> keyboardTapEventBuilder_;
+    /**
+     * <code>.skymouse.KeyboardTapEvent keyboard_tap_event = 10;</code>
+     * @return Whether the keyboardTapEvent field is set.
+     */
+    @java.lang.Override
+    public boolean hasKeyboardTapEvent() {
+      return eventCase_ == 10;
+    }
+    /**
+     * <code>.skymouse.KeyboardTapEvent keyboard_tap_event = 10;</code>
+     * @return The keyboardTapEvent.
+     */
+    @java.lang.Override
+    public com.skymouse.skymouseclient.proto.KeyboardTapEvent getKeyboardTapEvent() {
+      if (keyboardTapEventBuilder_ == null) {
+        if (eventCase_ == 10) {
+          return (com.skymouse.skymouseclient.proto.KeyboardTapEvent) event_;
+        }
+        return com.skymouse.skymouseclient.proto.KeyboardTapEvent.getDefaultInstance();
+      } else {
+        if (eventCase_ == 10) {
+          return keyboardTapEventBuilder_.getMessage();
+        }
+        return com.skymouse.skymouseclient.proto.KeyboardTapEvent.getDefaultInstance();
+      }
+    }
+    /**
+     * <code>.skymouse.KeyboardTapEvent keyboard_tap_event = 10;</code>
+     */
+    public Builder setKeyboardTapEvent(com.skymouse.skymouseclient.proto.KeyboardTapEvent value) {
+      if (keyboardTapEventBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        event_ = value;
+        onChanged();
+      } else {
+        keyboardTapEventBuilder_.setMessage(value);
+      }
+      eventCase_ = 10;
+      return this;
+    }
+    /**
+     * <code>.skymouse.KeyboardTapEvent keyboard_tap_event = 10;</code>
+     */
+    public Builder setKeyboardTapEvent(
+        com.skymouse.skymouseclient.proto.KeyboardTapEvent.Builder builderForValue) {
+      if (keyboardTapEventBuilder_ == null) {
+        event_ = builderForValue.build();
+        onChanged();
+      } else {
+        keyboardTapEventBuilder_.setMessage(builderForValue.build());
+      }
+      eventCase_ = 10;
+      return this;
+    }
+    /**
+     * <code>.skymouse.KeyboardTapEvent keyboard_tap_event = 10;</code>
+     */
+    public Builder mergeKeyboardTapEvent(com.skymouse.skymouseclient.proto.KeyboardTapEvent value) {
+      if (keyboardTapEventBuilder_ == null) {
+        if (eventCase_ == 10 &&
+            event_ != com.skymouse.skymouseclient.proto.KeyboardTapEvent.getDefaultInstance()) {
+          event_ = com.skymouse.skymouseclient.proto.KeyboardTapEvent.newBuilder((com.skymouse.skymouseclient.proto.KeyboardTapEvent) event_)
+              .mergeFrom(value).buildPartial();
+        } else {
+          event_ = value;
+        }
+        onChanged();
+      } else {
+        if (eventCase_ == 10) {
+          keyboardTapEventBuilder_.mergeFrom(value);
+        } else {
+          keyboardTapEventBuilder_.setMessage(value);
+        }
+      }
+      eventCase_ = 10;
+      return this;
+    }
+    /**
+     * <code>.skymouse.KeyboardTapEvent keyboard_tap_event = 10;</code>
+     */
+    public Builder clearKeyboardTapEvent() {
+      if (keyboardTapEventBuilder_ == null) {
+        if (eventCase_ == 10) {
+          eventCase_ = 0;
+          event_ = null;
+          onChanged();
+        }
+      } else {
+        if (eventCase_ == 10) {
+          eventCase_ = 0;
+          event_ = null;
+        }
+        keyboardTapEventBuilder_.clear();
+      }
+      return this;
+    }
+    /**
+     * <code>.skymouse.KeyboardTapEvent keyboard_tap_event = 10;</code>
+     */
+    public com.skymouse.skymouseclient.proto.KeyboardTapEvent.Builder getKeyboardTapEventBuilder() {
+      return internalGetKeyboardTapEventFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.skymouse.KeyboardTapEvent keyboard_tap_event = 10;</code>
+     */
+    @java.lang.Override
+    public com.skymouse.skymouseclient.proto.KeyboardTapEventOrBuilder getKeyboardTapEventOrBuilder() {
+      if ((eventCase_ == 10) && (keyboardTapEventBuilder_ != null)) {
+        return keyboardTapEventBuilder_.getMessageOrBuilder();
+      } else {
+        if (eventCase_ == 10) {
+          return (com.skymouse.skymouseclient.proto.KeyboardTapEvent) event_;
+        }
+        return com.skymouse.skymouseclient.proto.KeyboardTapEvent.getDefaultInstance();
+      }
+    }
+    /**
+     * <code>.skymouse.KeyboardTapEvent keyboard_tap_event = 10;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilder<
+        com.skymouse.skymouseclient.proto.KeyboardTapEvent, com.skymouse.skymouseclient.proto.KeyboardTapEvent.Builder, com.skymouse.skymouseclient.proto.KeyboardTapEventOrBuilder> 
+        internalGetKeyboardTapEventFieldBuilder() {
+      if (keyboardTapEventBuilder_ == null) {
+        if (!(eventCase_ == 10)) {
+          event_ = com.skymouse.skymouseclient.proto.KeyboardTapEvent.getDefaultInstance();
+        }
+        keyboardTapEventBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+            com.skymouse.skymouseclient.proto.KeyboardTapEvent, com.skymouse.skymouseclient.proto.KeyboardTapEvent.Builder, com.skymouse.skymouseclient.proto.KeyboardTapEventOrBuilder>(
+                (com.skymouse.skymouseclient.proto.KeyboardTapEvent) event_,
+                getParentForChildren(),
+                isClean());
+        event_ = null;
+      }
+      eventCase_ = 10;
+      onChanged();
+      return keyboardTapEventBuilder_;
     }
 
     // @@protoc_insertion_point(builder_scope:skymouse.MessageToServer)
