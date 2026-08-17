@@ -308,7 +308,9 @@ fun HapticSlider(
     valueRange: ClosedFloatingPointRange<Float>,
     getHapticBucket: (Float) -> Int,
     isEdge: (Float) -> Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    onValueChangeFinished: (() -> Unit)? = null
 ) {
     val haptic = LocalHapticFeedback.current
     var lastHapticValue by remember { mutableIntStateOf(getHapticBucket(value)) }
@@ -316,6 +318,8 @@ fun HapticSlider(
 
     Slider(
         value = value,
+        enabled = enabled,
+        onValueChangeFinished = onValueChangeFinished,
         onValueChange = { newValue ->
             val currentBucket = getHapticBucket(newValue)
 
