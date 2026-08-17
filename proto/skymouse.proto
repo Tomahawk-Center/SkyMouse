@@ -117,6 +117,8 @@ message EmulatorEvent {
         MouseEvent mouse = 1;
         ClickEvent click = 2;
         ScrollEvent scroll = 3;
+        KeyboardStringEvent keyboard_string_event = 4;
+        KeyboardTapEvent keyboard_tap_event = 5;
     }
 }
 
@@ -130,8 +132,6 @@ message MessageToServer {
         ClipboardShareEvent clipboard_share = 6;
         GetCursorScaleEvent get_cursor_scale = 7;
         SetCursorScaleEvent set_cursor_scale = 8;
-        KeyboardStringEvent keyboard_string_event = 9;
-        KeyboardTapEvent keyboard_tap_event = 10;
     }
 }
 
