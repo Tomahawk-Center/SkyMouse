@@ -19,9 +19,14 @@ import com.skymouse.skymouseclient.data.CursorScaleQueryState
 import com.skymouse.skymouseclient.data.GyroscopeProvider
 import com.skymouse.skymouseclient.data.PingType
 import com.skymouse.skymouseclient.data.SkyMouseManager
+import com.skymouse.skymouseclient.proto.ButtonState
 import com.skymouse.skymouseclient.proto.CommandEvent
+import com.skymouse.skymouseclient.proto.KeyboardKey
 import com.skymouse.skymouseclient.proto.MouseButton
 import com.skymouse.skymouseclient.proto.clipboardShareEvent
+import com.skymouse.skymouseclient.proto.emulatorEvent
+import com.skymouse.skymouseclient.proto.keyboardStringEvent
+import com.skymouse.skymouseclient.proto.keyboardTapEvent
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -156,9 +161,9 @@ class ControlViewModel(
                     click = com.skymouse.skymouseclient.proto.clickEvent {
                         this.button = button
                         this.state = if (isPressed) {
-                            com.skymouse.skymouseclient.proto.ButtonState.STATE_DOWN
+                            ButtonState.STATE_DOWN
                         } else {
-                            com.skymouse.skymouseclient.proto.ButtonState.STATE_UP
+                            ButtonState.STATE_UP
                         }
                         this.timestampMs = System.currentTimeMillis()
                     }
@@ -311,6 +316,36 @@ class ControlViewModel(
             val msg = com.skymouse.skymouseclient.proto.messageToServer {
                 clipboardShare = clipboardShareEvent {
                     this.text = text
+                }
+            }
+            tcpClientManager.sendProto(msg)
+        }
+    }
+
+    fun onKeyboardStringInput(text: String) {
+        viewModelScope.launch {
+            val msg = com.skymouse.skymouseclient.proto.messageToServer {
+                emulatorEvent = emulatorEvent {
+                    keyboardStringEvent = keyboardStringEvent {
+                    this.text = text
+                    this.timestampMs = System.currentTimeMillis()
+                    }
+                }
+
+            }
+            tcpClientManager.sendProto(msg)
+        }
+    }
+
+    fun onKeyboardTapInput(key: KeyboardKey, isPressed: Boolean) {
+        viewModelScope.launch {
+            val msg = com.skymouse.skymouseclient.proto.messageToServer {
+                emulatorEvent = emulatorEvent {
+                    keyboardTapEvent = keyboardTapEvent {
+                    this.key = key
+                    this.state = if (isPressed) ButtonState.STATE_DOWN else ButtonState.STATE_UP
+                    this.timestampMs = System.currentTimeMillis()
+                    }
                 }
             }
             tcpClientManager.sendProto(msg)

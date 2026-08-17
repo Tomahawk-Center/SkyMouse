@@ -17,11 +17,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bedtime
 import androidx.compose.material.icons.filled.ContentPasteGo
+import androidx.compose.material.icons.filled.Keyboard
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.PowerSettingsNew
 import androidx.compose.material3.AlertDialog
@@ -48,20 +53,34 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.changedToDown
 import androidx.compose.ui.input.pointer.changedToUp
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.skymouse.skymouseclient.data.CursorScaleQueryState
 import com.skymouse.skymouseclient.data.SettingsState
 import com.skymouse.skymouseclient.proto.CommandEvent
+import com.skymouse.skymouseclient.proto.KeyboardKey
 import com.skymouse.skymouseclient.proto.MouseButton
 import com.skymouse.skymouseclient.ui.settings.HapticSlider
 import kotlinx.coroutines.flow.StateFlow
@@ -88,6 +107,65 @@ fun ControlScreen(
     val scope = rememberCoroutineScope()
     var pendingCommand by remember { mutableStateOf<CommandEvent?>(null) }
 
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusRequester = remember { FocusRequester() }
+    var textInput by remember { mutableStateOf(TextFieldValue("")) }
+
+    BasicTextField(
+        value = textInput,
+        onValueChange = { newValue ->
+            val oldText = textInput.text
+            val newText = newValue.text
+
+            if (newText.length > oldText.length) {
+                val addedText = newText.substring(oldText.length)
+                val textToSend = addedText.replace("\n", "")
+                if (textToSend.isNotEmpty()) {
+                    viewModel.onKeyboardStringInput(textToSend)
+                }
+            }
+
+            textInput = newValue
+
+            if (newText.length > 1000) {
+                textInput = TextFieldValue("")
+            }
+        },
+        modifier = Modifier
+            .size(1.dp)
+            .alpha(0f)
+            .focusRequester(focusRequester)
+            .onPreviewKeyEvent { keyEvent ->
+                val isPressed = keyEvent.type == KeyEventType.KeyDown
+                val isReleased = keyEvent.type == KeyEventType.KeyUp
+
+                if (isPressed || isReleased) {
+                    when (keyEvent.key) {
+                        Key.Backspace -> {
+                            viewModel.onKeyboardTapInput(KeyboardKey.KEY_BACKSPACE, isPressed)
+                            false
+                        }
+                        Key.Enter -> {
+                            viewModel.onKeyboardTapInput(KeyboardKey.KEY_ENTER, isPressed)
+                            false
+                        }
+                        else -> false
+                    }
+                } else false
+            },
+        keyboardOptions = KeyboardOptions(
+            autoCorrectEnabled = false,
+            imeAction = ImeAction.Send,
+            capitalization = KeyboardCapitalization.Sentences,
+            keyboardType = KeyboardType.Text
+        ),
+        keyboardActions = KeyboardActions(
+            onSend = {
+                viewModel.onKeyboardTapInput(KeyboardKey.KEY_ENTER, true)
+                viewModel.onKeyboardTapInput(KeyboardKey.KEY_ENTER, false)
+            }
+        )
+    )
 
     if (pendingCommand != null) {
         val commandName = when (pendingCommand) {
@@ -461,6 +539,7 @@ fun ControlScreen(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
+            // clipboard share
             Button(
                 onClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.SegmentTick)
@@ -481,13 +560,14 @@ fun ControlScreen(
                 )
             }
 
+            // mode switch
             Button(
                 onClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
                     viewModel.toggleControlMode()
                 },
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .weight(1f)
                     .height(48.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -500,6 +580,29 @@ fun ControlScreen(
                     else "Switch to Gyroscope"
                 )
             }
+
+            // show keyboard button
+            Button(
+                onClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                    focusRequester.requestFocus()
+                    keyboardController?.show()
+                },
+                modifier = Modifier
+                    .height(48.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                ),
+                shape = MaterialTheme.shapes.medium
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Keyboard,
+                    contentDescription = "show keyboard",
+                    tint = LocalContentColor.current
+                )
+            }
+
         }
 
         Spacer(modifier = Modifier.height(12.dp))
