@@ -158,36 +158,6 @@ func (e *Emulator) handleClick(ev *protoapi.ClickEvent) {
 	}
 }
 
-func (e *Emulator) HandleKeyboardString(ev *protoapi.KeyboardStringEvent) {
-	if ev == nil || ev.Text == "" {
-		return
-	}
-	robotgo.Type(ev.Text)
-}
-
-func (e *Emulator) HandleKeyboardTap(ev *protoapi.KeyboardTapEvent) {
-	if ev == nil {
-		return
-	}
-
-	var key string
-	switch ev.Key {
-	case protoapi.KeyboardKey_KEY_ENTER:
-		key = "enter"
-	case protoapi.KeyboardKey_KEY_BACKSPACE:
-		key = "backspace"
-	default:
-		return
-	}
-
-	switch ev.State {
-	case protoapi.ButtonState_STATE_DOWN:
-		_ = robotgo.KeyDown(key)
-	case protoapi.ButtonState_STATE_UP:
-		_ = robotgo.KeyUp(key)
-	}
-}
-
 func (e *Emulator) handleScroll(ev *protoapi.ScrollEvent) {
 	delta := int(ev.DeltaY)
 	log.Println("DeltaY:", ev.DeltaY)
