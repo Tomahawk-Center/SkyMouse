@@ -131,35 +131,5 @@ public interface MessageToServerOrBuilder extends
    */
   com.skymouse.skymouseclient.proto.SetCursorScaleEventOrBuilder getSetCursorScaleOrBuilder();
 
-  /**
-   * <code>.skymouse.KeyboardStringEvent keyboard_string_event = 9;</code>
-   * @return Whether the keyboardStringEvent field is set.
-   */
-  boolean hasKeyboardStringEvent();
-  /**
-   * <code>.skymouse.KeyboardStringEvent keyboard_string_event = 9;</code>
-   * @return The keyboardStringEvent.
-   */
-  com.skymouse.skymouseclient.proto.KeyboardStringEvent getKeyboardStringEvent();
-  /**
-   * <code>.skymouse.KeyboardStringEvent keyboard_string_event = 9;</code>
-   */
-  com.skymouse.skymouseclient.proto.KeyboardStringEventOrBuilder getKeyboardStringEventOrBuilder();
-
-  /**
-   * <code>.skymouse.KeyboardTapEvent keyboard_tap_event = 10;</code>
-   * @return Whether the keyboardTapEvent field is set.
-   */
-  boolean hasKeyboardTapEvent();
-  /**
-   * <code>.skymouse.KeyboardTapEvent keyboard_tap_event = 10;</code>
-   * @return The keyboardTapEvent.
-   */
-  com.skymouse.skymouseclient.proto.KeyboardTapEvent getKeyboardTapEvent();
-  /**
-   * <code>.skymouse.KeyboardTapEvent keyboard_tap_event = 10;</code>
-   */
-  com.skymouse.skymouseclient.proto.KeyboardTapEventOrBuilder getKeyboardTapEventOrBuilder();
-
   com.skymouse.skymouseclient.proto.MessageToServer.EventCase getEventCase();
 }
