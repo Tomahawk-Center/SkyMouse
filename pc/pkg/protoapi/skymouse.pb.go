@@ -1021,6 +1021,8 @@ type EmulatorEvent struct {
 	//	*EmulatorEvent_Mouse
 	//	*EmulatorEvent_Click
 	//	*EmulatorEvent_Scroll
+	//	*EmulatorEvent_KeyboardStringEvent
+	//	*EmulatorEvent_KeyboardTapEvent
 	Event         isEmulatorEvent_Event `protobuf_oneof:"event"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1090,6 +1092,24 @@ func (x *EmulatorEvent) GetScroll() *ScrollEvent {
 	return nil
 }
 
+func (x *EmulatorEvent) GetKeyboardStringEvent() *KeyboardStringEvent {
+	if x != nil {
+		if x, ok := x.Event.(*EmulatorEvent_KeyboardStringEvent); ok {
+			return x.KeyboardStringEvent
+		}
+	}
+	return nil
+}
+
+func (x *EmulatorEvent) GetKeyboardTapEvent() *KeyboardTapEvent {
+	if x != nil {
+		if x, ok := x.Event.(*EmulatorEvent_KeyboardTapEvent); ok {
+			return x.KeyboardTapEvent
+		}
+	}
+	return nil
+}
+
 type isEmulatorEvent_Event interface {
 	isEmulatorEvent_Event()
 }
@@ -1106,11 +1126,23 @@ type EmulatorEvent_Scroll struct {
 	Scroll *ScrollEvent `protobuf:"bytes,3,opt,name=scroll,proto3,oneof"`
 }
 
+type EmulatorEvent_KeyboardStringEvent struct {
+	KeyboardStringEvent *KeyboardStringEvent `protobuf:"bytes,4,opt,name=keyboard_string_event,json=keyboardStringEvent,proto3,oneof"`
+}
+
+type EmulatorEvent_KeyboardTapEvent struct {
+	KeyboardTapEvent *KeyboardTapEvent `protobuf:"bytes,5,opt,name=keyboard_tap_event,json=keyboardTapEvent,proto3,oneof"`
+}
+
 func (*EmulatorEvent_Mouse) isEmulatorEvent_Event() {}
 
 func (*EmulatorEvent_Click) isEmulatorEvent_Event() {}
 
 func (*EmulatorEvent_Scroll) isEmulatorEvent_Event() {}
+
+func (*EmulatorEvent_KeyboardStringEvent) isEmulatorEvent_Event() {}
+
+func (*EmulatorEvent_KeyboardTapEvent) isEmulatorEvent_Event() {}
 
 type MessageToServer struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
@@ -1124,8 +1156,6 @@ type MessageToServer struct {
 	//	*MessageToServer_ClipboardShare
 	//	*MessageToServer_GetCursorScale
 	//	*MessageToServer_SetCursorScale
-	//	*MessageToServer_KeyboardStringEvent
-	//	*MessageToServer_KeyboardTapEvent
 	Event         isMessageToServer_Event `protobuf_oneof:"event"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1240,24 +1270,6 @@ func (x *MessageToServer) GetSetCursorScale() *SetCursorScaleEvent {
 	return nil
 }
 
-func (x *MessageToServer) GetKeyboardStringEvent() *KeyboardStringEvent {
-	if x != nil {
-		if x, ok := x.Event.(*MessageToServer_KeyboardStringEvent); ok {
-			return x.KeyboardStringEvent
-		}
-	}
-	return nil
-}
-
-func (x *MessageToServer) GetKeyboardTapEvent() *KeyboardTapEvent {
-	if x != nil {
-		if x, ok := x.Event.(*MessageToServer_KeyboardTapEvent); ok {
-			return x.KeyboardTapEvent
-		}
-	}
-	return nil
-}
-
 type isMessageToServer_Event interface {
 	isMessageToServer_Event()
 }
@@ -1294,14 +1306,6 @@ type MessageToServer_SetCursorScale struct {
 	SetCursorScale *SetCursorScaleEvent `protobuf:"bytes,8,opt,name=set_cursor_scale,json=setCursorScale,proto3,oneof"`
 }
 
-type MessageToServer_KeyboardStringEvent struct {
-	KeyboardStringEvent *KeyboardStringEvent `protobuf:"bytes,9,opt,name=keyboard_string_event,json=keyboardStringEvent,proto3,oneof"`
-}
-
-type MessageToServer_KeyboardTapEvent struct {
-	KeyboardTapEvent *KeyboardTapEvent `protobuf:"bytes,10,opt,name=keyboard_tap_event,json=keyboardTapEvent,proto3,oneof"`
-}
-
 func (*MessageToServer_ClientHello) isMessageToServer_Event() {}
 
 func (*MessageToServer_EmulatorEvent) isMessageToServer_Event() {}
@@ -1317,10 +1321,6 @@ func (*MessageToServer_ClipboardShare) isMessageToServer_Event() {}
 func (*MessageToServer_GetCursorScale) isMessageToServer_Event() {}
 
 func (*MessageToServer_SetCursorScale) isMessageToServer_Event() {}
-
-func (*MessageToServer_KeyboardStringEvent) isMessageToServer_Event() {}
-
-func (*MessageToServer_KeyboardTapEvent) isMessageToServer_Event() {}
 
 type UdpMessageToServer struct {
 	state    protoimpl.MessageState `protogen:"open.v1"`
@@ -1577,12 +1577,14 @@ const file_skymouse_proto_rawDesc = "" +
 	"\x14current_cursor_scale\x18\x01 \x01(\x05R\x12currentCursorScale\"_\n" +
 	"\vServerEvent\x12-\n" +
 	"\x04type\x18\x01 \x01(\x0e2\x19.skymouse.HapticEventTypeR\x04type\x12!\n" +
-	"\ftimestamp_ms\x18\x02 \x01(\x03R\vtimestampMs\"\xa5\x01\n" +
+	"\ftimestamp_ms\x18\x02 \x01(\x03R\vtimestampMs\"\xc6\x02\n" +
 	"\rEmulatorEvent\x12,\n" +
 	"\x05mouse\x18\x01 \x01(\v2\x14.skymouse.MouseEventH\x00R\x05mouse\x12,\n" +
 	"\x05click\x18\x02 \x01(\v2\x14.skymouse.ClickEventH\x00R\x05click\x12/\n" +
-	"\x06scroll\x18\x03 \x01(\v2\x15.skymouse.ScrollEventH\x00R\x06scrollB\a\n" +
-	"\x05event\"\x99\x05\n" +
+	"\x06scroll\x18\x03 \x01(\v2\x15.skymouse.ScrollEventH\x00R\x06scroll\x12S\n" +
+	"\x15keyboard_string_event\x18\x04 \x01(\v2\x1d.skymouse.KeyboardStringEventH\x00R\x13keyboardStringEvent\x12J\n" +
+	"\x12keyboard_tap_event\x18\x05 \x01(\v2\x1a.skymouse.KeyboardTapEventH\x00R\x10keyboardTapEventB\a\n" +
+	"\x05event\"\xf8\x03\n" +
 	"\x0fMessageToServer\x12:\n" +
 	"\fclient_hello\x18\x01 \x01(\v2\x15.skymouse.ClientHelloH\x00R\vclientHello\x12@\n" +
 	"\x0eemulator_event\x18\x02 \x01(\v2\x17.skymouse.EmulatorEventH\x00R\remulatorEvent\x12$\n" +
@@ -1591,10 +1593,7 @@ const file_skymouse_proto_rawDesc = "" +
 	"\acommand\x18\x05 \x01(\x0e2\x16.skymouse.CommandEventH\x00R\acommand\x12H\n" +
 	"\x0fclipboard_share\x18\x06 \x01(\v2\x1d.skymouse.ClipboardShareEventH\x00R\x0eclipboardShare\x12I\n" +
 	"\x10get_cursor_scale\x18\a \x01(\v2\x1d.skymouse.GetCursorScaleEventH\x00R\x0egetCursorScale\x12I\n" +
-	"\x10set_cursor_scale\x18\b \x01(\v2\x1d.skymouse.SetCursorScaleEventH\x00R\x0esetCursorScale\x12S\n" +
-	"\x15keyboard_string_event\x18\t \x01(\v2\x1d.skymouse.KeyboardStringEventH\x00R\x13keyboardStringEvent\x12J\n" +
-	"\x12keyboard_tap_event\x18\n" +
-	" \x01(\v2\x1a.skymouse.KeyboardTapEventH\x00R\x10keyboardTapEventB\a\n" +
+	"\x10set_cursor_scale\x18\b \x01(\v2\x1d.skymouse.SetCursorScaleEventH\x00R\x0esetCursorScaleB\a\n" +
 	"\x05event\"\xa2\x01\n" +
 	"\x12UdpMessageToServer\x12\x1b\n" +
 	"\tudp_token\x18\x01 \x01(\rR\budpToken\x12@\n" +
@@ -1680,16 +1679,16 @@ var file_skymouse_proto_depIdxs = []int32{
 	5,  // 5: skymouse.EmulatorEvent.mouse:type_name -> skymouse.MouseEvent
 	6,  // 6: skymouse.EmulatorEvent.click:type_name -> skymouse.ClickEvent
 	7,  // 7: skymouse.EmulatorEvent.scroll:type_name -> skymouse.ScrollEvent
-	12, // 8: skymouse.MessageToServer.client_hello:type_name -> skymouse.ClientHello
-	19, // 9: skymouse.MessageToServer.emulator_event:type_name -> skymouse.EmulatorEvent
-	10, // 10: skymouse.MessageToServer.ping:type_name -> skymouse.Ping
-	11, // 11: skymouse.MessageToServer.pong:type_name -> skymouse.Pong
-	4,  // 12: skymouse.MessageToServer.command:type_name -> skymouse.CommandEvent
-	14, // 13: skymouse.MessageToServer.clipboard_share:type_name -> skymouse.ClipboardShareEvent
-	16, // 14: skymouse.MessageToServer.get_cursor_scale:type_name -> skymouse.GetCursorScaleEvent
-	15, // 15: skymouse.MessageToServer.set_cursor_scale:type_name -> skymouse.SetCursorScaleEvent
-	8,  // 16: skymouse.MessageToServer.keyboard_string_event:type_name -> skymouse.KeyboardStringEvent
-	9,  // 17: skymouse.MessageToServer.keyboard_tap_event:type_name -> skymouse.KeyboardTapEvent
+	8,  // 8: skymouse.EmulatorEvent.keyboard_string_event:type_name -> skymouse.KeyboardStringEvent
+	9,  // 9: skymouse.EmulatorEvent.keyboard_tap_event:type_name -> skymouse.KeyboardTapEvent
+	12, // 10: skymouse.MessageToServer.client_hello:type_name -> skymouse.ClientHello
+	19, // 11: skymouse.MessageToServer.emulator_event:type_name -> skymouse.EmulatorEvent
+	10, // 12: skymouse.MessageToServer.ping:type_name -> skymouse.Ping
+	11, // 13: skymouse.MessageToServer.pong:type_name -> skymouse.Pong
+	4,  // 14: skymouse.MessageToServer.command:type_name -> skymouse.CommandEvent
+	14, // 15: skymouse.MessageToServer.clipboard_share:type_name -> skymouse.ClipboardShareEvent
+	16, // 16: skymouse.MessageToServer.get_cursor_scale:type_name -> skymouse.GetCursorScaleEvent
+	15, // 17: skymouse.MessageToServer.set_cursor_scale:type_name -> skymouse.SetCursorScaleEvent
 	19, // 18: skymouse.UdpMessageToServer.emulator_event:type_name -> skymouse.EmulatorEvent
 	10, // 19: skymouse.UdpMessageToServer.ping:type_name -> skymouse.Ping
 	13, // 20: skymouse.MessageToClient.server_hello:type_name -> skymouse.ServerHello
@@ -1715,6 +1714,8 @@ func file_skymouse_proto_init() {
 		(*EmulatorEvent_Mouse)(nil),
 		(*EmulatorEvent_Click)(nil),
 		(*EmulatorEvent_Scroll)(nil),
+		(*EmulatorEvent_KeyboardStringEvent)(nil),
+		(*EmulatorEvent_KeyboardTapEvent)(nil),
 	}
 	file_skymouse_proto_msgTypes[15].OneofWrappers = []any{
 		(*MessageToServer_ClientHello)(nil),
@@ -1725,8 +1726,6 @@ func file_skymouse_proto_init() {
 		(*MessageToServer_ClipboardShare)(nil),
 		(*MessageToServer_GetCursorScale)(nil),
 		(*MessageToServer_SetCursorScale)(nil),
-		(*MessageToServer_KeyboardStringEvent)(nil),
-		(*MessageToServer_KeyboardTapEvent)(nil),
 	}
 	file_skymouse_proto_msgTypes[16].OneofWrappers = []any{
 		(*UdpMessageToServer_EmulatorEvent)(nil),
