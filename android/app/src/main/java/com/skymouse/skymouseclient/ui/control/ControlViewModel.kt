@@ -15,6 +15,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewModelScope
+import com.skymouse.skymouseclient.data.CursorScaleQueryState
 import com.skymouse.skymouseclient.data.GyroscopeProvider
 import com.skymouse.skymouseclient.data.PingType
 import com.skymouse.skymouseclient.data.SkyMouseManager
@@ -28,6 +29,7 @@ import com.skymouse.skymouseclient.proto.keyboardStringEvent
 import com.skymouse.skymouseclient.proto.keyboardTapEvent
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
@@ -74,6 +76,15 @@ class ControlViewModel(
                     state.gyroSensitivity,
                     state.gyroAcceleration
                 )
+            }
+        }
+
+        viewModelScope.launch {
+            tcpClientManager.incomingMessages.collect { message ->
+                if (message.hasCurrentCursorScaleAnswer()) {
+                    val scale = message.currentCursorScaleAnswer.currentCursorScale
+                    _cursorScaleState.value = CursorScaleQueryState.CursorScale(scale)
+                }
             }
         }
     }
@@ -259,6 +270,34 @@ class ControlViewModel(
         pingManager.stopPingTest(PingType.UDP)
         pingManager.stopPingTest(PingType.TCP)
     }
+
+    var isScaleSheetShown by mutableStateOf(false)
+
+    private val _cursorScaleState = MutableStateFlow<CursorScaleQueryState>(CursorScaleQueryState.Unknown)
+    val cursorScaleState = _cursorScaleState
+
+
+    fun onCursorSizeChanged(size: Int) {
+        viewModelScope.launch {
+            val msg = com.skymouse.skymouseclient.proto.messageToServer {
+                setCursorScale = com.skymouse.skymouseclient.proto.setCursorScaleEvent {
+                    this.newCursorScale = size
+                }
+            }
+            tcpClientManager.sendProto(msg)
+        }
+    }
+
+    fun onCursorSizeQuery() {
+        _cursorScaleState.value = CursorScaleQueryState.Fetching
+        viewModelScope.launch {
+            val msg = com.skymouse.skymouseclient.proto.messageToServer {
+                getCursorScale = com.skymouse.skymouseclient.proto.getCursorScaleEvent {}
+            }
+            tcpClientManager.sendProto(msg)
+        }
+    }
+
 
     fun onClipboardShare() {
         val clipboard = getApplication<Application>().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager

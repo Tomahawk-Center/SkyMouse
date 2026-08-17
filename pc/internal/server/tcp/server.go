@@ -269,6 +269,37 @@ func (s *Server) routeMessage(sess *session.Session, m *protoapi.MessageToServer
 			}
 		}
 
+	case *protoapi.MessageToServer_GetCursorScale:
+		if sess.IsHandshake() {
+			size, err := commands.CursorSize()
+			if err != nil {
+				log.Println(err)
+				return
+			}
+
+			msg := &protoapi.MessageToClient{
+				Event: &protoapi.MessageToClient_CurrentCursorScaleAnswer{
+					CurrentCursorScaleAnswer: &protoapi.CurrentCursorScaleAnswer{
+						CurrentCursorScale: int32(size),
+					},
+				},
+			}
+
+			err = s.sendProto(sess.Id(), msg)
+			if err != nil {
+				log.Println("Send current cursor scale failed:", err)
+			}
+		}
+
+	case *protoapi.MessageToServer_SetCursorScale:
+		if sess.IsHandshake() {
+			size := m.GetSetCursorScale().GetNewCursorScale()
+			err := commands.SetCursorSize(uint32(size))
+			if err != nil {
+				log.Println(err)
+			}
+		}
+
 	case *protoapi.MessageToServer_Command:
 		if sess.IsHandshake() {
 			var err error
