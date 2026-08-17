@@ -258,24 +258,6 @@ func (s *Server) routeMessage(sess *session.Session, m *protoapi.MessageToServer
 			s.handler.Handle(sess.Id(), m.GetEmulatorEvent())
 		}
 
-	case *protoapi.MessageToServer_KeyboardStringEvent:
-		if sess.IsHandshake() {
-			if emu, ok := s.handler.(interface {
-				HandleKeyboardString(*protoapi.KeyboardStringEvent)
-			}); ok {
-				emu.HandleKeyboardString(m.GetKeyboardStringEvent())
-			}
-		}
-
-	case *protoapi.MessageToServer_KeyboardTapEvent:
-		if sess.IsHandshake() {
-			if emu, ok := s.handler.(interface {
-				HandleKeyboardTap(*protoapi.KeyboardTapEvent)
-			}); ok {
-				emu.HandleKeyboardTap(m.GetKeyboardTapEvent())
-			}
-		}
-
 	case *protoapi.MessageToServer_ClipboardShare:
 		if sess.IsHandshake() {
 			text := m.GetClipboardShare().GetText()
