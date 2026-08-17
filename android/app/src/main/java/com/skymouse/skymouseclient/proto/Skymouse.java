@@ -148,23 +148,23 @@ public final class Skymouse extends com.google.protobuf.GeneratedFile {
       "\n\030CurrentCursorScaleAnswer\022\034\n\024current_cu" +
       "rsor_scale\030\001 \001(\005\"L\n\013ServerEvent\022\'\n\004type\030" +
       "\001 \001(\0162\031.skymouse.HapticEventType\022\024\n\014time" +
-      "stamp_ms\030\002 \001(\003\"\217\001\n\rEmulatorEvent\022%\n\005mous" +
+      "stamp_ms\030\002 \001(\003\"\211\002\n\rEmulatorEvent\022%\n\005mous" +
       "e\030\001 \001(\0132\024.skymouse.MouseEventH\000\022%\n\005click" +
       "\030\002 \001(\0132\024.skymouse.ClickEventH\000\022\'\n\006scroll" +
-      "\030\003 \001(\0132\025.skymouse.ScrollEventH\000B\007\n\005event" +
-      "\"\221\004\n\017MessageToServer\022-\n\014client_hello\030\001 \001" +
-      "(\0132\025.skymouse.ClientHelloH\000\0221\n\016emulator_" +
-      "event\030\002 \001(\0132\027.skymouse.EmulatorEventH\000\022\036" +
-      "\n\004ping\030\003 \001(\0132\016.skymouse.PingH\000\022\036\n\004pong\030\004" +
-      " \001(\0132\016.skymouse.PongH\000\022)\n\007command\030\005 \001(\0162" +
-      "\026.skymouse.CommandEventH\000\0228\n\017clipboard_s" +
-      "hare\030\006 \001(\0132\035.skymouse.ClipboardShareEven" +
-      "tH\000\0229\n\020get_cursor_scale\030\007 \001(\0132\035.skymouse" +
-      ".GetCursorScaleEventH\000\0229\n\020set_cursor_sca" +
-      "le\030\010 \001(\0132\035.skymouse.SetCursorScaleEventH" +
-      "\000\022>\n\025keyboard_string_event\030\t \001(\0132\035.skymo" +
-      "use.KeyboardStringEventH\000\0228\n\022keyboard_ta" +
-      "p_event\030\n \001(\0132\032.skymouse.KeyboardTapEven" +
+      "\030\003 \001(\0132\025.skymouse.ScrollEventH\000\022>\n\025keybo" +
+      "ard_string_event\030\004 \001(\0132\035.skymouse.Keyboa" +
+      "rdStringEventH\000\0228\n\022keyboard_tap_event\030\005 " +
+      "\001(\0132\032.skymouse.KeyboardTapEventH\000B\007\n\005eve" +
+      "nt\"\227\003\n\017MessageToServer\022-\n\014client_hello\030\001" +
+      " \001(\0132\025.skymouse.ClientHelloH\000\0221\n\016emulato" +
+      "r_event\030\002 \001(\0132\027.skymouse.EmulatorEventH\000" +
+      "\022\036\n\004ping\030\003 \001(\0132\016.skymouse.PingH\000\022\036\n\004pong" +
+      "\030\004 \001(\0132\016.skymouse.PongH\000\022)\n\007command\030\005 \001(" +
+      "\0162\026.skymouse.CommandEventH\000\0228\n\017clipboard" +
+      "_share\030\006 \001(\0132\035.skymouse.ClipboardShareEv" +
+      "entH\000\0229\n\020get_cursor_scale\030\007 \001(\0132\035.skymou" +
+      "se.GetCursorScaleEventH\000\0229\n\020set_cursor_s" +
+      "cale\030\010 \001(\0132\035.skymouse.SetCursorScaleEven" +
       "tH\000B\007\n\005event\"\203\001\n\022UdpMessageToServer\022\021\n\tu" +
       "dp_token\030\001 \001(\r\0221\n\016emulator_event\030\002 \001(\0132\027" +
       ".skymouse.EmulatorEventH\000\022\036\n\004ping\030\003 \001(\0132" +
@@ -282,13 +282,13 @@ public final class Skymouse extends com.google.protobuf.GeneratedFile {
     internal_static_skymouse_EmulatorEvent_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_skymouse_EmulatorEvent_descriptor,
-        new java.lang.String[] { "Mouse", "Click", "Scroll", "Event", });
+        new java.lang.String[] { "Mouse", "Click", "Scroll", "KeyboardStringEvent", "KeyboardTapEvent", "Event", });
     internal_static_skymouse_MessageToServer_descriptor =
       getDescriptor().getMessageType(15);
     internal_static_skymouse_MessageToServer_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_skymouse_MessageToServer_descriptor,
-        new java.lang.String[] { "ClientHello", "EmulatorEvent", "Ping", "Pong", "Command", "ClipboardShare", "GetCursorScale", "SetCursorScale", "KeyboardStringEvent", "KeyboardTapEvent", "Event", });
+        new java.lang.String[] { "ClientHello", "EmulatorEvent", "Ping", "Pong", "Command", "ClipboardShare", "GetCursorScale", "SetCursorScale", "Event", });
     internal_static_skymouse_UdpMessageToServer_descriptor =
       getDescriptor().getMessageType(16);
     internal_static_skymouse_UdpMessageToServer_fieldAccessorTable = new
