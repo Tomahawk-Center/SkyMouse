@@ -38,6 +38,23 @@ message ScrollEvent {
     int64 timestamp_ms = 2;
 }
 
+message KeyboardStringEvent {
+    string text = 1;
+    int64 timestamp_ms = 2;
+}
+
+enum KeyboardKey {
+    KEY_UNKNOWN = 0;
+    KEY_ENTER = 1;
+    KEY_BACKSPACE = 2;
+}
+
+message KeyboardTapEvent {
+    KeyboardKey key = 1;
+    ButtonState state = 2;
+    int64 timestamp_ms = 3;
+}
+
 message Ping {
     int64 sequence_id = 1;
     int64 timestamp_ms = 2;
@@ -80,6 +97,16 @@ message ClipboardShareEvent {
     }
 }
 
+message SetCursorScaleEvent {
+    int32 new_cursor_scale = 1;
+}
+
+message GetCursorScaleEvent {}
+
+message CurrentCursorScaleAnswer {
+    int32 current_cursor_scale = 1;
+}
+
 message ServerEvent {
     HapticEventType type = 1;
     int64 timestamp_ms = 2;
@@ -90,6 +117,8 @@ message EmulatorEvent {
         MouseEvent mouse = 1;
         ClickEvent click = 2;
         ScrollEvent scroll = 3;
+        KeyboardStringEvent keyboard_string_event = 4;
+        KeyboardTapEvent keyboard_tap_event = 5;
     }
 }
 
@@ -101,6 +130,8 @@ message MessageToServer {
         Pong pong = 4;
         CommandEvent command = 5;
         ClipboardShareEvent clipboard_share = 6;
+        GetCursorScaleEvent get_cursor_scale = 7;
+        SetCursorScaleEvent set_cursor_scale = 8;
     }
 }
 
@@ -117,5 +148,6 @@ message MessageToClient {
         ServerHello server_hello = 1;
         ServerEvent server_event = 2;
         Pong pong = 3;
+        CurrentCursorScaleAnswer current_cursor_scale_answer = 4;
     }
 }

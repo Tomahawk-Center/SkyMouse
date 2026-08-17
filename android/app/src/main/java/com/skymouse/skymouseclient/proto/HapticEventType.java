@@ -106,7 +106,7 @@ public enum HapticEventType
   }
   public static com.google.protobuf.Descriptors.EnumDescriptor
       getDescriptor() {
-    return com.skymouse.skymouseclient.proto.Skymouse.getDescriptor().getEnumType(2);
+    return com.skymouse.skymouseclient.proto.Skymouse.getDescriptor().getEnumType(3);
   }
 
   private static final HapticEventType[] VALUES = values();

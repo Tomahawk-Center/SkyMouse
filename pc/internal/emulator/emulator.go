@@ -81,6 +81,10 @@ func (e *Emulator) Handle(sessionId string, event *protoapi.EmulatorEvent) {
 		e.handleClick(ev.Click)
 	case *protoapi.EmulatorEvent_Scroll:
 		e.handleScroll(ev.Scroll)
+	case *protoapi.EmulatorEvent_KeyboardStringEvent:
+		e.handleKeyboardString(ev.KeyboardStringEvent)
+	case *protoapi.EmulatorEvent_KeyboardTapEvent:
+		e.handleKeyboardTap(ev.KeyboardTapEvent)
 	}
 }
 
@@ -169,5 +173,39 @@ func (e *Emulator) handleScroll(ev *protoapi.ScrollEvent) {
 		robotgo.ScrollDir(delta*-1, "down")
 	default:
 		return
+	}
+}
+
+func (e *Emulator) handleKeyboardString(ev *protoapi.KeyboardStringEvent) {
+	text := ev.GetText()
+	if text != "" {
+		robotgo.Type(ev.Text)
+	}
+}
+
+func (e *Emulator) handleKeyboardTap(ev *protoapi.KeyboardTapEvent) {
+	if ev == nil {
+		return
+	}
+
+	var key string
+	switch ev.Key {
+	case protoapi.KeyboardKey_KEY_ENTER:
+		key = robotgo.Enter
+	case protoapi.KeyboardKey_KEY_BACKSPACE:
+		key = robotgo.Backspace
+	default:
+		return
+	}
+
+	var err error
+	switch ev.State {
+	case protoapi.ButtonState_STATE_DOWN:
+		err = robotgo.KeyDown(key)
+	case protoapi.ButtonState_STATE_UP:
+		err = robotgo.KeyUp(key)
+	}
+	if err != nil {
+		log.Printf("Keyboard click err: %v\n", err)
 	}
 }

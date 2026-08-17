@@ -55,5 +55,35 @@ public interface EmulatorEventOrBuilder extends
    */
   com.skymouse.skymouseclient.proto.ScrollEventOrBuilder getScrollOrBuilder();
 
+  /**
+   * <code>.skymouse.KeyboardStringEvent keyboard_string_event = 4;</code>
+   * @return Whether the keyboardStringEvent field is set.
+   */
+  boolean hasKeyboardStringEvent();
+  /**
+   * <code>.skymouse.KeyboardStringEvent keyboard_string_event = 4;</code>
+   * @return The keyboardStringEvent.
+   */
+  com.skymouse.skymouseclient.proto.KeyboardStringEvent getKeyboardStringEvent();
+  /**
+   * <code>.skymouse.KeyboardStringEvent keyboard_string_event = 4;</code>
+   */
+  com.skymouse.skymouseclient.proto.KeyboardStringEventOrBuilder getKeyboardStringEventOrBuilder();
+
+  /**
+   * <code>.skymouse.KeyboardTapEvent keyboard_tap_event = 5;</code>
+   * @return Whether the keyboardTapEvent field is set.
+   */
+  boolean hasKeyboardTapEvent();
+  /**
+   * <code>.skymouse.KeyboardTapEvent keyboard_tap_event = 5;</code>
+   * @return The keyboardTapEvent.
+   */
+  com.skymouse.skymouseclient.proto.KeyboardTapEvent getKeyboardTapEvent();
+  /**
+   * <code>.skymouse.KeyboardTapEvent keyboard_tap_event = 5;</code>
+   */
+  com.skymouse.skymouseclient.proto.KeyboardTapEventOrBuilder getKeyboardTapEventOrBuilder();
+
   com.skymouse.skymouseclient.proto.EmulatorEvent.EventCase getEventCase();
 }
