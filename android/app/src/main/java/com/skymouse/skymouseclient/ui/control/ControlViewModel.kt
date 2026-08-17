@@ -23,6 +23,7 @@ import com.skymouse.skymouseclient.proto.CommandEvent
 import com.skymouse.skymouseclient.proto.KeyboardKey
 import com.skymouse.skymouseclient.proto.MouseButton
 import com.skymouse.skymouseclient.proto.clipboardShareEvent
+import com.skymouse.skymouseclient.proto.emulatorEvent
 import com.skymouse.skymouseclient.proto.keyboardStringEvent
 import com.skymouse.skymouseclient.proto.keyboardTapEvent
 import kotlinx.coroutines.Job
@@ -285,10 +286,13 @@ class ControlViewModel(
     fun onKeyboardStringInput(text: String) {
         viewModelScope.launch {
             val msg = com.skymouse.skymouseclient.proto.messageToServer {
-                keyboardStringEvent = keyboardStringEvent {
+                emulatorEvent = emulatorEvent {
+                    keyboardStringEvent = keyboardStringEvent {
                     this.text = text
                     this.timestampMs = System.currentTimeMillis()
+                    }
                 }
+
             }
             tcpClientManager.sendProto(msg)
         }
@@ -297,10 +301,12 @@ class ControlViewModel(
     fun onKeyboardTapInput(key: KeyboardKey, isPressed: Boolean) {
         viewModelScope.launch {
             val msg = com.skymouse.skymouseclient.proto.messageToServer {
-                keyboardTapEvent = keyboardTapEvent {
+                emulatorEvent = emulatorEvent {
+                    keyboardTapEvent = keyboardTapEvent {
                     this.key = key
                     this.state = if (isPressed) ButtonState.STATE_DOWN else ButtonState.STATE_UP
                     this.timestampMs = System.currentTimeMillis()
+                    }
                 }
             }
             tcpClientManager.sendProto(msg)
