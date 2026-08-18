@@ -12,6 +12,7 @@ protobuf = "4.35.1"
 materialIconsExtended = "1.7.8"
 navigationCompose = "2.9.8"
 material3 = "1.5.0-alpha26"
+coreSplashscreen = "1.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -32,6 +33,7 @@ protobuf-java = { group = "com.google.protobuf", name = "protobuf-java", version
 protobuf-kotlin = {group = "com.google.protobuf", name = "protobuf-kotlin", version.ref = "protobuf"}
 androidx-compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "materialIconsExtended" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
