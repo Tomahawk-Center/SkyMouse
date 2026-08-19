@@ -157,7 +157,7 @@ class ControlViewModel(
 
         viewModelScope.launch {
             val message = com.skymouse.skymouseclient.proto.messageToServer {
-                emulatorEvent = com.skymouse.skymouseclient.proto.emulatorEvent {
+                emulatorEvent = emulatorEvent {
                     click = com.skymouse.skymouseclient.proto.clickEvent {
                         this.button = button
                         this.state = if (isPressed) {
@@ -181,7 +181,7 @@ class ControlViewModel(
         }
         viewModelScope.launch {
             val message = com.skymouse.skymouseclient.proto.messageToServer {
-                emulatorEvent = com.skymouse.skymouseclient.proto.emulatorEvent {
+                emulatorEvent = emulatorEvent {
                     scroll = com.skymouse.skymouseclient.proto.scrollEvent {
                         deltaY = settingsState.value.scrollMultiplier
                         timestampMs = System.currentTimeMillis()
@@ -200,7 +200,7 @@ class ControlViewModel(
         }
         viewModelScope.launch {
             val message = com.skymouse.skymouseclient.proto.messageToServer {
-                emulatorEvent = com.skymouse.skymouseclient.proto.emulatorEvent {
+                emulatorEvent = emulatorEvent {
                     scroll = com.skymouse.skymouseclient.proto.scrollEvent {
                         deltaY = -1 * settingsState.value.scrollMultiplier
                         timestampMs = System.currentTimeMillis()
@@ -215,7 +215,7 @@ class ControlViewModel(
 
     fun onMouseMove(deltaX: Float, deltaY: Float) {
         viewModelScope.launch {
-            val emulatorEvent = com.skymouse.skymouseclient.proto.emulatorEvent {
+            val emulatorEvent = emulatorEvent {
                 mouse = com.skymouse.skymouseclient.proto.mouseEvent {
                     this.deltaX = deltaX
                     this.deltaY = deltaY
