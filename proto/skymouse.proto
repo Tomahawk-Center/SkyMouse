@@ -47,6 +47,12 @@ enum KeyboardKey {
     KEY_UNKNOWN = 0;
     KEY_ENTER = 1;
     KEY_BACKSPACE = 2;
+    KEY_VOL_DOWN = 3;
+    KEY_VOL_UP = 4;
+    KEY_VOL_MUTE = 5;
+    KEY_AUDIO_PAUSE = 6;
+    KEY_AUDIO_PREV = 7;
+    KEY_AUDIO_NEXT = 8;
 }
 
 message KeyboardTapEvent {

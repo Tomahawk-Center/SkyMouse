@@ -23,6 +23,30 @@ public enum KeyboardKey
    * <code>KEY_BACKSPACE = 2;</code>
    */
   KEY_BACKSPACE(2),
+  /**
+   * <code>KEY_VOL_DOWN = 3;</code>
+   */
+  KEY_VOL_DOWN(3),
+  /**
+   * <code>KEY_VOL_UP = 4;</code>
+   */
+  KEY_VOL_UP(4),
+  /**
+   * <code>KEY_VOL_MUTE = 5;</code>
+   */
+  KEY_VOL_MUTE(5),
+  /**
+   * <code>KEY_AUDIO_PAUSE = 6;</code>
+   */
+  KEY_AUDIO_PAUSE(6),
+  /**
+   * <code>KEY_AUDIO_PREV = 7;</code>
+   */
+  KEY_AUDIO_PREV(7),
+  /**
+   * <code>KEY_AUDIO_NEXT = 8;</code>
+   */
+  KEY_AUDIO_NEXT(8),
   UNRECOGNIZED(-1),
   ;
 
@@ -47,6 +71,30 @@ public enum KeyboardKey
    * <code>KEY_BACKSPACE = 2;</code>
    */
   public static final int KEY_BACKSPACE_VALUE = 2;
+  /**
+   * <code>KEY_VOL_DOWN = 3;</code>
+   */
+  public static final int KEY_VOL_DOWN_VALUE = 3;
+  /**
+   * <code>KEY_VOL_UP = 4;</code>
+   */
+  public static final int KEY_VOL_UP_VALUE = 4;
+  /**
+   * <code>KEY_VOL_MUTE = 5;</code>
+   */
+  public static final int KEY_VOL_MUTE_VALUE = 5;
+  /**
+   * <code>KEY_AUDIO_PAUSE = 6;</code>
+   */
+  public static final int KEY_AUDIO_PAUSE_VALUE = 6;
+  /**
+   * <code>KEY_AUDIO_PREV = 7;</code>
+   */
+  public static final int KEY_AUDIO_PREV_VALUE = 7;
+  /**
+   * <code>KEY_AUDIO_NEXT = 8;</code>
+   */
+  public static final int KEY_AUDIO_NEXT_VALUE = 8;
 
 
   public final int getNumber() {
@@ -76,6 +124,12 @@ public enum KeyboardKey
       case 0: return KEY_UNKNOWN;
       case 1: return KEY_ENTER;
       case 2: return KEY_BACKSPACE;
+      case 3: return KEY_VOL_DOWN;
+      case 4: return KEY_VOL_UP;
+      case 5: return KEY_VOL_MUTE;
+      case 6: return KEY_AUDIO_PAUSE;
+      case 7: return KEY_AUDIO_PREV;
+      case 8: return KEY_AUDIO_NEXT;
       default: return null;
     }
   }

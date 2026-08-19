@@ -125,9 +125,15 @@ func (ButtonState) EnumDescriptor() ([]byte, []int) {
 type KeyboardKey int32
 
 const (
-	KeyboardKey_KEY_UNKNOWN   KeyboardKey = 0
-	KeyboardKey_KEY_ENTER     KeyboardKey = 1
-	KeyboardKey_KEY_BACKSPACE KeyboardKey = 2
+	KeyboardKey_KEY_UNKNOWN     KeyboardKey = 0
+	KeyboardKey_KEY_ENTER       KeyboardKey = 1
+	KeyboardKey_KEY_BACKSPACE   KeyboardKey = 2
+	KeyboardKey_KEY_VOL_DOWN    KeyboardKey = 3
+	KeyboardKey_KEY_VOL_UP      KeyboardKey = 4
+	KeyboardKey_KEY_VOL_MUTE    KeyboardKey = 5
+	KeyboardKey_KEY_AUDIO_PAUSE KeyboardKey = 6
+	KeyboardKey_KEY_AUDIO_PREV  KeyboardKey = 7
+	KeyboardKey_KEY_AUDIO_NEXT  KeyboardKey = 8
 )
 
 // Enum value maps for KeyboardKey.
@@ -136,11 +142,23 @@ var (
 		0: "KEY_UNKNOWN",
 		1: "KEY_ENTER",
 		2: "KEY_BACKSPACE",
+		3: "KEY_VOL_DOWN",
+		4: "KEY_VOL_UP",
+		5: "KEY_VOL_MUTE",
+		6: "KEY_AUDIO_PAUSE",
+		7: "KEY_AUDIO_PREV",
+		8: "KEY_AUDIO_NEXT",
 	}
 	KeyboardKey_value = map[string]int32{
-		"KEY_UNKNOWN":   0,
-		"KEY_ENTER":     1,
-		"KEY_BACKSPACE": 2,
+		"KEY_UNKNOWN":     0,
+		"KEY_ENTER":       1,
+		"KEY_BACKSPACE":   2,
+		"KEY_VOL_DOWN":    3,
+		"KEY_VOL_UP":      4,
+		"KEY_VOL_MUTE":    5,
+		"KEY_AUDIO_PAUSE": 6,
+		"KEY_AUDIO_PREV":  7,
+		"KEY_AUDIO_NEXT":  8,
 	}
 )
 
@@ -1615,11 +1633,18 @@ const file_skymouse_proto_rawDesc = "" +
 	"\rSTATE_UNKNOWN\x10\x00\x12\x0e\n" +
 	"\n" +
 	"STATE_DOWN\x10\x01\x12\f\n" +
-	"\bSTATE_UP\x10\x02*@\n" +
+	"\bSTATE_UP\x10\x02*\xb1\x01\n" +
 	"\vKeyboardKey\x12\x0f\n" +
 	"\vKEY_UNKNOWN\x10\x00\x12\r\n" +
 	"\tKEY_ENTER\x10\x01\x12\x11\n" +
-	"\rKEY_BACKSPACE\x10\x02*S\n" +
+	"\rKEY_BACKSPACE\x10\x02\x12\x10\n" +
+	"\fKEY_VOL_DOWN\x10\x03\x12\x0e\n" +
+	"\n" +
+	"KEY_VOL_UP\x10\x04\x12\x10\n" +
+	"\fKEY_VOL_MUTE\x10\x05\x12\x13\n" +
+	"\x0fKEY_AUDIO_PAUSE\x10\x06\x12\x12\n" +
+	"\x0eKEY_AUDIO_PREV\x10\a\x12\x12\n" +
+	"\x0eKEY_AUDIO_NEXT\x10\b*S\n" +
 	"\x0fHapticEventType\x12\x11\n" +
 	"\rEVENT_UNKNOWN\x10\x00\x12\x19\n" +
 	"\x15EVENT_BORDER_CROSSING\x10\x01\x12\x12\n" +
