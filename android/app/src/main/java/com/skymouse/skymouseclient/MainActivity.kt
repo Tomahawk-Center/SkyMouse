@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.view.KeyEvent
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
@@ -25,6 +26,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import com.skymouse.skymouseclient.data.SkyMouseManager
+import com.skymouse.skymouseclient.data.VolumeButtonsAction
+import com.skymouse.skymouseclient.proto.KeyboardKey
 import com.skymouse.skymouseclient.ui.connection.ConnectionViewModel
 import com.skymouse.skymouseclient.ui.control.ControlViewModel
 import com.skymouse.skymouseclient.ui.main.MainViewModel
@@ -124,5 +127,43 @@ class MainActivity : ComponentActivity() {
         }
 
         checkAndRequestLocalNetwork()
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        val settings = SkyMouseManager.settingsState.value
+        val isControlScreen = mainViewModel.currentRoute.value == "main"
+
+        if (connectionViewModel.isConnected.value && isControlScreen && settings.volumeButtonsAction == VolumeButtonsAction.APP_CONTROL) {
+            when (keyCode) {
+                KeyEvent.KEYCODE_VOLUME_UP -> {
+                    controlViewModel.onKeyboardTapInput(KeyboardKey.KEY_VOL_UP, true)
+                    return true
+                }
+                KeyEvent.KEYCODE_VOLUME_DOWN -> {
+                    controlViewModel.onKeyboardTapInput(KeyboardKey.KEY_VOL_DOWN, true)
+                    return true
+                }
+            }
+        }
+        return super.onKeyDown(keyCode, event)
+    }
+
+    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
+        val settings = SkyMouseManager.settingsState.value
+        val isControlScreen = mainViewModel.currentRoute.value == "main"
+
+        if (connectionViewModel.isConnected.value && isControlScreen && settings.volumeButtonsAction == VolumeButtonsAction.APP_CONTROL) {
+            when (keyCode) {
+                KeyEvent.KEYCODE_VOLUME_UP -> {
+                    controlViewModel.onKeyboardTapInput(KeyboardKey.KEY_VOL_UP, false)
+                    return true
+                }
+                KeyEvent.KEYCODE_VOLUME_DOWN -> {
+                    controlViewModel.onKeyboardTapInput(KeyboardKey.KEY_VOL_DOWN, false)
+                    return true
+                }
+            }
+        }
+        return super.onKeyUp(keyCode, event)
     }
 }
