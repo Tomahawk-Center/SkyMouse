@@ -40,9 +40,10 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ShapeDefaults
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -100,9 +101,9 @@ fun ControlScreen(
 
     val haptic = LocalHapticFeedback.current
 
-    val bottomSheetState = rememberModalBottomSheetState()
-    val pingCheckBottomSheetState = rememberModalBottomSheetState()
-    val scaleBottomSheetState = rememberModalBottomSheetState()
+    val bottomSheetState = rememberBottomSheetState(initialValue = SheetValue.Hidden)
+    val pingCheckBottomSheetState = rememberBottomSheetState(initialValue = SheetValue.Hidden)
+    val scaleBottomSheetState = rememberBottomSheetState(initialValue = SheetValue.Hidden)
 
     val scope = rememberCoroutineScope()
     var pendingCommand by remember { mutableStateOf<CommandEvent?>(null) }
@@ -723,7 +724,7 @@ fun CommandItem(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     onClick: ()->Unit) {
     ListItem(
-        headlineContent = {Text(text)},
+        content = {Text(text)},
         leadingContent = {Icon(icon, contentDescription = null)},
         modifier = Modifier.clickable {onClick()},
         colors = ListItemDefaults.colors(containerColor = Color.Transparent)
