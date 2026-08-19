@@ -17,7 +17,7 @@ import (
 	"github.com/Tomahawk-Center/SkyMouse/pc/pkg/protoapi"
 )
 
-const protobufVersion = "3.3"
+const protobufVersion = "3.6"
 
 func main() {
 	log.SetOutput(os.Stdout)

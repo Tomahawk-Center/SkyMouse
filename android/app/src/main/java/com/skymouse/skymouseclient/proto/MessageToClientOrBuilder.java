@@ -55,5 +55,20 @@ public interface MessageToClientOrBuilder extends
    */
   com.skymouse.skymouseclient.proto.PongOrBuilder getPongOrBuilder();
 
+  /**
+   * <code>.skymouse.CurrentCursorScaleAnswer current_cursor_scale_answer = 4;</code>
+   * @return Whether the currentCursorScaleAnswer field is set.
+   */
+  boolean hasCurrentCursorScaleAnswer();
+  /**
+   * <code>.skymouse.CurrentCursorScaleAnswer current_cursor_scale_answer = 4;</code>
+   * @return The currentCursorScaleAnswer.
+   */
+  com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswer getCurrentCursorScaleAnswer();
+  /**
+   * <code>.skymouse.CurrentCursorScaleAnswer current_cursor_scale_answer = 4;</code>
+   */
+  com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswerOrBuilder getCurrentCursorScaleAnswerOrBuilder();
+
   com.skymouse.skymouseclient.proto.MessageToClient.EventCase getEventCase();
 }

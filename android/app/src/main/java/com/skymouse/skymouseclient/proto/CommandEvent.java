@@ -115,7 +115,7 @@ public enum CommandEvent
   }
   public static com.google.protobuf.Descriptors.EnumDescriptor
       getDescriptor() {
-    return com.skymouse.skymouseclient.proto.Skymouse.getDescriptor().getEnumType(3);
+    return com.skymouse.skymouseclient.proto.Skymouse.getDescriptor().getEnumType(4);
   }
 
   private static final CommandEvent[] VALUES = values();

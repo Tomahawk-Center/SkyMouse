@@ -6,6 +6,7 @@ import androidx.core.content.edit
 import androidx.lifecycle.AndroidViewModel
 import com.skymouse.skymouseclient.data.SettingsState
 import com.skymouse.skymouseclient.data.SkyMouseManager
+import com.skymouse.skymouseclient.data.VolumeButtonsAction
 import kotlinx.coroutines.flow.StateFlow
 
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
@@ -45,6 +46,10 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         SkyMouseManager.updateSettings(settingsState.value.copy(autoConnectOnStartup = newValue))
     }
 
+    fun onVolumeButtonsActionChange(newValue: VolumeButtonsAction) {
+        SkyMouseManager.updateSettings(settingsState.value.copy(volumeButtonsAction = newValue))
+    }
+
     fun saveSettings() {
         val state = settingsState.value
         prefs.edit {
@@ -56,6 +61,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
             putInt("scroll_multiplier", state.scrollMultiplier)
             putBoolean("auto_reconnect", state.autoReconnect)
             putBoolean("auto_connect_on_startup", state.autoConnectOnStartup)
+            putString("volume_buttons_action", state.volumeButtonsAction.name)
         }
     }
 }

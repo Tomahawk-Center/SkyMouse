@@ -1,5 +1,10 @@
 package com.skymouse.skymouseclient.data
 
+enum class VolumeButtonsAction {
+    SYSTEM_VOLUME,
+    APP_CONTROL
+}
+
 data class SettingsState(
     val gyroSensitivity: Float = 4.0f,
     val gyroAcceleration: Float = 2.0f,
@@ -14,4 +19,6 @@ data class SettingsState(
     val autoReconnect: Boolean = true,
 
     val autoConnectOnStartup: Boolean = false,
+
+    val volumeButtonsAction: VolumeButtonsAction = VolumeButtonsAction.SYSTEM_VOLUME
 )

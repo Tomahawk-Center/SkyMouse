@@ -101,5 +101,35 @@ public interface MessageToServerOrBuilder extends
    */
   com.skymouse.skymouseclient.proto.ClipboardShareEventOrBuilder getClipboardShareOrBuilder();
 
+  /**
+   * <code>.skymouse.GetCursorScaleEvent get_cursor_scale = 7;</code>
+   * @return Whether the getCursorScale field is set.
+   */
+  boolean hasGetCursorScale();
+  /**
+   * <code>.skymouse.GetCursorScaleEvent get_cursor_scale = 7;</code>
+   * @return The getCursorScale.
+   */
+  com.skymouse.skymouseclient.proto.GetCursorScaleEvent getGetCursorScale();
+  /**
+   * <code>.skymouse.GetCursorScaleEvent get_cursor_scale = 7;</code>
+   */
+  com.skymouse.skymouseclient.proto.GetCursorScaleEventOrBuilder getGetCursorScaleOrBuilder();
+
+  /**
+   * <code>.skymouse.SetCursorScaleEvent set_cursor_scale = 8;</code>
+   * @return Whether the setCursorScale field is set.
+   */
+  boolean hasSetCursorScale();
+  /**
+   * <code>.skymouse.SetCursorScaleEvent set_cursor_scale = 8;</code>
+   * @return The setCursorScale.
+   */
+  com.skymouse.skymouseclient.proto.SetCursorScaleEvent getSetCursorScale();
+  /**
+   * <code>.skymouse.SetCursorScaleEvent set_cursor_scale = 8;</code>
+   */
+  com.skymouse.skymouseclient.proto.SetCursorScaleEventOrBuilder getSetCursorScaleOrBuilder();
+
   com.skymouse.skymouseclient.proto.MessageToServer.EventCase getEventCase();
 }

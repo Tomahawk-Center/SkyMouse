@@ -7,6 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardCommandKey
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Speed
+import androidx.compose.material.icons.filled.ZoomIn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -53,6 +54,20 @@ fun MainScreen(
                 title = { Text("SkyMouse Client") },
                 actions = {
                     if (isConnected) {
+
+                        // Scale change
+                        IconButton(
+                            onClick = {
+                                haptic.performHapticFeedback(HapticFeedbackType.SegmentTick)
+                                controlViewModel.isScaleSheetShown = true
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.ZoomIn,
+                                contentDescription = "Scale change",
+                                tint = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                        }
 
                         // Ping check
                         IconButton(

@@ -44,6 +44,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.skymouse.skymouseclient.data.SettingsState
+import com.skymouse.skymouseclient.data.VolumeButtonsAction
 import kotlin.math.roundToInt
 
 @Composable
@@ -69,6 +70,7 @@ fun SettingsScreen(
         onScrollMultiplierChange = viewModel::onScrollMultiplierChange,
         onAutoReconnectChange = viewModel::onAutoReconnectChange,
         onAutoConnectOnStartupChange = viewModel::onAutoConnectOnStartupChange,
+        onVolumeButtonsActionChange = viewModel::onVolumeButtonsActionChange,
         onNavigateBack = onNavigateBack
     )
 }
@@ -85,6 +87,7 @@ private fun SettingsContent(
     onScrollMultiplierChange: (Int) -> Unit,
     onAutoReconnectChange: (Boolean) -> Unit,
     onAutoConnectOnStartupChange: (Boolean) -> Unit,
+    onVolumeButtonsActionChange: (VolumeButtonsAction) -> Unit,
     onNavigateBack: () -> Unit
 ) {
     val haptic = LocalHapticFeedback.current
@@ -297,6 +300,53 @@ private fun SettingsContent(
                     )
                 )
             }
+
+            Spacer(modifier = Modifier.height(36.dp))
+
+            // Volume buttons action
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Use volume buttons to control server volume",
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Switch(
+                    checked = settingsState.volumeButtonsAction == VolumeButtonsAction.APP_CONTROL,
+                    onCheckedChange = {
+                        if (it) {
+                            haptic.performHapticFeedback(HapticFeedbackType.GestureThresholdActivate)
+                        } else {
+                            haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                        }
+                        onVolumeButtonsActionChange(if (it) VolumeButtonsAction.APP_CONTROL else VolumeButtonsAction.SYSTEM_VOLUME)
+                    },
+                    thumbContent = {
+                        AnimatedContent(
+                            targetState = settingsState.volumeButtonsAction == VolumeButtonsAction.APP_CONTROL,
+                            transitionSpec = { fadeIn(tween(100)) togetherWith fadeOut(tween(100)) },
+                            label = "switch_thumb_icon"
+                        ) { isSelected ->
+                            Icon(
+                                imageVector = if (isSelected) Icons.Rounded.Check else Icons.Rounded.Close,
+                                contentDescription = null,
+                                modifier = Modifier.size(SwitchDefaults.IconSize)
+                            )
+                        }
+                    },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
+                        checkedTrackColor = MaterialTheme.colorScheme.primary,
+                        checkedIconColor = MaterialTheme.colorScheme.primary,
+                        uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant,
+                        uncheckedIconColor = MaterialTheme.colorScheme.surfaceVariant
+                    )
+                )
+            }
         }
     }
 }
@@ -308,7 +358,9 @@ fun HapticSlider(
     valueRange: ClosedFloatingPointRange<Float>,
     getHapticBucket: (Float) -> Int,
     isEdge: (Float) -> Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    onValueChangeFinished: (() -> Unit)? = null
 ) {
     val haptic = LocalHapticFeedback.current
     var lastHapticValue by remember { mutableIntStateOf(getHapticBucket(value)) }
@@ -316,6 +368,8 @@ fun HapticSlider(
 
     Slider(
         value = value,
+        enabled = enabled,
+        onValueChangeFinished = onValueChangeFinished,
         onValueChange = { newValue ->
             val currentBucket = getHapticBucket(newValue)
 

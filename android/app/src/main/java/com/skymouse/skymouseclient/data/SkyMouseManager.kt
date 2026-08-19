@@ -26,7 +26,15 @@ object SkyMouseManager {
             longPressVibrationLevel = prefs.getInt("long_press_vibration", 1),
             scrollMultiplier = prefs.getInt("scroll_multiplier", 1),
             autoReconnect = prefs.getBoolean("auto_reconnect", true),
-            autoConnectOnStartup = prefs.getBoolean("auto_connect_on_startup", false)
+            autoConnectOnStartup = prefs.getBoolean("auto_connect_on_startup", false),
+            volumeButtonsAction = try {
+                VolumeButtonsAction.valueOf(
+                    prefs.getString("volume_buttons_action", VolumeButtonsAction.SYSTEM_VOLUME.name)
+                        ?: VolumeButtonsAction.SYSTEM_VOLUME.name
+                )
+            } catch (_: Exception) {
+                VolumeButtonsAction.SYSTEM_VOLUME
+            }
         )
         _settingsState.value = loadedState
     }

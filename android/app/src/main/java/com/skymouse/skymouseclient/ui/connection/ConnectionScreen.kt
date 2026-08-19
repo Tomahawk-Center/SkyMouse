@@ -11,7 +11,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -19,6 +20,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -29,6 +33,7 @@ import com.skymouse.skymouseclient.data.SkyMouseManager
 import com.skymouse.skymouseclient.data.TcpConnectionState
 import com.skymouse.skymouseclient.data.UdpConnectionState
 
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun ConnectionScreen(viewModel: ConnectionViewModel) {
     val tcpState by SkyMouseManager.tcpClient.connectionState.collectAsState()
@@ -39,9 +44,14 @@ fun ConnectionScreen(viewModel: ConnectionViewModel) {
 
     val haptic = LocalHapticFeedback.current
 
+    var lastHapticError by rememberSaveable { mutableStateOf<String?>(null) }
+
     LaunchedEffect(error) {
-        if (error != null) {
+        if (error != null && error != lastHapticError) {
             haptic.performHapticFeedback(HapticFeedbackType.Reject)
+            lastHapticError = error
+        } else if (error == null) {
+            lastHapticError = null
         }
     }
 
@@ -92,7 +102,7 @@ fun ConnectionScreen(viewModel: ConnectionViewModel) {
         Spacer(modifier = Modifier.height(24.dp))
 
         if (isConnecting) {
-            CircularProgressIndicator(modifier = Modifier.size(48.dp))
+            LoadingIndicator(modifier = Modifier.size(64.dp))
         } else {
             Button(
                 onClick = {
@@ -102,7 +112,7 @@ fun ConnectionScreen(viewModel: ConnectionViewModel) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
-                shape = MaterialTheme.shapes.large
+                shape = MaterialTheme.shapes.extraLarge
             ) {
                 Text(text = "Connect", style = MaterialTheme.typography.titleMedium)
             }
