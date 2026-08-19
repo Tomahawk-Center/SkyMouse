@@ -196,7 +196,7 @@ fun ControlScreen(
                         }
                     }
                 ) {
-                    Text("Confirm", color = MaterialTheme.colorScheme.error)
+                    Text("Confirm")
                 }
             },
             dismissButton = {
@@ -204,7 +204,7 @@ fun ControlScreen(
                     haptic.performHapticFeedback(HapticFeedbackType.Reject)
                     pendingCommand = null
                 }) {
-                    Text("Cancel")
+                    Text("Cancel", color = MaterialTheme.colorScheme.error)
                 }
             }
         )
