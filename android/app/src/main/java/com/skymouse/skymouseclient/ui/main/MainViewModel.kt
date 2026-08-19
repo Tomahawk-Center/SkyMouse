@@ -5,10 +5,19 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.skymouse.skymouseclient.data.SkyMouseManager
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class MainViewModel(application: Application) : AndroidViewModel(application), DefaultLifecycleObserver {
 
     val settingsState = SkyMouseManager.settingsState
+
+    private val _currentRoute = MutableStateFlow("main")
+    val currentRoute = _currentRoute.asStateFlow()
+
+    fun updateRoute(route: String) {
+        _currentRoute.value = route
+    }
 
     var isConnectingProvider: (()-> Boolean)? = null
 
