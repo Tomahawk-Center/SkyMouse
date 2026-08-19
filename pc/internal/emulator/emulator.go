@@ -194,6 +194,18 @@ func (e *Emulator) handleKeyboardTap(ev *protoapi.KeyboardTapEvent) {
 		key = robotgo.Enter
 	case protoapi.KeyboardKey_KEY_BACKSPACE:
 		key = robotgo.Backspace
+	case protoapi.KeyboardKey_KEY_VOL_DOWN:
+		key = robotgo.AudioVolDown
+	case protoapi.KeyboardKey_KEY_VOL_UP:
+		key = robotgo.AudioVolUp
+	case protoapi.KeyboardKey_KEY_VOL_MUTE:
+		key = robotgo.AudioMute
+	case protoapi.KeyboardKey_KEY_AUDIO_PAUSE:
+		key = robotgo.AudioPause
+	case protoapi.KeyboardKey_KEY_AUDIO_NEXT:
+		key = robotgo.AudioNext
+	case protoapi.KeyboardKey_KEY_AUDIO_PREV:
+		key = robotgo.AudioPrev
 	default:
 		return
 	}
