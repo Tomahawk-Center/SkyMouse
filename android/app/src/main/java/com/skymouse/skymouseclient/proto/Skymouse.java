@@ -178,16 +178,18 @@ public final class Skymouse extends com.google.protobuf.GeneratedFile {
       "N_UNKNOWN\020\000\022\017\n\013BUTTON_LEFT\020\001\022\020\n\014BUTTON_R" +
       "IGHT\020\002\022\021\n\rBUTTON_MIDDLE\020\003*>\n\013ButtonState" +
       "\022\021\n\rSTATE_UNKNOWN\020\000\022\016\n\nSTATE_DOWN\020\001\022\014\n\010S" +
-      "TATE_UP\020\002*@\n\013KeyboardKey\022\017\n\013KEY_UNKNOWN\020" +
-      "\000\022\r\n\tKEY_ENTER\020\001\022\021\n\rKEY_BACKSPACE\020\002*S\n\017H" +
-      "apticEventType\022\021\n\rEVENT_UNKNOWN\020\000\022\031\n\025EVE" +
-      "NT_BORDER_CROSSING\020\001\022\022\n\016EVENT_EDGE_HIT\020\002" +
-      "*f\n\014CommandEvent\022\023\n\017COMMAND_UNKNOWN\020\000\022\025\n" +
-      "\021COMMAND_SHUT_DOWN\020\001\022\021\n\rCOMMAND_SLEEP\020\002\022" +
-      "\027\n\023COMMAND_LOCK_SCREEN\020\003BY\n!com.skymouse" +
-      ".skymouseclient.protoP\001Z2github.com/Toma" +
-      "hawk-Center/SkyMouse/proto;protoapib\006pro" +
-      "to3"
+      "TATE_UP\020\002*\261\001\n\013KeyboardKey\022\017\n\013KEY_UNKNOWN" +
+      "\020\000\022\r\n\tKEY_ENTER\020\001\022\021\n\rKEY_BACKSPACE\020\002\022\020\n\014" +
+      "KEY_VOL_DOWN\020\003\022\016\n\nKEY_VOL_UP\020\004\022\020\n\014KEY_VO" +
+      "L_MUTE\020\005\022\023\n\017KEY_AUDIO_PAUSE\020\006\022\022\n\016KEY_AUD" +
+      "IO_PREV\020\007\022\022\n\016KEY_AUDIO_NEXT\020\010*S\n\017HapticE" +
+      "ventType\022\021\n\rEVENT_UNKNOWN\020\000\022\031\n\025EVENT_BOR" +
+      "DER_CROSSING\020\001\022\022\n\016EVENT_EDGE_HIT\020\002*f\n\014Co" +
+      "mmandEvent\022\023\n\017COMMAND_UNKNOWN\020\000\022\025\n\021COMMA" +
+      "ND_SHUT_DOWN\020\001\022\021\n\rCOMMAND_SLEEP\020\002\022\027\n\023COM" +
+      "MAND_LOCK_SCREEN\020\003BY\n!com.skymouse.skymo" +
+      "useclient.protoP\001Z2github.com/Tomahawk-C" +
+      "enter/SkyMouse/proto;protoapib\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
