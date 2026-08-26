@@ -14,7 +14,7 @@
 </p>
 
 
-## How to startup the server
+## How to start up the server
 create config.yaml file near of the server.exe  
 config fields:  
 ``` yaml
@@ -25,7 +25,7 @@ log_path: "skymouse.log" # path to the log file (not required field)
 
 ---
 
-### Server startup flags
+### Server start up flags
 `--help` — Print auto-generated help for all flags  
 `-lf` — Enable log to a file  
 `--config` — Path to the YAML config file  
