@@ -1,0 +1,31 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: ["main", "dev", "pc/test/emulator"]
+  pull_request:
+    branches: ["main", "dev"]
+
+jobs:
+  go-test:
+    name: Go Server CI
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: 'pc/go.mod'
+          cache-dependency-path: 'pc/go.sum'
+
+      - name: Install CGO deps for robotgo
+        run: |
+          sudo apt-get update
+          sudo apt-get install libx11-dev xorg-dev libxtst-dev
+
+      - name: Run Go tests
+        working-directory: ./pc
+        run: go test -v -race ./...
