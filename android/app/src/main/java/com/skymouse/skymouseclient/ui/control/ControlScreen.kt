@@ -26,6 +26,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bedtime
 import androidx.compose.material.icons.filled.ContentPasteGo
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Keyboard
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.PowerSettingsNew
@@ -37,11 +38,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -76,6 +77,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.skymouse.skymouseclient.data.CursorScaleQueryState
@@ -146,10 +148,12 @@ fun ControlScreen(
                             viewModel.onKeyboardTapInput(KeyboardKey.KEY_BACKSPACE, isPressed)
                             false
                         }
+
                         Key.Enter -> {
                             viewModel.onKeyboardTapInput(KeyboardKey.KEY_ENTER, isPressed)
                             false
                         }
+
                         else -> false
                     }
                 } else false
@@ -169,19 +173,93 @@ fun ControlScreen(
     )
 
     if (pendingCommand != null) {
-        val commandName = when (pendingCommand) {
-            CommandEvent.COMMAND_SHUT_DOWN -> "Shut Down"
-            CommandEvent.COMMAND_SLEEP -> "Sleep"
-            CommandEvent.COMMAND_LOCK_SCREEN -> "Lock Screen"
-            else -> "Unknown Command"
+        val commandName: String
+        val commandDescription: String
+        val commandIcon: androidx.compose.ui.graphics.vector.ImageVector
+        val containerColor: Color
+        val contentColor: Color
+        val buttonColor: Color
+        val confirmButtonText: String
+
+        when (pendingCommand) {
+            CommandEvent.COMMAND_SHUT_DOWN -> {
+                commandName = "Shut Down"
+                commandDescription = "Are you sure you want to power off the remote PC?"
+                commandIcon = Icons.Default.PowerSettingsNew
+                containerColor = MaterialTheme.colorScheme.errorContainer
+                contentColor = MaterialTheme.colorScheme.onErrorContainer
+                buttonColor = MaterialTheme.colorScheme.error
+                confirmButtonText = "Shut Down"
+            }
+            CommandEvent.COMMAND_SLEEP -> {
+                commandName = "Sleep"
+                commandDescription = "Are you sure you want to put the PC to sleep?"
+                commandIcon = Icons.Default.Bedtime
+                containerColor = MaterialTheme.colorScheme.tertiaryContainer
+                contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+                buttonColor = MaterialTheme.colorScheme.tertiary
+                confirmButtonText = "Sleep"
+            }
+            CommandEvent.COMMAND_LOCK_SCREEN -> {
+                commandName = "Lock Screen"
+                commandDescription = "Are you sure you want to lock the user session?"
+                commandIcon = Icons.Default.Lock
+                containerColor = MaterialTheme.colorScheme.secondaryContainer
+                contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                buttonColor = MaterialTheme.colorScheme.secondary
+                confirmButtonText = "Lock"
+            }
+            else -> {
+                commandName = "Unknown Command"
+                commandDescription = "Are you sure you want to perform this action?"
+                commandIcon = Icons.Default.Info
+                containerColor = MaterialTheme.colorScheme.surfaceVariant
+                contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                buttonColor = MaterialTheme.colorScheme.surface
+                confirmButtonText = "Confirm"
+            }
         }
 
         AlertDialog(
             onDismissRequest = { pendingCommand = null },
-            title = { Text("Confirm Action") },
-            text = { Text("Are you sure you want to $commandName the server?") },
+            shape = RoundedCornerShape(28.dp),
+            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+            icon = {
+                Box(
+                    modifier = Modifier
+                        .size(56.dp)
+                        .clip(CircleShape)
+                        .background(containerColor),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = commandIcon,
+                        contentDescription = null,
+                        tint = contentColor,
+                        modifier = Modifier.size(28.dp)
+                    )
+                }
+            },
+            title = {
+                Text(
+                    text = commandName,
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            },
+            text = {
+                Text(
+                    text = commandDescription,
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = TextAlign.Center,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            },
             confirmButton = {
-                TextButton(
+                Button(
                     onClick = {
                         val event = pendingCommand!!
                         pendingCommand = null
@@ -194,17 +272,24 @@ fun ControlScreen(
                                 viewModel.isCommandSheetShown = false
                             }
                         }
-                    }
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = buttonColor
+                    ),
+                    shape = CircleShape
                 ) {
-                    Text("Confirm")
+                    Text(confirmButtonText)
                 }
             },
             dismissButton = {
-                TextButton(onClick = {
-                    haptic.performHapticFeedback(HapticFeedbackType.Reject)
-                    pendingCommand = null
-                }) {
-                    Text("Cancel", color = MaterialTheme.colorScheme.error)
+                OutlinedButton(
+                    onClick = {
+                        haptic.performHapticFeedback(HapticFeedbackType.Reject)
+                        pendingCommand = null
+                    },
+                    shape = CircleShape
+                ) {
+                    Text("Cancel")
                 }
             }
         )
