@@ -21,9 +21,12 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color as ComposeColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.skymouse.skymouseclient.data.SkyMouseManager
 import com.skymouse.skymouseclient.data.VolumeButtonsAction
@@ -91,19 +94,36 @@ class MainActivity : ComponentActivity() {
         handleShareIntent(intent)
 
         setContent {
+            val settingsState by SkyMouseManager.settingsState.collectAsStateWithLifecycle()
             val darkTheme = isSystemInDarkTheme()
             val context = LocalContext.current
 
             val dynamicColor = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 
-            val colorScheme = when {
+            val baseColorScheme = when {
                 dynamicColor && darkTheme -> dynamicDarkColorScheme(context)
                 dynamicColor && !darkTheme -> dynamicLightColorScheme(context)
                 darkTheme -> darkColorScheme()
                 else -> lightColorScheme()
             }
 
-            LaunchedEffect(darkTheme) {
+            val colorScheme = if (darkTheme && settingsState.amoledDarkTheme) {
+                baseColorScheme.copy(
+                    background = ComposeColor.Black,
+                    surface = ComposeColor.Black,
+                    surfaceDim = ComposeColor.Black,
+                    surfaceBright = ComposeColor(0xFF121212),
+                    surfaceContainerLowest = ComposeColor.Black,
+                    surfaceContainerLow = ComposeColor(0xFF080808),
+                    surfaceContainer = ComposeColor(0xFF101010),
+                    surfaceContainerHigh = ComposeColor(0xFF181818),
+                    surfaceContainerHighest = ComposeColor(0xFF262626)
+                )
+            } else {
+                baseColorScheme
+            }
+
+            LaunchedEffect(darkTheme, settingsState.amoledDarkTheme) {
                 enableEdgeToEdge(
                     statusBarStyle = SystemBarStyle.auto(
                         Color.TRANSPARENT,

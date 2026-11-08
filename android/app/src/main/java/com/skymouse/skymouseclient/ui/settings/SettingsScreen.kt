@@ -70,6 +70,7 @@ fun SettingsScreen(
         onAutoReconnectChange = viewModel::onAutoReconnectChange,
         onAutoConnectOnStartupChange = viewModel::onAutoConnectOnStartupChange,
         onVolumeButtonsActionChange = viewModel::onVolumeButtonsActionChange,
+        onAmoledDarkThemeChange = viewModel::onAmoledDarkThemeChange,
         onNavigateBack = onNavigateBack
     )
 }
@@ -86,6 +87,7 @@ private fun SettingsContent(
     onAutoReconnectChange: (Boolean) -> Unit,
     onAutoConnectOnStartupChange: (Boolean) -> Unit,
     onVolumeButtonsActionChange: (VolumeButtonsAction) -> Unit,
+    onAmoledDarkThemeChange: (Boolean) -> Unit,
     onNavigateBack: () -> Unit
 ) {
     val haptic = LocalHapticFeedback.current
@@ -325,6 +327,52 @@ private fun SettingsContent(
                     thumbContent = {
                         AnimatedContent(
                             targetState = settingsState.volumeButtonsAction == VolumeButtonsAction.APP_CONTROL,
+                            transitionSpec = { fadeIn(tween(100)) togetherWith fadeOut(tween(100)) },
+                            label = "switch_thumb_icon"
+                        ) { isSelected ->
+                            Icon(
+                                imageVector = if (isSelected) Icons.Rounded.Check else Icons.Rounded.Close,
+                                contentDescription = null,
+                                modifier = Modifier.size(SwitchDefaults.IconSize)
+                            )
+                        }
+                    },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
+                        checkedTrackColor = MaterialTheme.colorScheme.primary,
+                        checkedIconColor = MaterialTheme.colorScheme.primary,
+                        uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant,
+                        uncheckedIconColor = MaterialTheme.colorScheme.surfaceVariant
+                    )
+                )
+            }
+
+            Spacer(modifier = Modifier.height(36.dp))
+
+            // AMOLED Dark Theme
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "AMOLED black background",
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Switch(
+                    checked = settingsState.amoledDarkTheme,
+                    onCheckedChange = {
+                        if (it) {
+                            haptic.performHapticFeedback(HapticFeedbackType.GestureThresholdActivate)
+                        } else {
+                            haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                        }
+                        onAmoledDarkThemeChange(it)
+                    },
+                    thumbContent = {
+                        AnimatedContent(
+                            targetState = settingsState.amoledDarkTheme,
                             transitionSpec = { fadeIn(tween(100)) togetherWith fadeOut(tween(100)) },
                             label = "switch_thumb_icon"
                         ) { isSelected ->

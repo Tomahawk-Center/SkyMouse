@@ -20,5 +20,7 @@ data class SettingsState(
 
     val autoConnectOnStartup: Boolean = false,
 
-    val volumeButtonsAction: VolumeButtonsAction = VolumeButtonsAction.SYSTEM_VOLUME
+    val volumeButtonsAction: VolumeButtonsAction = VolumeButtonsAction.SYSTEM_VOLUME,
+
+    val amoledDarkTheme: Boolean = false
 )
