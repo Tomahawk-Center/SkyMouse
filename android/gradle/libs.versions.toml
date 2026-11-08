@@ -11,7 +11,7 @@ composeBom = "2026.09.00"
 protobuf = "4.36.2"
 materialIconsExtended = "1.7.8"
 navigationCompose = "2.10.2"
-material3 = "1.5.0-alpha26"
+material3 = "1.5.0-rc01"
 coreSplashscreen = "1.2.0"
 compose = "1.12.1"
 
