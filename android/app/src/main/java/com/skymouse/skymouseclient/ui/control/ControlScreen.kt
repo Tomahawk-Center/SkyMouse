@@ -4,7 +4,6 @@ import android.os.Build
 import android.os.ext.SdkExtensions
 import androidx.annotation.RequiresExtension
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -19,6 +18,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -34,13 +34,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.SheetValue
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberBottomSheetState
@@ -72,6 +71,7 @@ import androidx.compose.ui.input.pointer.changedToUp
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -284,49 +284,69 @@ fun ControlScreen(
         }
 
         ModalBottomSheet(
-            onDismissRequest = {viewModel.isCommandSheetShown = false},
+            onDismissRequest = { viewModel.isCommandSheetShown = false },
             sheetState = bottomSheetState
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 32.dp)
+                    .padding(horizontal = 24.dp)
+                    .padding(bottom = 36.dp)
             ) {
                 Text(
-                    "Server Commands",
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.padding(16.dp)
+                    text = "Server Commands",
+                    style = MaterialTheme.typography.headlineSmall,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(bottom = 4.dp)
+                )
+                Text(
+                    text = "Select an action to perform on the remote PC",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(bottom = 20.dp)
                 )
 
-                val onCommandSelected: (CommandEvent)->Unit = { event ->
+                val onCommandSelected: (CommandEvent) -> Unit = { event ->
                     haptic.performHapticFeedback(HapticFeedbackType.SegmentTick)
                     pendingCommand = event
                 }
 
-                CommandItem(
-                    text = "Shut Down",
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    CommandTile(
+                        title = "Sleep",
+                        subtitle = "Put PC to sleep",
+                        icon = Icons.Default.Bedtime,
+                        containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
+                        modifier = Modifier.weight(1f),
+                        onClick = { onCommandSelected(CommandEvent.COMMAND_SLEEP) }
+                    )
+
+                    CommandTile(
+                        title = "Lock Screen",
+                        subtitle = "Lock user session",
+                        icon = Icons.Default.Lock,
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        modifier = Modifier.weight(1f),
+                        onClick = { onCommandSelected(CommandEvent.COMMAND_LOCK_SCREEN) }
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                CommandTileHorizontal(
+                    title = "Shut Down",
+                    subtitle = "Power off the remote PC",
                     icon = Icons.Default.PowerSettingsNew,
-                    onClick = {
-                        onCommandSelected(CommandEvent.COMMAND_SHUT_DOWN)
-
-                    }
+                    containerColor = MaterialTheme.colorScheme.errorContainer,
+                    contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = { onCommandSelected(CommandEvent.COMMAND_SHUT_DOWN) }
                 )
-
-                CommandItem(
-                    text = "Sleep",
-                    icon = Icons.Default.Bedtime,
-                    onClick = {
-                        onCommandSelected(CommandEvent.COMMAND_SLEEP)
-                    }
-                )
-                CommandItem(
-                    text = "Lock Screen",
-                    icon = Icons.Default.Lock,
-                    onClick = {
-                        onCommandSelected(CommandEvent.COMMAND_LOCK_SCREEN)
-                    }
-                )
-
             }
         }
     }
@@ -719,14 +739,117 @@ fun MouseInteractionButton(
 
 @RequiresExtension(extension = Build.VERSION_CODES.S, version = 13)
 @Composable
-fun CommandItem(
-    text: String,
+fun CommandTile(
+    title: String,
+    subtitle: String,
     icon: androidx.compose.ui.graphics.vector.ImageVector,
-    onClick: ()->Unit) {
-    ListItem(
-        content = {Text(text)},
-        leadingContent = {Icon(icon, contentDescription = null)},
-        modifier = Modifier.clickable {onClick()},
-        colors = ListItemDefaults.colors(containerColor = Color.Transparent)
-    )
+    containerColor: Color,
+    contentColor: Color,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    Surface(
+        onClick = onClick,
+        modifier = modifier.clip(RoundedCornerShape(24.dp)),
+        color = containerColor,
+        contentColor = contentColor,
+        shape = RoundedCornerShape(24.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(44.dp)
+                    .clip(CircleShape)
+                    .background(contentColor.copy(alpha = 0.14f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = contentColor,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Column {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = contentColor
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = subtitle,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = contentColor.copy(alpha = 0.75f)
+                )
+            }
+        }
+    }
+}
+
+@RequiresExtension(extension = Build.VERSION_CODES.S, version = 13)
+@Composable
+fun CommandTileHorizontal(
+    title: String,
+    subtitle: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    containerColor: Color,
+    contentColor: Color,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    Surface(
+        onClick = onClick,
+        modifier = modifier.clip(RoundedCornerShape(24.dp)),
+        color = containerColor,
+        contentColor = contentColor,
+        shape = RoundedCornerShape(24.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(44.dp)
+                    .clip(CircleShape)
+                    .background(contentColor.copy(alpha = 0.14f)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = contentColor,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = contentColor
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = subtitle,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = contentColor.copy(alpha = 0.75f)
+                )
+            }
+        }
+    }
 }
