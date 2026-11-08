@@ -79,24 +79,37 @@ fun Navigation(
                     animationSpec = tween(durationMillis = 350, easing = FastOutSlowInEasing)
                 )
             },
-            popEnterTransition = {
+            predictivePopEnterTransition = { _ ->
                 scaleIn(
                     initialScale = 0.88f,
-                    animationSpec = tween(durationMillis = 350, easing = FastOutSlowInEasing)
+                    animationSpec = tween(
+                        durationMillis = 350,
+                        easing = FastOutSlowInEasing
+                    )
                 ) + slideInHorizontally(
                     initialOffsetX = { fullWidth -> -fullWidth / 6 },
-                    animationSpec = tween(durationMillis = 350, easing = FastOutSlowInEasing)
+                    animationSpec = tween(
+                        durationMillis = 350,
+                        easing = FastOutSlowInEasing
+                    )
                 )
             },
-            popExitTransition = {
+
+            predictivePopExitTransition = { _ ->
                 scaleOut(
                     targetScale = 0.92f,
-                    animationSpec = tween(durationMillis = 350, easing = FastOutSlowInEasing)
+                    animationSpec = tween(
+                        durationMillis = 350,
+                        easing = FastOutSlowInEasing
+                    )
                 ) + slideOutHorizontally(
                     targetOffsetX = { fullWidth -> fullWidth },
-                    animationSpec = tween(durationMillis = 350, easing = FastOutSlowInEasing)
+                    animationSpec = tween(
+                        durationMillis = 350,
+                        easing = FastOutSlowInEasing
+                    )
                 )
-            }
+            },
         ) {
             composable("main") {
                 AnimatedCardWrapper {
