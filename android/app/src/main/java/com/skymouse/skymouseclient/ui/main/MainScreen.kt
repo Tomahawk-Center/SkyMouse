@@ -1,5 +1,4 @@
 package com.skymouse.skymouseclient.ui.main
-
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -49,7 +48,7 @@ fun MainScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("SkyMouse Client") },
+                title = { Text("SkyMouse") },
                 actions = {
                     if (isConnected) {
 
@@ -63,7 +62,7 @@ fun MainScreen(
                             Icon(
                                 imageVector = Icons.Default.ZoomIn,
                                 contentDescription = "Scale change",
-                                tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                tint = MaterialTheme.colorScheme.primaryContainer
                             )
                         }
 
@@ -77,7 +76,7 @@ fun MainScreen(
                             Icon(
                                 imageVector = Icons.Default.Speed,
                                 contentDescription = "Ping check",
-                                tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                tint = MaterialTheme.colorScheme.primaryContainer
                             )
                         }
 
@@ -91,7 +90,7 @@ fun MainScreen(
                             Icon(
                                 imageVector = Icons.Default.KeyboardCommandKey,
                                 contentDescription = "Commands",
-                                tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                tint = MaterialTheme.colorScheme.primaryContainer
                             )
                         }
                     }
@@ -106,13 +105,14 @@ fun MainScreen(
                         Icon(
                             imageVector = Icons.Default.Settings,
                             contentDescription = "Settings",
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer
+                            tint = MaterialTheme.colorScheme.primaryContainer
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    containerColor = MaterialTheme.colorScheme.background,
+                    titleContentColor = MaterialTheme.colorScheme.primaryContainer,
+                    actionIconContentColor = MaterialTheme.colorScheme.primaryContainer
                 )
             )
         }
