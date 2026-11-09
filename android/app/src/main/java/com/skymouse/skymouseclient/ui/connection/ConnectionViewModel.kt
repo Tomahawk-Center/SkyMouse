@@ -156,6 +156,7 @@ class ConnectionViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     private fun triggerHaptic(event: ServerEvent) {
+        if (!SkyMouseManager.settingsState.value.vibrationEnabled) return
         val effect = when (event.type) {
             HapticEventType.EVENT_BORDER_CROSSING -> {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && vibrator.areAllPrimitivesSupported(VibrationEffect.Composition.PRIMITIVE_TICK)) {

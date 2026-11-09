@@ -30,6 +30,14 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         SkyMouseManager.updateSettings(settingsState.value.copy(touchpadAcceleration = newValue))
     }
 
+    fun onVibrationEnabledChange(newValue: Boolean) {
+        SkyMouseManager.updateSettings(settingsState.value.copy(vibrationEnabled = newValue))
+    }
+
+    fun onLongPressVibrationEnabledChange(newValue: Boolean) {
+        SkyMouseManager.updateSettings(settingsState.value.copy(longPressVibrationEnabled = newValue))
+    }
+
     fun onLongPressVibrationLevelChange(newValue: Int) {
         SkyMouseManager.updateSettings(settingsState.value.copy(longPressVibrationLevel = newValue))
     }
@@ -61,6 +69,8 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
             putFloat("gyro_acceleration", state.gyroAcceleration)
             putFloat("touchpad_sensitivity", state.touchpadSensitivity)
             putFloat("touchpad_acceleration", state.touchpadAcceleration)
+            putBoolean("vibration_enabled", state.vibrationEnabled)
+            putBoolean("long_press_vibration_enabled", state.longPressVibrationEnabled)
             putInt("long_press_vibration", state.longPressVibrationLevel)
             putInt("scroll_multiplier", state.scrollMultiplier)
             putBoolean("auto_reconnect", state.autoReconnect)

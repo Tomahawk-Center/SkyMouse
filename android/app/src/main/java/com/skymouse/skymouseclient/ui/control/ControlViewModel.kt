@@ -123,10 +123,12 @@ class ControlViewModel(
                 }
 
                 holdVibrationJob?.cancel()
-                holdVibrationJob = viewModelScope.launch {
-                    delay(200.milliseconds)
-                    isHoldingVibration = true
-                    startHoldVibration()
+                if (settingsState.value.vibrationEnabled && settingsState.value.longPressVibrationEnabled) {
+                    holdVibrationJob = viewModelScope.launch {
+                        delay(200.milliseconds)
+                        isHoldingVibration = true
+                        startHoldVibration()
+                    }
                 }
             }
         } else {
@@ -228,6 +230,7 @@ class ControlViewModel(
     }
 
     private fun vibrateLocal(effectId: Int, primitiveId: Int, intensity: Float = 0.6f) {
+        if (!settingsState.value.vibrationEnabled) return
         val effect = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && vibrator.areAllPrimitivesSupported(primitiveId)) {
             VibrationEffect.startComposition().addPrimitive(primitiveId, intensity).compose()
         } else {
@@ -237,6 +240,7 @@ class ControlViewModel(
     }
 
     private fun startHoldVibration() {
+        if (!settingsState.value.vibrationEnabled || !settingsState.value.longPressVibrationEnabled) return
         val timings = longArrayOf(0, 100)
         val amplitudes = intArrayOf(0, settingsState.value.longPressVibrationLevel)
         val effect = VibrationEffect.createWaveform(timings, amplitudes, 1)

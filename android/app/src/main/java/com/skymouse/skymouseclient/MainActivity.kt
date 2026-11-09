@@ -20,11 +20,15 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color as ComposeColor
+import androidx.compose.ui.hapticfeedback.HapticFeedback
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -37,6 +41,7 @@ import com.skymouse.skymouseclient.ui.main.MainViewModel
 import com.skymouse.skymouseclient.ui.navigation.Navigation
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import androidx.compose.ui.graphics.Color as ComposeColor
 
 class MainActivity : ComponentActivity() {
     private val mainViewModel: MainViewModel by viewModels()
@@ -132,16 +137,29 @@ class MainActivity : ComponentActivity() {
                 )
             }
 
-            MaterialTheme(colorScheme = colorScheme){
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Navigation(
-                        mainViewModel = mainViewModel,
-                        connectionViewModel = connectionViewModel,
-                        controlViewModel = controlViewModel
-                    )
+            val currentHaptic = LocalHapticFeedback.current
+            val customHaptic = remember(settingsState.vibrationEnabled, currentHaptic) {
+                object : HapticFeedback {
+                    override fun performHapticFeedback(hapticFeedbackType: HapticFeedbackType) {
+                        if (settingsState.vibrationEnabled) {
+                            currentHaptic.performHapticFeedback(hapticFeedbackType)
+                        }
+                    }
+                }
+            }
+
+            CompositionLocalProvider(LocalHapticFeedback provides customHaptic) {
+                MaterialTheme(colorScheme = colorScheme){
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+                        Navigation(
+                            mainViewModel = mainViewModel,
+                            connectionViewModel = connectionViewModel,
+                            controlViewModel = controlViewModel
+                        )
+                    }
                 }
             }
         }

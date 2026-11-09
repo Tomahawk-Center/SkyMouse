@@ -23,6 +23,8 @@ object SkyMouseManager {
             gyroAcceleration = prefs.getFloat("gyro_acceleration", 2.0f),
             touchpadSensitivity = prefs.getFloat("touchpad_sensitivity", 1.0f),
             touchpadAcceleration = prefs.getFloat("touchpad_acceleration", 0.05f),
+            vibrationEnabled = prefs.getBoolean("vibration_enabled", true),
+            longPressVibrationEnabled = prefs.getBoolean("long_press_vibration_enabled", true),
             longPressVibrationLevel = prefs.getInt("long_press_vibration", 1),
             scrollMultiplier = prefs.getInt("scroll_multiplier", 1),
             autoReconnect = prefs.getBoolean("auto_reconnect", true),

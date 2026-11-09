@@ -65,6 +65,8 @@ fun SettingsScreen(
         onGyroAccelerationChange = viewModel::onAccelerationChange,
         onTouchpadSensitivityChange = viewModel::onTouchpadSensitivityChange,
         onTouchpadAccelerationChange = viewModel::onTouchpadAccelerationChange,
+        onVibrationEnabledChange = viewModel::onVibrationEnabledChange,
+        onLongPressVibrationEnabledChange = viewModel::onLongPressVibrationEnabledChange,
         onLongPressVibrationLevelChange = viewModel::onLongPressVibrationLevelChange,
         onScrollMultiplierChange = viewModel::onScrollMultiplierChange,
         onAutoReconnectChange = viewModel::onAutoReconnectChange,
@@ -82,6 +84,8 @@ private fun SettingsContent(
     onGyroAccelerationChange: (Float) -> Unit,
     onTouchpadSensitivityChange: (Float) -> Unit,
     onTouchpadAccelerationChange: (Float) -> Unit,
+    onVibrationEnabledChange: (Boolean) -> Unit,
+    onLongPressVibrationEnabledChange: (Boolean) -> Unit,
     onLongPressVibrationLevelChange: (Int) -> Unit,
     onScrollMultiplierChange: (Int) -> Unit,
     onAutoReconnectChange: (Boolean) -> Unit,
@@ -182,11 +186,113 @@ private fun SettingsContent(
             Spacer(modifier = Modifier.height(36.dp))
 
             // Haptics
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Haptic Feedback",
+                    style = MaterialTheme.typography.titleMedium
+                )
+                Switch(
+                    checked = settingsState.vibrationEnabled,
+                    onCheckedChange = {
+                        if (it) {
+                            haptic.performHapticFeedback(HapticFeedbackType.GestureThresholdActivate)
+                        } else {
+                            haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                        }
+                        onVibrationEnabledChange(it)
+                    },
+                    thumbContent = {
+                        AnimatedContent(
+                            targetState = settingsState.vibrationEnabled,
+                            transitionSpec = { fadeIn(tween(100)) togetherWith fadeOut(tween(100)) },
+                            label = "switch_thumb_icon"
+                        ) { isSelected ->
+                            Icon(
+                                imageVector = if (isSelected) Icons.Rounded.Check else Icons.Rounded.Close,
+                                contentDescription = null,
+                                modifier = Modifier.size(SwitchDefaults.IconSize)
+                            )
+                        }
+                    },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
+                        checkedTrackColor = MaterialTheme.colorScheme.primary,
+                        checkedIconColor = MaterialTheme.colorScheme.primary,
+                        uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant,
+                        uncheckedIconColor = MaterialTheme.colorScheme.surfaceVariant
+                    )
+                )
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Long Press Vibration",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = if (settingsState.vibrationEnabled) {
+                        MaterialTheme.colorScheme.onSurface
+                    } else {
+                        MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                    }
+                )
+                Switch(
+                    enabled = settingsState.vibrationEnabled,
+                    checked = settingsState.longPressVibrationEnabled,
+                    onCheckedChange = {
+                        if (it) {
+                            haptic.performHapticFeedback(HapticFeedbackType.GestureThresholdActivate)
+                        } else {
+                            haptic.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+                        }
+                        onLongPressVibrationEnabledChange(it)
+                    },
+                    thumbContent = {
+                        AnimatedContent(
+                            targetState = settingsState.longPressVibrationEnabled,
+                            transitionSpec = { fadeIn(tween(100)) togetherWith fadeOut(tween(100)) },
+                            label = "switch_thumb_icon"
+                        ) { isSelected ->
+                            Icon(
+                                imageVector = if (isSelected) Icons.Rounded.Check else Icons.Rounded.Close,
+                                contentDescription = null,
+                                modifier = Modifier.size(SwitchDefaults.IconSize)
+                            )
+                        }
+                    },
+                    colors = SwitchDefaults.colors(
+                        checkedThumbColor = MaterialTheme.colorScheme.onPrimary,
+                        checkedTrackColor = MaterialTheme.colorScheme.primary,
+                        checkedIconColor = MaterialTheme.colorScheme.primary,
+                        uncheckedThumbColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                        uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant,
+                        uncheckedIconColor = MaterialTheme.colorScheme.surfaceVariant
+                    )
+                )
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
             Text(
                 text = "Long Press Vibration Intensity: ${settingsState.longPressVibrationLevel}",
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium,
+                color = if (settingsState.vibrationEnabled && settingsState.longPressVibrationEnabled) {
+                    MaterialTheme.colorScheme.onSurface
+                } else {
+                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                }
             )
             HapticSlider(
+                enabled = settingsState.vibrationEnabled && settingsState.longPressVibrationEnabled,
                 value = settingsState.longPressVibrationLevel.toFloat(),
                 onValueChange = { onLongPressVibrationLevelChange(it.toInt()) },
                 valueRange = 1.0f..255.0f,
@@ -255,7 +361,7 @@ private fun SettingsContent(
                 )
             }
 
-            Spacer(modifier = Modifier.height(36.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             // Auto-connect on startup
             Row(
@@ -301,10 +407,9 @@ private fun SettingsContent(
                 )
             }
 
-            Spacer(modifier = Modifier.height(36.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             // Volume buttons action
-
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -348,7 +453,7 @@ private fun SettingsContent(
                 )
             }
 
-            Spacer(modifier = Modifier.height(36.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             // AMOLED Dark Theme
             Row(

@@ -12,6 +12,8 @@ data class SettingsState(
     val touchpadSensitivity: Float = 1.0f,
     val touchpadAcceleration: Float = 0.05f,
 
+    val vibrationEnabled: Boolean = true,
+    val longPressVibrationEnabled: Boolean = true,
     val longPressVibrationLevel: Int = 1,
 
     val scrollMultiplier: Int = 1,
