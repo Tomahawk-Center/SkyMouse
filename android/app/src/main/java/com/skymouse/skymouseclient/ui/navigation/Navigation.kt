@@ -79,6 +79,36 @@ fun Navigation(
                     animationSpec = tween(durationMillis = 350, easing = FastOutSlowInEasing)
                 )
             },
+            popEnterTransition = {
+                scaleIn(
+                    initialScale = 0.88f,
+                    animationSpec = tween(
+                        durationMillis = 350,
+                        easing = FastOutSlowInEasing
+                    )
+                ) + slideInHorizontally(
+                    initialOffsetX = { fullWidth -> -fullWidth / 6 },
+                    animationSpec = tween(
+                        durationMillis = 350,
+                        easing = FastOutSlowInEasing
+                    )
+                )
+            },
+            popExitTransition = {
+                scaleOut(
+                    targetScale = 0.88f,
+                    animationSpec = tween(
+                        durationMillis = 350,
+                        easing = FastOutSlowInEasing
+                    )
+                ) + slideOutHorizontally(
+                    targetOffsetX = { fullWidth -> fullWidth },
+                    animationSpec = tween(
+                        durationMillis = 350,
+                        easing = FastOutSlowInEasing
+                    )
+                )
+            },
             predictivePopEnterTransition = { _ ->
                 scaleIn(
                     initialScale = 0.88f,
@@ -94,7 +124,6 @@ fun Navigation(
                     )
                 )
             },
-
             predictivePopExitTransition = { _ ->
                 scaleOut(
                     targetScale = 0.92f,
