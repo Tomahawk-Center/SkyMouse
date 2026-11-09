@@ -126,7 +126,7 @@ fun Navigation(
             },
             predictivePopExitTransition = { _ ->
                 scaleOut(
-                    targetScale = 0.92f,
+                    targetScale = 0.88f,
                     animationSpec = tween(
                         durationMillis = 350,
                         easing = FastOutSlowInEasing
