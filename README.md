@@ -1,7 +1,4 @@
 # SkyMouse
-<p align="center">
-  <img src="assets/icon.png" alt="App Icon" width="128" style="border-radius:32px;"/>
-</p>
 
 <p align="center">
   <img src="assets/s1.png" alt="Screenshot 1" width="200" style="border-radius:4px;"/>
