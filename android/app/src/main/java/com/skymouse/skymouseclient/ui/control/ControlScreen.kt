@@ -589,9 +589,15 @@ fun ControlScreen(
                     modifier = Modifier
                         .weight(1f)
                         .width(85.dp),
-                    shape = ShapeDefaults.Medium
+                    shape = ShapeDefaults.Medium,
+                    contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 4.dp)
                 ) {
-                    Text("SCRL+", style = MaterialTheme.typography.labelSmall)
+                    Text(
+                        "SCRL+",
+                        style = MaterialTheme.typography.labelSmall,
+                        maxLines = 1,
+                        softWrap = false
+                    )
                 }
 
                 Button(
@@ -599,9 +605,15 @@ fun ControlScreen(
                     modifier = Modifier
                         .weight(1f)
                         .width(85.dp),
-                    shape = ShapeDefaults.Medium
+                    shape = ShapeDefaults.Medium,
+                    contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = 4.dp)
                 ) {
-                    Text("SCRL-", style = MaterialTheme.typography.labelSmall)
+                    Text(
+                        "SCRL-",
+                        style = MaterialTheme.typography.labelSmall,
+                        maxLines = 1,
+                        softWrap = false
+                    )
                 }
             }
         }
@@ -814,10 +826,16 @@ fun MouseInteractionButton(
                 }
             }
         }
-        .padding(horizontal = 24.dp, vertical = 16.dp),
+        .padding(horizontal = 4.dp, vertical = 16.dp),
         contentAlignment = Alignment.Center
     ) {
-        Text(text, color = MaterialTheme.colorScheme.onPrimary, style = MaterialTheme.typography.titleSmall)
+        Text(
+            text = text,
+            color = MaterialTheme.colorScheme.onPrimary,
+            style = MaterialTheme.typography.titleSmall,
+            maxLines = 1,
+            softWrap = false
+        )
     }
 }
 
