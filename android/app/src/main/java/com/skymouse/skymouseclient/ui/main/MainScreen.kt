@@ -61,8 +61,7 @@ fun MainScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.ZoomIn,
-                                contentDescription = "Scale change",
-                                tint = MaterialTheme.colorScheme.primaryContainer
+                                contentDescription = "Scale change"
                             )
                         }
 
@@ -75,8 +74,7 @@ fun MainScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Speed,
-                                contentDescription = "Ping check",
-                                tint = MaterialTheme.colorScheme.primaryContainer
+                                contentDescription = "Ping check"
                             )
                         }
 
@@ -89,13 +87,12 @@ fun MainScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.KeyboardCommandKey,
-                                contentDescription = "Commands",
-                                tint = MaterialTheme.colorScheme.primaryContainer
+                                contentDescription = "Commands"
                             )
                         }
                     }
 
-
+                    // Settings
                     IconButton(
                         onClick = {
                             haptic.performHapticFeedback(HapticFeedbackType.SegmentTick)
@@ -104,15 +101,14 @@ fun MainScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Settings,
-                            contentDescription = "Settings",
-                            tint = MaterialTheme.colorScheme.primaryContainer
+                            contentDescription = "Settings"
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background,
-                    titleContentColor = MaterialTheme.colorScheme.primaryContainer,
-                    actionIconContentColor = MaterialTheme.colorScheme.primaryContainer
+                    titleContentColor = MaterialTheme.colorScheme.primary,
+                    actionIconContentColor = MaterialTheme.colorScheme.primary
                 )
             )
         }
