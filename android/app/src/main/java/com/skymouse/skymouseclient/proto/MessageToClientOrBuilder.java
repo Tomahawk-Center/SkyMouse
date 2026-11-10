@@ -70,5 +70,20 @@ public interface MessageToClientOrBuilder extends
    */
   com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswerOrBuilder getCurrentCursorScaleAnswerOrBuilder();
 
+  /**
+   * <code>.skymouse.CurrentVolumeAnswer current_volume_answer = 5;</code>
+   * @return Whether the currentVolumeAnswer field is set.
+   */
+  boolean hasCurrentVolumeAnswer();
+  /**
+   * <code>.skymouse.CurrentVolumeAnswer current_volume_answer = 5;</code>
+   * @return The currentVolumeAnswer.
+   */
+  com.skymouse.skymouseclient.proto.CurrentVolumeAnswer getCurrentVolumeAnswer();
+  /**
+   * <code>.skymouse.CurrentVolumeAnswer current_volume_answer = 5;</code>
+   */
+  com.skymouse.skymouseclient.proto.CurrentVolumeAnswerOrBuilder getCurrentVolumeAnswerOrBuilder();
+
   com.skymouse.skymouseclient.proto.MessageToClient.EventCase getEventCase();
 }

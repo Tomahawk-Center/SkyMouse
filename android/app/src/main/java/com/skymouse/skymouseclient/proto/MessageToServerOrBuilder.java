@@ -131,5 +131,20 @@ public interface MessageToServerOrBuilder extends
    */
   com.skymouse.skymouseclient.proto.SetCursorScaleEventOrBuilder getSetCursorScaleOrBuilder();
 
+  /**
+   * <code>.skymouse.GetVolumeEvent get_volume_event = 9;</code>
+   * @return Whether the getVolumeEvent field is set.
+   */
+  boolean hasGetVolumeEvent();
+  /**
+   * <code>.skymouse.GetVolumeEvent get_volume_event = 9;</code>
+   * @return The getVolumeEvent.
+   */
+  com.skymouse.skymouseclient.proto.GetVolumeEvent getGetVolumeEvent();
+  /**
+   * <code>.skymouse.GetVolumeEvent get_volume_event = 9;</code>
+   */
+  com.skymouse.skymouseclient.proto.GetVolumeEventOrBuilder getGetVolumeEventOrBuilder();
+
   com.skymouse.skymouseclient.proto.MessageToServer.EventCase getEventCase();
 }

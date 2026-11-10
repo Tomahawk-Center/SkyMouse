@@ -87,10 +87,20 @@ public final class Skymouse extends com.google.protobuf.GeneratedFile {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_skymouse_GetCursorScaleEvent_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_skymouse_GetVolumeEvent_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_skymouse_GetVolumeEvent_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
     internal_static_skymouse_CurrentCursorScaleAnswer_descriptor;
   static final 
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_skymouse_CurrentCursorScaleAnswer_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_skymouse_CurrentVolumeAnswer_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_skymouse_CurrentVolumeAnswer_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
     internal_static_skymouse_ServerEvent_descriptor;
   static final 
@@ -144,52 +154,57 @@ public final class Skymouse extends com.google.protobuf.GeneratedFile {
       "\020\n\010udp_port\030\002 \001(\005\022\021\n\tudp_token\030\003 \001(\r\"0\n\023" +
       "ClipboardShareEvent\022\016\n\004text\030\001 \001(\tH\000B\t\n\007c" +
       "ontent\"/\n\023SetCursorScaleEvent\022\030\n\020new_cur" +
-      "sor_scale\030\001 \001(\005\"\025\n\023GetCursorScaleEvent\"8" +
-      "\n\030CurrentCursorScaleAnswer\022\034\n\024current_cu" +
-      "rsor_scale\030\001 \001(\005\"L\n\013ServerEvent\022\'\n\004type\030" +
-      "\001 \001(\0162\031.skymouse.HapticEventType\022\024\n\014time" +
-      "stamp_ms\030\002 \001(\003\"\211\002\n\rEmulatorEvent\022%\n\005mous" +
-      "e\030\001 \001(\0132\024.skymouse.MouseEventH\000\022%\n\005click" +
-      "\030\002 \001(\0132\024.skymouse.ClickEventH\000\022\'\n\006scroll" +
-      "\030\003 \001(\0132\025.skymouse.ScrollEventH\000\022>\n\025keybo" +
-      "ard_string_event\030\004 \001(\0132\035.skymouse.Keyboa" +
-      "rdStringEventH\000\0228\n\022keyboard_tap_event\030\005 " +
-      "\001(\0132\032.skymouse.KeyboardTapEventH\000B\007\n\005eve" +
-      "nt\"\227\003\n\017MessageToServer\022-\n\014client_hello\030\001" +
-      " \001(\0132\025.skymouse.ClientHelloH\000\0221\n\016emulato" +
-      "r_event\030\002 \001(\0132\027.skymouse.EmulatorEventH\000" +
-      "\022\036\n\004ping\030\003 \001(\0132\016.skymouse.PingH\000\022\036\n\004pong" +
-      "\030\004 \001(\0132\016.skymouse.PongH\000\022)\n\007command\030\005 \001(" +
-      "\0162\026.skymouse.CommandEventH\000\0228\n\017clipboard" +
-      "_share\030\006 \001(\0132\035.skymouse.ClipboardShareEv" +
-      "entH\000\0229\n\020get_cursor_scale\030\007 \001(\0132\035.skymou" +
-      "se.GetCursorScaleEventH\000\0229\n\020set_cursor_s" +
-      "cale\030\010 \001(\0132\035.skymouse.SetCursorScaleEven" +
-      "tH\000B\007\n\005event\"\203\001\n\022UdpMessageToServer\022\021\n\tu" +
-      "dp_token\030\001 \001(\r\0221\n\016emulator_event\030\002 \001(\0132\027" +
-      ".skymouse.EmulatorEventH\000\022\036\n\004ping\030\003 \001(\0132" +
-      "\016.skymouse.PingH\000B\007\n\005event\"\343\001\n\017MessageTo" +
-      "Client\022-\n\014server_hello\030\001 \001(\0132\025.skymouse." +
-      "ServerHelloH\000\022-\n\014server_event\030\002 \001(\0132\025.sk" +
-      "ymouse.ServerEventH\000\022\036\n\004pong\030\003 \001(\0132\016.sky" +
-      "mouse.PongH\000\022I\n\033current_cursor_scale_ans" +
-      "wer\030\004 \001(\0132\".skymouse.CurrentCursorScaleA" +
-      "nswerH\000B\007\n\005event*W\n\013MouseButton\022\022\n\016BUTTO" +
-      "N_UNKNOWN\020\000\022\017\n\013BUTTON_LEFT\020\001\022\020\n\014BUTTON_R" +
-      "IGHT\020\002\022\021\n\rBUTTON_MIDDLE\020\003*>\n\013ButtonState" +
-      "\022\021\n\rSTATE_UNKNOWN\020\000\022\016\n\nSTATE_DOWN\020\001\022\014\n\010S" +
-      "TATE_UP\020\002*\261\001\n\013KeyboardKey\022\017\n\013KEY_UNKNOWN" +
-      "\020\000\022\r\n\tKEY_ENTER\020\001\022\021\n\rKEY_BACKSPACE\020\002\022\020\n\014" +
-      "KEY_VOL_DOWN\020\003\022\016\n\nKEY_VOL_UP\020\004\022\020\n\014KEY_VO" +
-      "L_MUTE\020\005\022\023\n\017KEY_AUDIO_PAUSE\020\006\022\022\n\016KEY_AUD" +
-      "IO_PREV\020\007\022\022\n\016KEY_AUDIO_NEXT\020\010*S\n\017HapticE" +
-      "ventType\022\021\n\rEVENT_UNKNOWN\020\000\022\031\n\025EVENT_BOR" +
-      "DER_CROSSING\020\001\022\022\n\016EVENT_EDGE_HIT\020\002*f\n\014Co" +
-      "mmandEvent\022\023\n\017COMMAND_UNKNOWN\020\000\022\025\n\021COMMA" +
-      "ND_SHUT_DOWN\020\001\022\021\n\rCOMMAND_SLEEP\020\002\022\027\n\023COM" +
-      "MAND_LOCK_SCREEN\020\003BY\n!com.skymouse.skymo" +
-      "useclient.protoP\001Z2github.com/Tomahawk-C" +
-      "enter/SkyMouse/proto;protoapib\006proto3"
+      "sor_scale\030\001 \001(\005\"\025\n\023GetCursorScaleEvent\"\020" +
+      "\n\016GetVolumeEvent\"8\n\030CurrentCursorScaleAn" +
+      "swer\022\034\n\024current_cursor_scale\030\001 \001(\005\"7\n\023Cu" +
+      "rrentVolumeAnswer\022\016\n\006volume\030\001 \001(\005\022\020\n\010is_" +
+      "muted\030\002 \001(\010\"L\n\013ServerEvent\022\'\n\004type\030\001 \001(\016" +
+      "2\031.skymouse.HapticEventType\022\024\n\014timestamp" +
+      "_ms\030\002 \001(\003\"\211\002\n\rEmulatorEvent\022%\n\005mouse\030\001 \001" +
+      "(\0132\024.skymouse.MouseEventH\000\022%\n\005click\030\002 \001(" +
+      "\0132\024.skymouse.ClickEventH\000\022\'\n\006scroll\030\003 \001(" +
+      "\0132\025.skymouse.ScrollEventH\000\022>\n\025keyboard_s" +
+      "tring_event\030\004 \001(\0132\035.skymouse.KeyboardStr" +
+      "ingEventH\000\0228\n\022keyboard_tap_event\030\005 \001(\0132\032" +
+      ".skymouse.KeyboardTapEventH\000B\007\n\005event\"\315\003" +
+      "\n\017MessageToServer\022-\n\014client_hello\030\001 \001(\0132" +
+      "\025.skymouse.ClientHelloH\000\0221\n\016emulator_eve" +
+      "nt\030\002 \001(\0132\027.skymouse.EmulatorEventH\000\022\036\n\004p" +
+      "ing\030\003 \001(\0132\016.skymouse.PingH\000\022\036\n\004pong\030\004 \001(" +
+      "\0132\016.skymouse.PongH\000\022)\n\007command\030\005 \001(\0162\026.s" +
+      "kymouse.CommandEventH\000\0228\n\017clipboard_shar" +
+      "e\030\006 \001(\0132\035.skymouse.ClipboardShareEventH\000" +
+      "\0229\n\020get_cursor_scale\030\007 \001(\0132\035.skymouse.Ge" +
+      "tCursorScaleEventH\000\0229\n\020set_cursor_scale\030" +
+      "\010 \001(\0132\035.skymouse.SetCursorScaleEventH\000\0224" +
+      "\n\020get_volume_event\030\t \001(\0132\030.skymouse.GetV" +
+      "olumeEventH\000B\007\n\005event\"\203\001\n\022UdpMessageToSe" +
+      "rver\022\021\n\tudp_token\030\001 \001(\r\0221\n\016emulator_even" +
+      "t\030\002 \001(\0132\027.skymouse.EmulatorEventH\000\022\036\n\004pi" +
+      "ng\030\003 \001(\0132\016.skymouse.PingH\000B\007\n\005event\"\243\002\n\017" +
+      "MessageToClient\022-\n\014server_hello\030\001 \001(\0132\025." +
+      "skymouse.ServerHelloH\000\022-\n\014server_event\030\002" +
+      " \001(\0132\025.skymouse.ServerEventH\000\022\036\n\004pong\030\003 " +
+      "\001(\0132\016.skymouse.PongH\000\022I\n\033current_cursor_" +
+      "scale_answer\030\004 \001(\0132\".skymouse.CurrentCur" +
+      "sorScaleAnswerH\000\022>\n\025current_volume_answe" +
+      "r\030\005 \001(\0132\035.skymouse.CurrentVolumeAnswerH\000" +
+      "B\007\n\005event*W\n\013MouseButton\022\022\n\016BUTTON_UNKNO" +
+      "WN\020\000\022\017\n\013BUTTON_LEFT\020\001\022\020\n\014BUTTON_RIGHT\020\002\022" +
+      "\021\n\rBUTTON_MIDDLE\020\003*>\n\013ButtonState\022\021\n\rSTA" +
+      "TE_UNKNOWN\020\000\022\016\n\nSTATE_DOWN\020\001\022\014\n\010STATE_UP" +
+      "\020\002*\261\001\n\013KeyboardKey\022\017\n\013KEY_UNKNOWN\020\000\022\r\n\tK" +
+      "EY_ENTER\020\001\022\021\n\rKEY_BACKSPACE\020\002\022\020\n\014KEY_VOL" +
+      "_DOWN\020\003\022\016\n\nKEY_VOL_UP\020\004\022\020\n\014KEY_VOL_MUTE\020" +
+      "\005\022\023\n\017KEY_AUDIO_PAUSE\020\006\022\022\n\016KEY_AUDIO_PREV" +
+      "\020\007\022\022\n\016KEY_AUDIO_NEXT\020\010*S\n\017HapticEventTyp" +
+      "e\022\021\n\rEVENT_UNKNOWN\020\000\022\031\n\025EVENT_BORDER_CRO" +
+      "SSING\020\001\022\022\n\016EVENT_EDGE_HIT\020\002*f\n\014CommandEv" +
+      "ent\022\023\n\017COMMAND_UNKNOWN\020\000\022\025\n\021COMMAND_SHUT" +
+      "_DOWN\020\001\022\021\n\rCOMMAND_SLEEP\020\002\022\027\n\023COMMAND_LO" +
+      "CK_SCREEN\020\003BY\n!com.skymouse.skymouseclie" +
+      "nt.protoP\001Z2github.com/Tomahawk-Center/S" +
+      "kyMouse/proto;protoapib\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -267,42 +282,54 @@ public final class Skymouse extends com.google.protobuf.GeneratedFile {
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_skymouse_GetCursorScaleEvent_descriptor,
         new java.lang.String[] { });
-    internal_static_skymouse_CurrentCursorScaleAnswer_descriptor =
+    internal_static_skymouse_GetVolumeEvent_descriptor =
       getDescriptor().getMessageType(12);
+    internal_static_skymouse_GetVolumeEvent_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_skymouse_GetVolumeEvent_descriptor,
+        new java.lang.String[] { });
+    internal_static_skymouse_CurrentCursorScaleAnswer_descriptor =
+      getDescriptor().getMessageType(13);
     internal_static_skymouse_CurrentCursorScaleAnswer_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_skymouse_CurrentCursorScaleAnswer_descriptor,
         new java.lang.String[] { "CurrentCursorScale", });
+    internal_static_skymouse_CurrentVolumeAnswer_descriptor =
+      getDescriptor().getMessageType(14);
+    internal_static_skymouse_CurrentVolumeAnswer_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_skymouse_CurrentVolumeAnswer_descriptor,
+        new java.lang.String[] { "Volume", "IsMuted", });
     internal_static_skymouse_ServerEvent_descriptor =
-      getDescriptor().getMessageType(13);
+      getDescriptor().getMessageType(15);
     internal_static_skymouse_ServerEvent_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_skymouse_ServerEvent_descriptor,
         new java.lang.String[] { "Type", "TimestampMs", });
     internal_static_skymouse_EmulatorEvent_descriptor =
-      getDescriptor().getMessageType(14);
+      getDescriptor().getMessageType(16);
     internal_static_skymouse_EmulatorEvent_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_skymouse_EmulatorEvent_descriptor,
         new java.lang.String[] { "Mouse", "Click", "Scroll", "KeyboardStringEvent", "KeyboardTapEvent", "Event", });
     internal_static_skymouse_MessageToServer_descriptor =
-      getDescriptor().getMessageType(15);
+      getDescriptor().getMessageType(17);
     internal_static_skymouse_MessageToServer_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_skymouse_MessageToServer_descriptor,
-        new java.lang.String[] { "ClientHello", "EmulatorEvent", "Ping", "Pong", "Command", "ClipboardShare", "GetCursorScale", "SetCursorScale", "Event", });
+        new java.lang.String[] { "ClientHello", "EmulatorEvent", "Ping", "Pong", "Command", "ClipboardShare", "GetCursorScale", "SetCursorScale", "GetVolumeEvent", "Event", });
     internal_static_skymouse_UdpMessageToServer_descriptor =
-      getDescriptor().getMessageType(16);
+      getDescriptor().getMessageType(18);
     internal_static_skymouse_UdpMessageToServer_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_skymouse_UdpMessageToServer_descriptor,
         new java.lang.String[] { "UdpToken", "EmulatorEvent", "Ping", "Event", });
     internal_static_skymouse_MessageToClient_descriptor =
-      getDescriptor().getMessageType(17);
+      getDescriptor().getMessageType(19);
     internal_static_skymouse_MessageToClient_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_skymouse_MessageToClient_descriptor,
-        new java.lang.String[] { "ServerHello", "ServerEvent", "Pong", "CurrentCursorScaleAnswer", "Event", });
+        new java.lang.String[] { "ServerHello", "ServerEvent", "Pong", "CurrentCursorScaleAnswer", "CurrentVolumeAnswer", "Event", });
     descriptor.resolveAllFeaturesImmutable();
   }
 

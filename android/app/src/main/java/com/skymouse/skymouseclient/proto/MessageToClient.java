@@ -58,6 +58,7 @@ private static final long serialVersionUID = 0L;
     SERVER_EVENT(2),
     PONG(3),
     CURRENT_CURSOR_SCALE_ANSWER(4),
+    CURRENT_VOLUME_ANSWER(5),
     EVENT_NOT_SET(0);
     private final int value;
     private EventCase(int value) {
@@ -79,6 +80,7 @@ private static final long serialVersionUID = 0L;
         case 2: return SERVER_EVENT;
         case 3: return PONG;
         case 4: return CURRENT_CURSOR_SCALE_ANSWER;
+        case 5: return CURRENT_VOLUME_ANSWER;
         case 0: return EVENT_NOT_SET;
         default: return null;
       }
@@ -218,6 +220,37 @@ private static final long serialVersionUID = 0L;
     return com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswer.getDefaultInstance();
   }
 
+  public static final int CURRENT_VOLUME_ANSWER_FIELD_NUMBER = 5;
+  /**
+   * <code>.skymouse.CurrentVolumeAnswer current_volume_answer = 5;</code>
+   * @return Whether the currentVolumeAnswer field is set.
+   */
+  @java.lang.Override
+  public boolean hasCurrentVolumeAnswer() {
+    return eventCase_ == 5;
+  }
+  /**
+   * <code>.skymouse.CurrentVolumeAnswer current_volume_answer = 5;</code>
+   * @return The currentVolumeAnswer.
+   */
+  @java.lang.Override
+  public com.skymouse.skymouseclient.proto.CurrentVolumeAnswer getCurrentVolumeAnswer() {
+    if (eventCase_ == 5) {
+       return (com.skymouse.skymouseclient.proto.CurrentVolumeAnswer) event_;
+    }
+    return com.skymouse.skymouseclient.proto.CurrentVolumeAnswer.getDefaultInstance();
+  }
+  /**
+   * <code>.skymouse.CurrentVolumeAnswer current_volume_answer = 5;</code>
+   */
+  @java.lang.Override
+  public com.skymouse.skymouseclient.proto.CurrentVolumeAnswerOrBuilder getCurrentVolumeAnswerOrBuilder() {
+    if (eventCase_ == 5) {
+       return (com.skymouse.skymouseclient.proto.CurrentVolumeAnswer) event_;
+    }
+    return com.skymouse.skymouseclient.proto.CurrentVolumeAnswer.getDefaultInstance();
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -244,6 +277,9 @@ private static final long serialVersionUID = 0L;
     if (eventCase_ == 4) {
       output.writeMessage(4, (com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswer) event_);
     }
+    if (eventCase_ == 5) {
+      output.writeMessage(5, (com.skymouse.skymouseclient.proto.CurrentVolumeAnswer) event_);
+    }
     getUnknownFields().writeTo(output);
   }
   private int computeSerializedSize_0() {
@@ -263,6 +299,10 @@ private static final long serialVersionUID = 0L;
     if (eventCase_ == 4) {
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(4, (com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswer) event_);
+    }
+    if (eventCase_ == 5) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(5, (com.skymouse.skymouseclient.proto.CurrentVolumeAnswer) event_);
     }
     return size;
   }
@@ -306,6 +346,10 @@ private static final long serialVersionUID = 0L;
         if (!getCurrentCursorScaleAnswer()
             .equals(other.getCurrentCursorScaleAnswer())) return false;
         break;
+      case 5:
+        if (!getCurrentVolumeAnswer()
+            .equals(other.getCurrentVolumeAnswer())) return false;
+        break;
       case 0:
       default:
     }
@@ -336,6 +380,10 @@ private static final long serialVersionUID = 0L;
       case 4:
         hash = (37 * hash) + CURRENT_CURSOR_SCALE_ANSWER_FIELD_NUMBER;
         hash = (53 * hash) + getCurrentCursorScaleAnswer().hashCode();
+        break;
+      case 5:
+        hash = (37 * hash) + CURRENT_VOLUME_ANSWER_FIELD_NUMBER;
+        hash = (53 * hash) + getCurrentVolumeAnswer().hashCode();
         break;
       case 0:
       default:
@@ -483,6 +531,9 @@ private static final long serialVersionUID = 0L;
       if (currentCursorScaleAnswerBuilder_ != null) {
         currentCursorScaleAnswerBuilder_.clear();
       }
+      if (currentVolumeAnswerBuilder_ != null) {
+        currentVolumeAnswerBuilder_.clear();
+      }
       eventCase_ = 0;
       event_ = null;
       return this;
@@ -540,6 +591,10 @@ private static final long serialVersionUID = 0L;
           currentCursorScaleAnswerBuilder_ != null) {
         result.event_ = currentCursorScaleAnswerBuilder_.build();
       }
+      if (eventCase_ == 5 &&
+          currentVolumeAnswerBuilder_ != null) {
+        result.event_ = currentVolumeAnswerBuilder_.build();
+      }
     }
 
     @java.lang.Override
@@ -569,6 +624,10 @@ private static final long serialVersionUID = 0L;
         }
         case CURRENT_CURSOR_SCALE_ANSWER: {
           mergeCurrentCursorScaleAnswer(other.getCurrentCursorScaleAnswer());
+          break;
+        }
+        case CURRENT_VOLUME_ANSWER: {
+          mergeCurrentVolumeAnswer(other.getCurrentVolumeAnswer());
           break;
         }
         case EVENT_NOT_SET: {
@@ -629,6 +688,13 @@ private static final long serialVersionUID = 0L;
               eventCase_ = 4;
               break;
             } // case 34
+            case 42: {
+              input.readMessage(
+                  internalGetCurrentVolumeAnswerFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              eventCase_ = 5;
+              break;
+            } // case 42
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -1227,6 +1293,148 @@ private static final long serialVersionUID = 0L;
       eventCase_ = 4;
       onChanged();
       return currentCursorScaleAnswerBuilder_;
+    }
+
+    private com.google.protobuf.SingleFieldBuilder<
+        com.skymouse.skymouseclient.proto.CurrentVolumeAnswer, com.skymouse.skymouseclient.proto.CurrentVolumeAnswer.Builder, com.skymouse.skymouseclient.proto.CurrentVolumeAnswerOrBuilder> currentVolumeAnswerBuilder_;
+    /**
+     * <code>.skymouse.CurrentVolumeAnswer current_volume_answer = 5;</code>
+     * @return Whether the currentVolumeAnswer field is set.
+     */
+    @java.lang.Override
+    public boolean hasCurrentVolumeAnswer() {
+      return eventCase_ == 5;
+    }
+    /**
+     * <code>.skymouse.CurrentVolumeAnswer current_volume_answer = 5;</code>
+     * @return The currentVolumeAnswer.
+     */
+    @java.lang.Override
+    public com.skymouse.skymouseclient.proto.CurrentVolumeAnswer getCurrentVolumeAnswer() {
+      if (currentVolumeAnswerBuilder_ == null) {
+        if (eventCase_ == 5) {
+          return (com.skymouse.skymouseclient.proto.CurrentVolumeAnswer) event_;
+        }
+        return com.skymouse.skymouseclient.proto.CurrentVolumeAnswer.getDefaultInstance();
+      } else {
+        if (eventCase_ == 5) {
+          return currentVolumeAnswerBuilder_.getMessage();
+        }
+        return com.skymouse.skymouseclient.proto.CurrentVolumeAnswer.getDefaultInstance();
+      }
+    }
+    /**
+     * <code>.skymouse.CurrentVolumeAnswer current_volume_answer = 5;</code>
+     */
+    public Builder setCurrentVolumeAnswer(com.skymouse.skymouseclient.proto.CurrentVolumeAnswer value) {
+      if (currentVolumeAnswerBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        event_ = value;
+        onChanged();
+      } else {
+        currentVolumeAnswerBuilder_.setMessage(value);
+      }
+      eventCase_ = 5;
+      return this;
+    }
+    /**
+     * <code>.skymouse.CurrentVolumeAnswer current_volume_answer = 5;</code>
+     */
+    public Builder setCurrentVolumeAnswer(
+        com.skymouse.skymouseclient.proto.CurrentVolumeAnswer.Builder builderForValue) {
+      if (currentVolumeAnswerBuilder_ == null) {
+        event_ = builderForValue.build();
+        onChanged();
+      } else {
+        currentVolumeAnswerBuilder_.setMessage(builderForValue.build());
+      }
+      eventCase_ = 5;
+      return this;
+    }
+    /**
+     * <code>.skymouse.CurrentVolumeAnswer current_volume_answer = 5;</code>
+     */
+    public Builder mergeCurrentVolumeAnswer(com.skymouse.skymouseclient.proto.CurrentVolumeAnswer value) {
+      if (currentVolumeAnswerBuilder_ == null) {
+        if (eventCase_ == 5 &&
+            event_ != com.skymouse.skymouseclient.proto.CurrentVolumeAnswer.getDefaultInstance()) {
+          event_ = com.skymouse.skymouseclient.proto.CurrentVolumeAnswer.newBuilder((com.skymouse.skymouseclient.proto.CurrentVolumeAnswer) event_)
+              .mergeFrom(value).buildPartial();
+        } else {
+          event_ = value;
+        }
+        onChanged();
+      } else {
+        if (eventCase_ == 5) {
+          currentVolumeAnswerBuilder_.mergeFrom(value);
+        } else {
+          currentVolumeAnswerBuilder_.setMessage(value);
+        }
+      }
+      eventCase_ = 5;
+      return this;
+    }
+    /**
+     * <code>.skymouse.CurrentVolumeAnswer current_volume_answer = 5;</code>
+     */
+    public Builder clearCurrentVolumeAnswer() {
+      if (currentVolumeAnswerBuilder_ == null) {
+        if (eventCase_ == 5) {
+          eventCase_ = 0;
+          event_ = null;
+          onChanged();
+        }
+      } else {
+        if (eventCase_ == 5) {
+          eventCase_ = 0;
+          event_ = null;
+        }
+        currentVolumeAnswerBuilder_.clear();
+      }
+      return this;
+    }
+    /**
+     * <code>.skymouse.CurrentVolumeAnswer current_volume_answer = 5;</code>
+     */
+    public com.skymouse.skymouseclient.proto.CurrentVolumeAnswer.Builder getCurrentVolumeAnswerBuilder() {
+      return internalGetCurrentVolumeAnswerFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.skymouse.CurrentVolumeAnswer current_volume_answer = 5;</code>
+     */
+    @java.lang.Override
+    public com.skymouse.skymouseclient.proto.CurrentVolumeAnswerOrBuilder getCurrentVolumeAnswerOrBuilder() {
+      if ((eventCase_ == 5) && (currentVolumeAnswerBuilder_ != null)) {
+        return currentVolumeAnswerBuilder_.getMessageOrBuilder();
+      } else {
+        if (eventCase_ == 5) {
+          return (com.skymouse.skymouseclient.proto.CurrentVolumeAnswer) event_;
+        }
+        return com.skymouse.skymouseclient.proto.CurrentVolumeAnswer.getDefaultInstance();
+      }
+    }
+    /**
+     * <code>.skymouse.CurrentVolumeAnswer current_volume_answer = 5;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilder<
+        com.skymouse.skymouseclient.proto.CurrentVolumeAnswer, com.skymouse.skymouseclient.proto.CurrentVolumeAnswer.Builder, com.skymouse.skymouseclient.proto.CurrentVolumeAnswerOrBuilder> 
+        internalGetCurrentVolumeAnswerFieldBuilder() {
+      if (currentVolumeAnswerBuilder_ == null) {
+        if (!(eventCase_ == 5)) {
+          event_ = com.skymouse.skymouseclient.proto.CurrentVolumeAnswer.getDefaultInstance();
+        }
+        currentVolumeAnswerBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+            com.skymouse.skymouseclient.proto.CurrentVolumeAnswer, com.skymouse.skymouseclient.proto.CurrentVolumeAnswer.Builder, com.skymouse.skymouseclient.proto.CurrentVolumeAnswerOrBuilder>(
+                (com.skymouse.skymouseclient.proto.CurrentVolumeAnswer) event_,
+                getParentForChildren(),
+                isClean());
+        event_ = null;
+      }
+      eventCase_ = 5;
+      onChanged();
+      return currentVolumeAnswerBuilder_;
     }
 
     // @@protoc_insertion_point(builder_scope:skymouse.MessageToClient)

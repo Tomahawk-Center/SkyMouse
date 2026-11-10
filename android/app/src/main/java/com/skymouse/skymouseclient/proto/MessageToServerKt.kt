@@ -227,6 +227,30 @@ public object MessageToServerKt {
     public fun hasSetCursorScale(): kotlin.Boolean {
       return _builder.hasSetCursorScale()
     }
+
+    /**
+     * `.skymouse.GetVolumeEvent get_volume_event = 9;`
+     */
+    public var getVolumeEvent: com.skymouse.skymouseclient.proto.GetVolumeEvent
+      @kotlin.jvm.JvmName("getGetVolumeEvent")
+        get() = _builder.getVolumeEvent
+      @kotlin.jvm.JvmName("setGetVolumeEvent")
+        set(value) {
+        _builder.getVolumeEvent = value
+      }
+    /**
+     * `.skymouse.GetVolumeEvent get_volume_event = 9;`
+     */
+    public fun clearGetVolumeEvent() {
+      _builder.clearGetVolumeEvent()
+    }
+    /**
+     * `.skymouse.GetVolumeEvent get_volume_event = 9;`
+     * @return Whether the getVolumeEvent field is set.
+     */
+    public fun hasGetVolumeEvent(): kotlin.Boolean {
+      return _builder.hasGetVolumeEvent()
+    }
     public val eventCase: com.skymouse.skymouseclient.proto.MessageToServer.EventCase
     @kotlin.jvm.JvmName("getEventCase")
       get() = _builder.getEventCase()
@@ -260,4 +284,7 @@ public val com.skymouse.skymouseclient.proto.MessageToServerOrBuilder.getCursorS
 
 public val com.skymouse.skymouseclient.proto.MessageToServerOrBuilder.setCursorScaleOrNull: com.skymouse.skymouseclient.proto.SetCursorScaleEvent?
   get() = if (hasSetCursorScale()) getSetCursorScale() else null
+
+public val com.skymouse.skymouseclient.proto.MessageToServerOrBuilder.getVolumeEventOrNull: com.skymouse.skymouseclient.proto.GetVolumeEvent?
+  get() = if (hasGetVolumeEvent()) getGetVolumeEvent() else null
 

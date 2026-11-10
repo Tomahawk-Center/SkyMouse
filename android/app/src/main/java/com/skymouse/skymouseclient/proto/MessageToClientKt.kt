@@ -124,6 +124,30 @@ public object MessageToClientKt {
     public fun hasCurrentCursorScaleAnswer(): kotlin.Boolean {
       return _builder.hasCurrentCursorScaleAnswer()
     }
+
+    /**
+     * `.skymouse.CurrentVolumeAnswer current_volume_answer = 5;`
+     */
+    public var currentVolumeAnswer: com.skymouse.skymouseclient.proto.CurrentVolumeAnswer
+      @kotlin.jvm.JvmName("getCurrentVolumeAnswer")
+        get() = _builder.currentVolumeAnswer
+      @kotlin.jvm.JvmName("setCurrentVolumeAnswer")
+        set(value) {
+        _builder.currentVolumeAnswer = value
+      }
+    /**
+     * `.skymouse.CurrentVolumeAnswer current_volume_answer = 5;`
+     */
+    public fun clearCurrentVolumeAnswer() {
+      _builder.clearCurrentVolumeAnswer()
+    }
+    /**
+     * `.skymouse.CurrentVolumeAnswer current_volume_answer = 5;`
+     * @return Whether the currentVolumeAnswer field is set.
+     */
+    public fun hasCurrentVolumeAnswer(): kotlin.Boolean {
+      return _builder.hasCurrentVolumeAnswer()
+    }
     public val eventCase: com.skymouse.skymouseclient.proto.MessageToClient.EventCase
     @kotlin.jvm.JvmName("getEventCase")
       get() = _builder.getEventCase()
@@ -148,4 +172,7 @@ public val com.skymouse.skymouseclient.proto.MessageToClientOrBuilder.pongOrNull
 
 public val com.skymouse.skymouseclient.proto.MessageToClientOrBuilder.currentCursorScaleAnswerOrNull: com.skymouse.skymouseclient.proto.CurrentCursorScaleAnswer?
   get() = if (hasCurrentCursorScaleAnswer()) getCurrentCursorScaleAnswer() else null
+
+public val com.skymouse.skymouseclient.proto.MessageToClientOrBuilder.currentVolumeAnswerOrNull: com.skymouse.skymouseclient.proto.CurrentVolumeAnswer?
+  get() = if (hasCurrentVolumeAnswer()) getCurrentVolumeAnswer() else null
 

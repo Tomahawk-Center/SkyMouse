@@ -62,6 +62,7 @@ private static final long serialVersionUID = 0L;
     CLIPBOARD_SHARE(6),
     GET_CURSOR_SCALE(7),
     SET_CURSOR_SCALE(8),
+    GET_VOLUME_EVENT(9),
     EVENT_NOT_SET(0);
     private final int value;
     private EventCase(int value) {
@@ -87,6 +88,7 @@ private static final long serialVersionUID = 0L;
         case 6: return CLIPBOARD_SHARE;
         case 7: return GET_CURSOR_SCALE;
         case 8: return SET_CURSOR_SCALE;
+        case 9: return GET_VOLUME_EVENT;
         case 0: return EVENT_NOT_SET;
         default: return null;
       }
@@ -350,6 +352,37 @@ private static final long serialVersionUID = 0L;
     return com.skymouse.skymouseclient.proto.SetCursorScaleEvent.getDefaultInstance();
   }
 
+  public static final int GET_VOLUME_EVENT_FIELD_NUMBER = 9;
+  /**
+   * <code>.skymouse.GetVolumeEvent get_volume_event = 9;</code>
+   * @return Whether the getVolumeEvent field is set.
+   */
+  @java.lang.Override
+  public boolean hasGetVolumeEvent() {
+    return eventCase_ == 9;
+  }
+  /**
+   * <code>.skymouse.GetVolumeEvent get_volume_event = 9;</code>
+   * @return The getVolumeEvent.
+   */
+  @java.lang.Override
+  public com.skymouse.skymouseclient.proto.GetVolumeEvent getGetVolumeEvent() {
+    if (eventCase_ == 9) {
+       return (com.skymouse.skymouseclient.proto.GetVolumeEvent) event_;
+    }
+    return com.skymouse.skymouseclient.proto.GetVolumeEvent.getDefaultInstance();
+  }
+  /**
+   * <code>.skymouse.GetVolumeEvent get_volume_event = 9;</code>
+   */
+  @java.lang.Override
+  public com.skymouse.skymouseclient.proto.GetVolumeEventOrBuilder getGetVolumeEventOrBuilder() {
+    if (eventCase_ == 9) {
+       return (com.skymouse.skymouseclient.proto.GetVolumeEvent) event_;
+    }
+    return com.skymouse.skymouseclient.proto.GetVolumeEvent.getDefaultInstance();
+  }
+
   private byte memoizedIsInitialized = -1;
   @java.lang.Override
   public final boolean isInitialized() {
@@ -388,6 +421,9 @@ private static final long serialVersionUID = 0L;
     if (eventCase_ == 8) {
       output.writeMessage(8, (com.skymouse.skymouseclient.proto.SetCursorScaleEvent) event_);
     }
+    if (eventCase_ == 9) {
+      output.writeMessage(9, (com.skymouse.skymouseclient.proto.GetVolumeEvent) event_);
+    }
     getUnknownFields().writeTo(output);
   }
   private int computeSerializedSize_0() {
@@ -423,6 +459,10 @@ private static final long serialVersionUID = 0L;
     if (eventCase_ == 8) {
       size += com.google.protobuf.CodedOutputStream
         .computeMessageSize(8, (com.skymouse.skymouseclient.proto.SetCursorScaleEvent) event_);
+    }
+    if (eventCase_ == 9) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeMessageSize(9, (com.skymouse.skymouseclient.proto.GetVolumeEvent) event_);
     }
     return size;
   }
@@ -482,6 +522,10 @@ private static final long serialVersionUID = 0L;
         if (!getSetCursorScale()
             .equals(other.getSetCursorScale())) return false;
         break;
+      case 9:
+        if (!getGetVolumeEvent()
+            .equals(other.getGetVolumeEvent())) return false;
+        break;
       case 0:
       default:
     }
@@ -528,6 +572,10 @@ private static final long serialVersionUID = 0L;
       case 8:
         hash = (37 * hash) + SET_CURSOR_SCALE_FIELD_NUMBER;
         hash = (53 * hash) + getSetCursorScale().hashCode();
+        break;
+      case 9:
+        hash = (37 * hash) + GET_VOLUME_EVENT_FIELD_NUMBER;
+        hash = (53 * hash) + getGetVolumeEvent().hashCode();
         break;
       case 0:
       default:
@@ -684,6 +732,9 @@ private static final long serialVersionUID = 0L;
       if (setCursorScaleBuilder_ != null) {
         setCursorScaleBuilder_.clear();
       }
+      if (getVolumeEventBuilder_ != null) {
+        getVolumeEventBuilder_.clear();
+      }
       eventCase_ = 0;
       event_ = null;
       return this;
@@ -753,6 +804,10 @@ private static final long serialVersionUID = 0L;
           setCursorScaleBuilder_ != null) {
         result.event_ = setCursorScaleBuilder_.build();
       }
+      if (eventCase_ == 9 &&
+          getVolumeEventBuilder_ != null) {
+        result.event_ = getVolumeEventBuilder_.build();
+      }
     }
 
     @java.lang.Override
@@ -798,6 +853,10 @@ private static final long serialVersionUID = 0L;
         }
         case SET_CURSOR_SCALE: {
           mergeSetCursorScale(other.getSetCursorScale());
+          break;
+        }
+        case GET_VOLUME_EVENT: {
+          mergeGetVolumeEvent(other.getGetVolumeEvent());
           break;
         }
         case EVENT_NOT_SET: {
@@ -885,6 +944,13 @@ private static final long serialVersionUID = 0L;
               eventCase_ = 8;
               break;
             } // case 66
+            case 74: {
+              input.readMessage(
+                  internalGetGetVolumeEventFieldBuilder().getBuilder(),
+                  extensionRegistry);
+              eventCase_ = 9;
+              break;
+            } // case 74
             default: {
               if (!super.parseUnknownField(input, extensionRegistry, tag)) {
                 done = true; // was an endgroup tag
@@ -1978,6 +2044,148 @@ private static final long serialVersionUID = 0L;
       eventCase_ = 8;
       onChanged();
       return setCursorScaleBuilder_;
+    }
+
+    private com.google.protobuf.SingleFieldBuilder<
+        com.skymouse.skymouseclient.proto.GetVolumeEvent, com.skymouse.skymouseclient.proto.GetVolumeEvent.Builder, com.skymouse.skymouseclient.proto.GetVolumeEventOrBuilder> getVolumeEventBuilder_;
+    /**
+     * <code>.skymouse.GetVolumeEvent get_volume_event = 9;</code>
+     * @return Whether the getVolumeEvent field is set.
+     */
+    @java.lang.Override
+    public boolean hasGetVolumeEvent() {
+      return eventCase_ == 9;
+    }
+    /**
+     * <code>.skymouse.GetVolumeEvent get_volume_event = 9;</code>
+     * @return The getVolumeEvent.
+     */
+    @java.lang.Override
+    public com.skymouse.skymouseclient.proto.GetVolumeEvent getGetVolumeEvent() {
+      if (getVolumeEventBuilder_ == null) {
+        if (eventCase_ == 9) {
+          return (com.skymouse.skymouseclient.proto.GetVolumeEvent) event_;
+        }
+        return com.skymouse.skymouseclient.proto.GetVolumeEvent.getDefaultInstance();
+      } else {
+        if (eventCase_ == 9) {
+          return getVolumeEventBuilder_.getMessage();
+        }
+        return com.skymouse.skymouseclient.proto.GetVolumeEvent.getDefaultInstance();
+      }
+    }
+    /**
+     * <code>.skymouse.GetVolumeEvent get_volume_event = 9;</code>
+     */
+    public Builder setGetVolumeEvent(com.skymouse.skymouseclient.proto.GetVolumeEvent value) {
+      if (getVolumeEventBuilder_ == null) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        event_ = value;
+        onChanged();
+      } else {
+        getVolumeEventBuilder_.setMessage(value);
+      }
+      eventCase_ = 9;
+      return this;
+    }
+    /**
+     * <code>.skymouse.GetVolumeEvent get_volume_event = 9;</code>
+     */
+    public Builder setGetVolumeEvent(
+        com.skymouse.skymouseclient.proto.GetVolumeEvent.Builder builderForValue) {
+      if (getVolumeEventBuilder_ == null) {
+        event_ = builderForValue.build();
+        onChanged();
+      } else {
+        getVolumeEventBuilder_.setMessage(builderForValue.build());
+      }
+      eventCase_ = 9;
+      return this;
+    }
+    /**
+     * <code>.skymouse.GetVolumeEvent get_volume_event = 9;</code>
+     */
+    public Builder mergeGetVolumeEvent(com.skymouse.skymouseclient.proto.GetVolumeEvent value) {
+      if (getVolumeEventBuilder_ == null) {
+        if (eventCase_ == 9 &&
+            event_ != com.skymouse.skymouseclient.proto.GetVolumeEvent.getDefaultInstance()) {
+          event_ = com.skymouse.skymouseclient.proto.GetVolumeEvent.newBuilder((com.skymouse.skymouseclient.proto.GetVolumeEvent) event_)
+              .mergeFrom(value).buildPartial();
+        } else {
+          event_ = value;
+        }
+        onChanged();
+      } else {
+        if (eventCase_ == 9) {
+          getVolumeEventBuilder_.mergeFrom(value);
+        } else {
+          getVolumeEventBuilder_.setMessage(value);
+        }
+      }
+      eventCase_ = 9;
+      return this;
+    }
+    /**
+     * <code>.skymouse.GetVolumeEvent get_volume_event = 9;</code>
+     */
+    public Builder clearGetVolumeEvent() {
+      if (getVolumeEventBuilder_ == null) {
+        if (eventCase_ == 9) {
+          eventCase_ = 0;
+          event_ = null;
+          onChanged();
+        }
+      } else {
+        if (eventCase_ == 9) {
+          eventCase_ = 0;
+          event_ = null;
+        }
+        getVolumeEventBuilder_.clear();
+      }
+      return this;
+    }
+    /**
+     * <code>.skymouse.GetVolumeEvent get_volume_event = 9;</code>
+     */
+    public com.skymouse.skymouseclient.proto.GetVolumeEvent.Builder getGetVolumeEventBuilder() {
+      return internalGetGetVolumeEventFieldBuilder().getBuilder();
+    }
+    /**
+     * <code>.skymouse.GetVolumeEvent get_volume_event = 9;</code>
+     */
+    @java.lang.Override
+    public com.skymouse.skymouseclient.proto.GetVolumeEventOrBuilder getGetVolumeEventOrBuilder() {
+      if ((eventCase_ == 9) && (getVolumeEventBuilder_ != null)) {
+        return getVolumeEventBuilder_.getMessageOrBuilder();
+      } else {
+        if (eventCase_ == 9) {
+          return (com.skymouse.skymouseclient.proto.GetVolumeEvent) event_;
+        }
+        return com.skymouse.skymouseclient.proto.GetVolumeEvent.getDefaultInstance();
+      }
+    }
+    /**
+     * <code>.skymouse.GetVolumeEvent get_volume_event = 9;</code>
+     */
+    private com.google.protobuf.SingleFieldBuilder<
+        com.skymouse.skymouseclient.proto.GetVolumeEvent, com.skymouse.skymouseclient.proto.GetVolumeEvent.Builder, com.skymouse.skymouseclient.proto.GetVolumeEventOrBuilder> 
+        internalGetGetVolumeEventFieldBuilder() {
+      if (getVolumeEventBuilder_ == null) {
+        if (!(eventCase_ == 9)) {
+          event_ = com.skymouse.skymouseclient.proto.GetVolumeEvent.getDefaultInstance();
+        }
+        getVolumeEventBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+            com.skymouse.skymouseclient.proto.GetVolumeEvent, com.skymouse.skymouseclient.proto.GetVolumeEvent.Builder, com.skymouse.skymouseclient.proto.GetVolumeEventOrBuilder>(
+                (com.skymouse.skymouseclient.proto.GetVolumeEvent) event_,
+                getParentForChildren(),
+                isClean());
+        event_ = null;
+      }
+      eventCase_ = 9;
+      onChanged();
+      return getVolumeEventBuilder_;
     }
 
     // @@protoc_insertion_point(builder_scope:skymouse.MessageToServer)
