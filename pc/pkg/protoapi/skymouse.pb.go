@@ -936,6 +936,42 @@ func (*GetCursorScaleEvent) Descriptor() ([]byte, []int) {
 	return file_skymouse_proto_rawDescGZIP(), []int{11}
 }
 
+type GetVolumeEvent struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetVolumeEvent) Reset() {
+	*x = GetVolumeEvent{}
+	mi := &file_skymouse_proto_msgTypes[12]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetVolumeEvent) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetVolumeEvent) ProtoMessage() {}
+
+func (x *GetVolumeEvent) ProtoReflect() protoreflect.Message {
+	mi := &file_skymouse_proto_msgTypes[12]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetVolumeEvent.ProtoReflect.Descriptor instead.
+func (*GetVolumeEvent) Descriptor() ([]byte, []int) {
+	return file_skymouse_proto_rawDescGZIP(), []int{12}
+}
+
 type CurrentCursorScaleAnswer struct {
 	state              protoimpl.MessageState `protogen:"open.v1"`
 	CurrentCursorScale int32                  `protobuf:"varint,1,opt,name=current_cursor_scale,json=currentCursorScale,proto3" json:"current_cursor_scale,omitempty"`
@@ -945,7 +981,7 @@ type CurrentCursorScaleAnswer struct {
 
 func (x *CurrentCursorScaleAnswer) Reset() {
 	*x = CurrentCursorScaleAnswer{}
-	mi := &file_skymouse_proto_msgTypes[12]
+	mi := &file_skymouse_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -957,7 +993,7 @@ func (x *CurrentCursorScaleAnswer) String() string {
 func (*CurrentCursorScaleAnswer) ProtoMessage() {}
 
 func (x *CurrentCursorScaleAnswer) ProtoReflect() protoreflect.Message {
-	mi := &file_skymouse_proto_msgTypes[12]
+	mi := &file_skymouse_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -970,7 +1006,7 @@ func (x *CurrentCursorScaleAnswer) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CurrentCursorScaleAnswer.ProtoReflect.Descriptor instead.
 func (*CurrentCursorScaleAnswer) Descriptor() ([]byte, []int) {
-	return file_skymouse_proto_rawDescGZIP(), []int{12}
+	return file_skymouse_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *CurrentCursorScaleAnswer) GetCurrentCursorScale() int32 {
@@ -978,6 +1014,58 @@ func (x *CurrentCursorScaleAnswer) GetCurrentCursorScale() int32 {
 		return x.CurrentCursorScale
 	}
 	return 0
+}
+
+type CurrentVolumeAnswer struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Volume        int32                  `protobuf:"varint,1,opt,name=volume,proto3" json:"volume,omitempty"`
+	IsMuted       bool                   `protobuf:"varint,2,opt,name=is_muted,json=isMuted,proto3" json:"is_muted,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CurrentVolumeAnswer) Reset() {
+	*x = CurrentVolumeAnswer{}
+	mi := &file_skymouse_proto_msgTypes[14]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CurrentVolumeAnswer) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CurrentVolumeAnswer) ProtoMessage() {}
+
+func (x *CurrentVolumeAnswer) ProtoReflect() protoreflect.Message {
+	mi := &file_skymouse_proto_msgTypes[14]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CurrentVolumeAnswer.ProtoReflect.Descriptor instead.
+func (*CurrentVolumeAnswer) Descriptor() ([]byte, []int) {
+	return file_skymouse_proto_rawDescGZIP(), []int{14}
+}
+
+func (x *CurrentVolumeAnswer) GetVolume() int32 {
+	if x != nil {
+		return x.Volume
+	}
+	return 0
+}
+
+func (x *CurrentVolumeAnswer) GetIsMuted() bool {
+	if x != nil {
+		return x.IsMuted
+	}
+	return false
 }
 
 type ServerEvent struct {
@@ -990,7 +1078,7 @@ type ServerEvent struct {
 
 func (x *ServerEvent) Reset() {
 	*x = ServerEvent{}
-	mi := &file_skymouse_proto_msgTypes[13]
+	mi := &file_skymouse_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1002,7 +1090,7 @@ func (x *ServerEvent) String() string {
 func (*ServerEvent) ProtoMessage() {}
 
 func (x *ServerEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_skymouse_proto_msgTypes[13]
+	mi := &file_skymouse_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1015,7 +1103,7 @@ func (x *ServerEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ServerEvent.ProtoReflect.Descriptor instead.
 func (*ServerEvent) Descriptor() ([]byte, []int) {
-	return file_skymouse_proto_rawDescGZIP(), []int{13}
+	return file_skymouse_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *ServerEvent) GetType() HapticEventType {
@@ -1048,7 +1136,7 @@ type EmulatorEvent struct {
 
 func (x *EmulatorEvent) Reset() {
 	*x = EmulatorEvent{}
-	mi := &file_skymouse_proto_msgTypes[14]
+	mi := &file_skymouse_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1060,7 +1148,7 @@ func (x *EmulatorEvent) String() string {
 func (*EmulatorEvent) ProtoMessage() {}
 
 func (x *EmulatorEvent) ProtoReflect() protoreflect.Message {
-	mi := &file_skymouse_proto_msgTypes[14]
+	mi := &file_skymouse_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1073,7 +1161,7 @@ func (x *EmulatorEvent) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use EmulatorEvent.ProtoReflect.Descriptor instead.
 func (*EmulatorEvent) Descriptor() ([]byte, []int) {
-	return file_skymouse_proto_rawDescGZIP(), []int{14}
+	return file_skymouse_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *EmulatorEvent) GetEvent() isEmulatorEvent_Event {
@@ -1174,6 +1262,7 @@ type MessageToServer struct {
 	//	*MessageToServer_ClipboardShare
 	//	*MessageToServer_GetCursorScale
 	//	*MessageToServer_SetCursorScale
+	//	*MessageToServer_GetVolumeEvent
 	Event         isMessageToServer_Event `protobuf_oneof:"event"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1181,7 +1270,7 @@ type MessageToServer struct {
 
 func (x *MessageToServer) Reset() {
 	*x = MessageToServer{}
-	mi := &file_skymouse_proto_msgTypes[15]
+	mi := &file_skymouse_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1193,7 +1282,7 @@ func (x *MessageToServer) String() string {
 func (*MessageToServer) ProtoMessage() {}
 
 func (x *MessageToServer) ProtoReflect() protoreflect.Message {
-	mi := &file_skymouse_proto_msgTypes[15]
+	mi := &file_skymouse_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1206,7 +1295,7 @@ func (x *MessageToServer) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MessageToServer.ProtoReflect.Descriptor instead.
 func (*MessageToServer) Descriptor() ([]byte, []int) {
-	return file_skymouse_proto_rawDescGZIP(), []int{15}
+	return file_skymouse_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *MessageToServer) GetEvent() isMessageToServer_Event {
@@ -1288,6 +1377,15 @@ func (x *MessageToServer) GetSetCursorScale() *SetCursorScaleEvent {
 	return nil
 }
 
+func (x *MessageToServer) GetGetVolumeEvent() *GetVolumeEvent {
+	if x != nil {
+		if x, ok := x.Event.(*MessageToServer_GetVolumeEvent); ok {
+			return x.GetVolumeEvent
+		}
+	}
+	return nil
+}
+
 type isMessageToServer_Event interface {
 	isMessageToServer_Event()
 }
@@ -1324,6 +1422,10 @@ type MessageToServer_SetCursorScale struct {
 	SetCursorScale *SetCursorScaleEvent `protobuf:"bytes,8,opt,name=set_cursor_scale,json=setCursorScale,proto3,oneof"`
 }
 
+type MessageToServer_GetVolumeEvent struct {
+	GetVolumeEvent *GetVolumeEvent `protobuf:"bytes,9,opt,name=get_volume_event,json=getVolumeEvent,proto3,oneof"`
+}
+
 func (*MessageToServer_ClientHello) isMessageToServer_Event() {}
 
 func (*MessageToServer_EmulatorEvent) isMessageToServer_Event() {}
@@ -1340,6 +1442,8 @@ func (*MessageToServer_GetCursorScale) isMessageToServer_Event() {}
 
 func (*MessageToServer_SetCursorScale) isMessageToServer_Event() {}
 
+func (*MessageToServer_GetVolumeEvent) isMessageToServer_Event() {}
+
 type UdpMessageToServer struct {
 	state    protoimpl.MessageState `protogen:"open.v1"`
 	UdpToken uint32                 `protobuf:"varint,1,opt,name=udp_token,json=udpToken,proto3" json:"udp_token,omitempty"`
@@ -1354,7 +1458,7 @@ type UdpMessageToServer struct {
 
 func (x *UdpMessageToServer) Reset() {
 	*x = UdpMessageToServer{}
-	mi := &file_skymouse_proto_msgTypes[16]
+	mi := &file_skymouse_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1366,7 +1470,7 @@ func (x *UdpMessageToServer) String() string {
 func (*UdpMessageToServer) ProtoMessage() {}
 
 func (x *UdpMessageToServer) ProtoReflect() protoreflect.Message {
-	mi := &file_skymouse_proto_msgTypes[16]
+	mi := &file_skymouse_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1379,7 +1483,7 @@ func (x *UdpMessageToServer) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UdpMessageToServer.ProtoReflect.Descriptor instead.
 func (*UdpMessageToServer) Descriptor() ([]byte, []int) {
-	return file_skymouse_proto_rawDescGZIP(), []int{16}
+	return file_skymouse_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *UdpMessageToServer) GetUdpToken() uint32 {
@@ -1438,6 +1542,7 @@ type MessageToClient struct {
 	//	*MessageToClient_ServerEvent
 	//	*MessageToClient_Pong
 	//	*MessageToClient_CurrentCursorScaleAnswer
+	//	*MessageToClient_CurrentVolumeAnswer
 	Event         isMessageToClient_Event `protobuf_oneof:"event"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -1445,7 +1550,7 @@ type MessageToClient struct {
 
 func (x *MessageToClient) Reset() {
 	*x = MessageToClient{}
-	mi := &file_skymouse_proto_msgTypes[17]
+	mi := &file_skymouse_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1457,7 +1562,7 @@ func (x *MessageToClient) String() string {
 func (*MessageToClient) ProtoMessage() {}
 
 func (x *MessageToClient) ProtoReflect() protoreflect.Message {
-	mi := &file_skymouse_proto_msgTypes[17]
+	mi := &file_skymouse_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1470,7 +1575,7 @@ func (x *MessageToClient) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use MessageToClient.ProtoReflect.Descriptor instead.
 func (*MessageToClient) Descriptor() ([]byte, []int) {
-	return file_skymouse_proto_rawDescGZIP(), []int{17}
+	return file_skymouse_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *MessageToClient) GetEvent() isMessageToClient_Event {
@@ -1516,6 +1621,15 @@ func (x *MessageToClient) GetCurrentCursorScaleAnswer() *CurrentCursorScaleAnswe
 	return nil
 }
 
+func (x *MessageToClient) GetCurrentVolumeAnswer() *CurrentVolumeAnswer {
+	if x != nil {
+		if x, ok := x.Event.(*MessageToClient_CurrentVolumeAnswer); ok {
+			return x.CurrentVolumeAnswer
+		}
+	}
+	return nil
+}
+
 type isMessageToClient_Event interface {
 	isMessageToClient_Event()
 }
@@ -1536,6 +1650,10 @@ type MessageToClient_CurrentCursorScaleAnswer struct {
 	CurrentCursorScaleAnswer *CurrentCursorScaleAnswer `protobuf:"bytes,4,opt,name=current_cursor_scale_answer,json=currentCursorScaleAnswer,proto3,oneof"`
 }
 
+type MessageToClient_CurrentVolumeAnswer struct {
+	CurrentVolumeAnswer *CurrentVolumeAnswer `protobuf:"bytes,5,opt,name=current_volume_answer,json=currentVolumeAnswer,proto3,oneof"`
+}
+
 func (*MessageToClient_ServerHello) isMessageToClient_Event() {}
 
 func (*MessageToClient_ServerEvent) isMessageToClient_Event() {}
@@ -1543,6 +1661,8 @@ func (*MessageToClient_ServerEvent) isMessageToClient_Event() {}
 func (*MessageToClient_Pong) isMessageToClient_Event() {}
 
 func (*MessageToClient_CurrentCursorScaleAnswer) isMessageToClient_Event() {}
+
+func (*MessageToClient_CurrentVolumeAnswer) isMessageToClient_Event() {}
 
 var File_skymouse_proto protoreflect.FileDescriptor
 
@@ -1590,9 +1710,13 @@ const file_skymouse_proto_rawDesc = "" +
 	"\acontent\"?\n" +
 	"\x13SetCursorScaleEvent\x12(\n" +
 	"\x10new_cursor_scale\x18\x01 \x01(\x05R\x0enewCursorScale\"\x15\n" +
-	"\x13GetCursorScaleEvent\"L\n" +
+	"\x13GetCursorScaleEvent\"\x10\n" +
+	"\x0eGetVolumeEvent\"L\n" +
 	"\x18CurrentCursorScaleAnswer\x120\n" +
-	"\x14current_cursor_scale\x18\x01 \x01(\x05R\x12currentCursorScale\"_\n" +
+	"\x14current_cursor_scale\x18\x01 \x01(\x05R\x12currentCursorScale\"H\n" +
+	"\x13CurrentVolumeAnswer\x12\x16\n" +
+	"\x06volume\x18\x01 \x01(\x05R\x06volume\x12\x19\n" +
+	"\bis_muted\x18\x02 \x01(\bR\aisMuted\"_\n" +
 	"\vServerEvent\x12-\n" +
 	"\x04type\x18\x01 \x01(\x0e2\x19.skymouse.HapticEventTypeR\x04type\x12!\n" +
 	"\ftimestamp_ms\x18\x02 \x01(\x03R\vtimestampMs\"\xc6\x02\n" +
@@ -1602,7 +1726,7 @@ const file_skymouse_proto_rawDesc = "" +
 	"\x06scroll\x18\x03 \x01(\v2\x15.skymouse.ScrollEventH\x00R\x06scroll\x12S\n" +
 	"\x15keyboard_string_event\x18\x04 \x01(\v2\x1d.skymouse.KeyboardStringEventH\x00R\x13keyboardStringEvent\x12J\n" +
 	"\x12keyboard_tap_event\x18\x05 \x01(\v2\x1a.skymouse.KeyboardTapEventH\x00R\x10keyboardTapEventB\a\n" +
-	"\x05event\"\xf8\x03\n" +
+	"\x05event\"\xbe\x04\n" +
 	"\x0fMessageToServer\x12:\n" +
 	"\fclient_hello\x18\x01 \x01(\v2\x15.skymouse.ClientHelloH\x00R\vclientHello\x12@\n" +
 	"\x0eemulator_event\x18\x02 \x01(\v2\x17.skymouse.EmulatorEventH\x00R\remulatorEvent\x12$\n" +
@@ -1611,18 +1735,20 @@ const file_skymouse_proto_rawDesc = "" +
 	"\acommand\x18\x05 \x01(\x0e2\x16.skymouse.CommandEventH\x00R\acommand\x12H\n" +
 	"\x0fclipboard_share\x18\x06 \x01(\v2\x1d.skymouse.ClipboardShareEventH\x00R\x0eclipboardShare\x12I\n" +
 	"\x10get_cursor_scale\x18\a \x01(\v2\x1d.skymouse.GetCursorScaleEventH\x00R\x0egetCursorScale\x12I\n" +
-	"\x10set_cursor_scale\x18\b \x01(\v2\x1d.skymouse.SetCursorScaleEventH\x00R\x0esetCursorScaleB\a\n" +
+	"\x10set_cursor_scale\x18\b \x01(\v2\x1d.skymouse.SetCursorScaleEventH\x00R\x0esetCursorScale\x12D\n" +
+	"\x10get_volume_event\x18\t \x01(\v2\x18.skymouse.GetVolumeEventH\x00R\x0egetVolumeEventB\a\n" +
 	"\x05event\"\xa2\x01\n" +
 	"\x12UdpMessageToServer\x12\x1b\n" +
 	"\tudp_token\x18\x01 \x01(\rR\budpToken\x12@\n" +
 	"\x0eemulator_event\x18\x02 \x01(\v2\x17.skymouse.EmulatorEventH\x00R\remulatorEvent\x12$\n" +
 	"\x04ping\x18\x03 \x01(\v2\x0e.skymouse.PingH\x00R\x04pingB\a\n" +
-	"\x05event\"\x9d\x02\n" +
+	"\x05event\"\xf2\x02\n" +
 	"\x0fMessageToClient\x12:\n" +
 	"\fserver_hello\x18\x01 \x01(\v2\x15.skymouse.ServerHelloH\x00R\vserverHello\x12:\n" +
 	"\fserver_event\x18\x02 \x01(\v2\x15.skymouse.ServerEventH\x00R\vserverEvent\x12$\n" +
 	"\x04pong\x18\x03 \x01(\v2\x0e.skymouse.PongH\x00R\x04pong\x12c\n" +
-	"\x1bcurrent_cursor_scale_answer\x18\x04 \x01(\v2\".skymouse.CurrentCursorScaleAnswerH\x00R\x18currentCursorScaleAnswerB\a\n" +
+	"\x1bcurrent_cursor_scale_answer\x18\x04 \x01(\v2\".skymouse.CurrentCursorScaleAnswerH\x00R\x18currentCursorScaleAnswer\x12S\n" +
+	"\x15current_volume_answer\x18\x05 \x01(\v2\x1d.skymouse.CurrentVolumeAnswerH\x00R\x13currentVolumeAnswerB\a\n" +
 	"\x05event*W\n" +
 	"\vMouseButton\x12\x12\n" +
 	"\x0eBUTTON_UNKNOWN\x10\x00\x12\x0f\n" +
@@ -1669,7 +1795,7 @@ func file_skymouse_proto_rawDescGZIP() []byte {
 }
 
 var file_skymouse_proto_enumTypes = make([]protoimpl.EnumInfo, 5)
-var file_skymouse_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
+var file_skymouse_proto_msgTypes = make([]protoimpl.MessageInfo, 20)
 var file_skymouse_proto_goTypes = []any{
 	(MouseButton)(0),                 // 0: skymouse.MouseButton
 	(ButtonState)(0),                 // 1: skymouse.ButtonState
@@ -1688,12 +1814,14 @@ var file_skymouse_proto_goTypes = []any{
 	(*ClipboardShareEvent)(nil),      // 14: skymouse.ClipboardShareEvent
 	(*SetCursorScaleEvent)(nil),      // 15: skymouse.SetCursorScaleEvent
 	(*GetCursorScaleEvent)(nil),      // 16: skymouse.GetCursorScaleEvent
-	(*CurrentCursorScaleAnswer)(nil), // 17: skymouse.CurrentCursorScaleAnswer
-	(*ServerEvent)(nil),              // 18: skymouse.ServerEvent
-	(*EmulatorEvent)(nil),            // 19: skymouse.EmulatorEvent
-	(*MessageToServer)(nil),          // 20: skymouse.MessageToServer
-	(*UdpMessageToServer)(nil),       // 21: skymouse.UdpMessageToServer
-	(*MessageToClient)(nil),          // 22: skymouse.MessageToClient
+	(*GetVolumeEvent)(nil),           // 17: skymouse.GetVolumeEvent
+	(*CurrentCursorScaleAnswer)(nil), // 18: skymouse.CurrentCursorScaleAnswer
+	(*CurrentVolumeAnswer)(nil),      // 19: skymouse.CurrentVolumeAnswer
+	(*ServerEvent)(nil),              // 20: skymouse.ServerEvent
+	(*EmulatorEvent)(nil),            // 21: skymouse.EmulatorEvent
+	(*MessageToServer)(nil),          // 22: skymouse.MessageToServer
+	(*UdpMessageToServer)(nil),       // 23: skymouse.UdpMessageToServer
+	(*MessageToClient)(nil),          // 24: skymouse.MessageToClient
 }
 var file_skymouse_proto_depIdxs = []int32{
 	0,  // 0: skymouse.ClickEvent.button:type_name -> skymouse.MouseButton
@@ -1707,24 +1835,26 @@ var file_skymouse_proto_depIdxs = []int32{
 	8,  // 8: skymouse.EmulatorEvent.keyboard_string_event:type_name -> skymouse.KeyboardStringEvent
 	9,  // 9: skymouse.EmulatorEvent.keyboard_tap_event:type_name -> skymouse.KeyboardTapEvent
 	12, // 10: skymouse.MessageToServer.client_hello:type_name -> skymouse.ClientHello
-	19, // 11: skymouse.MessageToServer.emulator_event:type_name -> skymouse.EmulatorEvent
+	21, // 11: skymouse.MessageToServer.emulator_event:type_name -> skymouse.EmulatorEvent
 	10, // 12: skymouse.MessageToServer.ping:type_name -> skymouse.Ping
 	11, // 13: skymouse.MessageToServer.pong:type_name -> skymouse.Pong
 	4,  // 14: skymouse.MessageToServer.command:type_name -> skymouse.CommandEvent
 	14, // 15: skymouse.MessageToServer.clipboard_share:type_name -> skymouse.ClipboardShareEvent
 	16, // 16: skymouse.MessageToServer.get_cursor_scale:type_name -> skymouse.GetCursorScaleEvent
 	15, // 17: skymouse.MessageToServer.set_cursor_scale:type_name -> skymouse.SetCursorScaleEvent
-	19, // 18: skymouse.UdpMessageToServer.emulator_event:type_name -> skymouse.EmulatorEvent
-	10, // 19: skymouse.UdpMessageToServer.ping:type_name -> skymouse.Ping
-	13, // 20: skymouse.MessageToClient.server_hello:type_name -> skymouse.ServerHello
-	18, // 21: skymouse.MessageToClient.server_event:type_name -> skymouse.ServerEvent
-	11, // 22: skymouse.MessageToClient.pong:type_name -> skymouse.Pong
-	17, // 23: skymouse.MessageToClient.current_cursor_scale_answer:type_name -> skymouse.CurrentCursorScaleAnswer
-	24, // [24:24] is the sub-list for method output_type
-	24, // [24:24] is the sub-list for method input_type
-	24, // [24:24] is the sub-list for extension type_name
-	24, // [24:24] is the sub-list for extension extendee
-	0,  // [0:24] is the sub-list for field type_name
+	17, // 18: skymouse.MessageToServer.get_volume_event:type_name -> skymouse.GetVolumeEvent
+	21, // 19: skymouse.UdpMessageToServer.emulator_event:type_name -> skymouse.EmulatorEvent
+	10, // 20: skymouse.UdpMessageToServer.ping:type_name -> skymouse.Ping
+	13, // 21: skymouse.MessageToClient.server_hello:type_name -> skymouse.ServerHello
+	20, // 22: skymouse.MessageToClient.server_event:type_name -> skymouse.ServerEvent
+	11, // 23: skymouse.MessageToClient.pong:type_name -> skymouse.Pong
+	18, // 24: skymouse.MessageToClient.current_cursor_scale_answer:type_name -> skymouse.CurrentCursorScaleAnswer
+	19, // 25: skymouse.MessageToClient.current_volume_answer:type_name -> skymouse.CurrentVolumeAnswer
+	26, // [26:26] is the sub-list for method output_type
+	26, // [26:26] is the sub-list for method input_type
+	26, // [26:26] is the sub-list for extension type_name
+	26, // [26:26] is the sub-list for extension extendee
+	0,  // [0:26] is the sub-list for field type_name
 }
 
 func init() { file_skymouse_proto_init() }
@@ -1735,14 +1865,14 @@ func file_skymouse_proto_init() {
 	file_skymouse_proto_msgTypes[9].OneofWrappers = []any{
 		(*ClipboardShareEvent_Text)(nil),
 	}
-	file_skymouse_proto_msgTypes[14].OneofWrappers = []any{
+	file_skymouse_proto_msgTypes[16].OneofWrappers = []any{
 		(*EmulatorEvent_Mouse)(nil),
 		(*EmulatorEvent_Click)(nil),
 		(*EmulatorEvent_Scroll)(nil),
 		(*EmulatorEvent_KeyboardStringEvent)(nil),
 		(*EmulatorEvent_KeyboardTapEvent)(nil),
 	}
-	file_skymouse_proto_msgTypes[15].OneofWrappers = []any{
+	file_skymouse_proto_msgTypes[17].OneofWrappers = []any{
 		(*MessageToServer_ClientHello)(nil),
 		(*MessageToServer_EmulatorEvent)(nil),
 		(*MessageToServer_Ping)(nil),
@@ -1751,16 +1881,18 @@ func file_skymouse_proto_init() {
 		(*MessageToServer_ClipboardShare)(nil),
 		(*MessageToServer_GetCursorScale)(nil),
 		(*MessageToServer_SetCursorScale)(nil),
+		(*MessageToServer_GetVolumeEvent)(nil),
 	}
-	file_skymouse_proto_msgTypes[16].OneofWrappers = []any{
+	file_skymouse_proto_msgTypes[18].OneofWrappers = []any{
 		(*UdpMessageToServer_EmulatorEvent)(nil),
 		(*UdpMessageToServer_Ping)(nil),
 	}
-	file_skymouse_proto_msgTypes[17].OneofWrappers = []any{
+	file_skymouse_proto_msgTypes[19].OneofWrappers = []any{
 		(*MessageToClient_ServerHello)(nil),
 		(*MessageToClient_ServerEvent)(nil),
 		(*MessageToClient_Pong)(nil),
 		(*MessageToClient_CurrentCursorScaleAnswer)(nil),
+		(*MessageToClient_CurrentVolumeAnswer)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
@@ -1768,7 +1900,7 @@ func file_skymouse_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_skymouse_proto_rawDesc), len(file_skymouse_proto_rawDesc)),
 			NumEnums:      5,
-			NumMessages:   18,
+			NumMessages:   20,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
