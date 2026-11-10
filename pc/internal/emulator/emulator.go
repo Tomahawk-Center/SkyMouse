@@ -133,7 +133,7 @@ func (e *Emulator) handleMouse(sessionId string, ev *protoapi.MouseEvent) {
 
 	}
 
-	robotgo.Move(newX, newY)
+	_ = robotgo.Move(newX, newY)
 }
 
 func (e *Emulator) handleClick(ev *protoapi.ClickEvent) {
@@ -168,9 +168,9 @@ func (e *Emulator) handleScroll(ev *protoapi.ScrollEvent) {
 
 	switch {
 	case ev.DeltaY > 0:
-		robotgo.ScrollDir(delta, "up")
+		_ = robotgo.ScrollDir(delta, "up")
 	case ev.DeltaY < 0:
-		robotgo.ScrollDir(delta*-1, "down")
+		_ = robotgo.ScrollDir(delta*-1, "down")
 	default:
 		return
 	}
