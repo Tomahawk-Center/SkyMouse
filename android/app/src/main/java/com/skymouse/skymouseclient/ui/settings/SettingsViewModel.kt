@@ -6,6 +6,7 @@ import androidx.core.content.edit
 import androidx.lifecycle.AndroidViewModel
 import com.skymouse.skymouseclient.data.SettingsState
 import com.skymouse.skymouseclient.data.SkyMouseManager
+import com.skymouse.skymouseclient.data.ThemeMode
 import com.skymouse.skymouseclient.data.VolumeButtonsAction
 import kotlinx.coroutines.flow.StateFlow
 
@@ -58,6 +59,10 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         SkyMouseManager.updateSettings(settingsState.value.copy(volumeButtonsAction = newValue))
     }
 
+    fun onThemeModeChange(newValue: ThemeMode) {
+        SkyMouseManager.updateSettings(settingsState.value.copy(themeMode = newValue))
+    }
+
     fun onAmoledDarkThemeChange(newValue: Boolean) {
         SkyMouseManager.updateSettings(settingsState.value.copy(amoledDarkTheme = newValue))
     }
@@ -76,6 +81,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
             putBoolean("auto_reconnect", state.autoReconnect)
             putBoolean("auto_connect_on_startup", state.autoConnectOnStartup)
             putString("volume_buttons_action", state.volumeButtonsAction.name)
+            putString("theme_mode", state.themeMode.name)
             putBoolean("amoled_dark_theme", state.amoledDarkTheme)
         }
     }

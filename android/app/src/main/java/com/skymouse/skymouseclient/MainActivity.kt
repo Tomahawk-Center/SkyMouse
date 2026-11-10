@@ -33,6 +33,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.skymouse.skymouseclient.data.SkyMouseManager
+import com.skymouse.skymouseclient.data.ThemeMode
 import com.skymouse.skymouseclient.data.VolumeButtonsAction
 import com.skymouse.skymouseclient.proto.KeyboardKey
 import com.skymouse.skymouseclient.ui.connection.ConnectionViewModel
@@ -100,7 +101,12 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val settingsState by SkyMouseManager.settingsState.collectAsStateWithLifecycle()
-            val darkTheme = isSystemInDarkTheme()
+            val systemDarkTheme = isSystemInDarkTheme()
+            val darkTheme = when (settingsState.themeMode) {
+                ThemeMode.AUTO -> systemDarkTheme
+                ThemeMode.LIGHT -> false
+                ThemeMode.DARK -> true
+            }
             val context = LocalContext.current
 
             val dynamicColor = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
@@ -132,7 +138,13 @@ class MainActivity : ComponentActivity() {
                 enableEdgeToEdge(
                     statusBarStyle = SystemBarStyle.auto(
                         Color.TRANSPARENT,
-                        Color.TRANSPARENT
+                        Color.TRANSPARENT,
+                        detectDarkMode = { darkTheme }
+                    ),
+                    navigationBarStyle = SystemBarStyle.auto(
+                        Color.TRANSPARENT,
+                        Color.TRANSPARENT,
+                        detectDarkMode = { darkTheme }
                     )
                 )
             }

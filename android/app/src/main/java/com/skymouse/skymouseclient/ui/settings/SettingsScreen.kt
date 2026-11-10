@@ -24,6 +24,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
@@ -43,6 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.skymouse.skymouseclient.data.SettingsState
+import com.skymouse.skymouseclient.data.ThemeMode
 import com.skymouse.skymouseclient.data.VolumeButtonsAction
 import kotlin.math.roundToInt
 
@@ -72,6 +76,7 @@ fun SettingsScreen(
         onAutoReconnectChange = viewModel::onAutoReconnectChange,
         onAutoConnectOnStartupChange = viewModel::onAutoConnectOnStartupChange,
         onVolumeButtonsActionChange = viewModel::onVolumeButtonsActionChange,
+        onThemeModeChange = viewModel::onThemeModeChange,
         onAmoledDarkThemeChange = viewModel::onAmoledDarkThemeChange,
         onNavigateBack = onNavigateBack
     )
@@ -91,6 +96,7 @@ private fun SettingsContent(
     onAutoReconnectChange: (Boolean) -> Unit,
     onAutoConnectOnStartupChange: (Boolean) -> Unit,
     onVolumeButtonsActionChange: (VolumeButtonsAction) -> Unit,
+    onThemeModeChange: (ThemeMode) -> Unit,
     onAmoledDarkThemeChange: (Boolean) -> Unit,
     onNavigateBack: () -> Unit
 ) {
@@ -451,6 +457,41 @@ private fun SettingsContent(
                         uncheckedIconColor = MaterialTheme.colorScheme.surfaceVariant
                     )
                 )
+            }
+
+            Spacer(modifier = Modifier.height(36.dp))
+
+            // App Theme
+            Text(
+                text = "Theme",
+                style = MaterialTheme.typography.titleMedium
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            SingleChoiceSegmentedButtonRow(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                ThemeMode.entries.forEachIndexed { index, mode ->
+                    SegmentedButton(
+                        selected = settingsState.themeMode == mode,
+                        onClick = {
+                            if (settingsState.themeMode != mode) {
+                                haptic.performHapticFeedback(HapticFeedbackType.SegmentFrequentTick)
+                                onThemeModeChange(mode)
+                            }
+                        },
+                        shape = SegmentedButtonDefaults.itemShape(index = index, count = ThemeMode.entries.size)
+                    ) {
+                        Text(
+                            text = when (mode) {
+                                ThemeMode.AUTO -> "Auto"
+                                ThemeMode.LIGHT -> "Light"
+                                ThemeMode.DARK -> "Dark"
+                            }
+                        )
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.height(24.dp))

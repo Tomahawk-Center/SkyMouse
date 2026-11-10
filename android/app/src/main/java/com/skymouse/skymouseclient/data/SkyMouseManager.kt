@@ -37,6 +37,14 @@ object SkyMouseManager {
             } catch (_: Exception) {
                 VolumeButtonsAction.SYSTEM_VOLUME
             },
+            themeMode = try {
+                ThemeMode.valueOf(
+                    prefs.getString("theme_mode", ThemeMode.AUTO.name)
+                        ?: ThemeMode.AUTO.name
+                )
+            } catch (_: Exception) {
+                ThemeMode.AUTO
+            },
             amoledDarkTheme = prefs.getBoolean("amoled_dark_theme", false)
         )
         _settingsState.value = loadedState
