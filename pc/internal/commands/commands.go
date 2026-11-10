@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"context"
 	"fmt"
 	"os/exec"
 	"sync"
@@ -47,7 +48,7 @@ func WriteToClipboard(text string) error {
 		return err
 	}
 
-	clipboard.Write(clipboard.FmtText, []byte(text))
+	clipboard.Write(context.Background(), clipboard.FmtText, []byte(text))
 	return nil // TODO add err handling on Write call
 }
 
