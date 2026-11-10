@@ -109,8 +109,15 @@ message SetCursorScaleEvent {
 
 message GetCursorScaleEvent {}
 
+message GetVolumeEvent {}
+
 message CurrentCursorScaleAnswer {
     int32 current_cursor_scale = 1;
+}
+
+message CurrentVolumeAnswer {
+    int32 volume = 1;
+    bool is_muted = 2;
 }
 
 message ServerEvent {
@@ -138,6 +145,7 @@ message MessageToServer {
         ClipboardShareEvent clipboard_share = 6;
         GetCursorScaleEvent get_cursor_scale = 7;
         SetCursorScaleEvent set_cursor_scale = 8;
+        GetVolumeEvent get_volume_event = 9;
     }
 }
 
@@ -155,5 +163,6 @@ message MessageToClient {
         ServerEvent server_event = 2;
         Pong pong = 3;
         CurrentCursorScaleAnswer current_cursor_scale_answer = 4;
+        CurrentVolumeAnswer current_volume_answer = 5;
     }
 }
