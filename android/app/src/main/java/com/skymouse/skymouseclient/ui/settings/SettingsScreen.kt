@@ -477,7 +477,7 @@ private fun SettingsContent(
                         selected = settingsState.themeMode == mode,
                         onClick = {
                             if (settingsState.themeMode != mode) {
-                                haptic.performHapticFeedback(HapticFeedbackType.SegmentFrequentTick)
+                                haptic.performHapticFeedback(HapticFeedbackType.GestureThresholdActivate)
                                 onThemeModeChange(mode)
                             }
                         },
