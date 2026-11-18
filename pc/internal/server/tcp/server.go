@@ -175,7 +175,7 @@ func (s *Server) handleConnection(conn net.Conn) {
 	}
 }
 
-func (s *Server) sendProto(sessionId string, msg proto.Message) error {
+func (s *Server) SendProto(sessionId string, msg proto.Message) error {
 	b, err := proto.Marshal(msg)
 	if err != nil {
 		return fmt.Errorf("send protobuf message failed: %w", err)
@@ -216,7 +216,7 @@ func (s *Server) handlePing(sessionId string, ping *protoapi.Ping) error {
 		},
 	}
 
-	return s.sendProto(sessionId, msg)
+	return s.SendProto(sessionId, msg)
 }
 
 func (s *Server) handleClientHello(sess *session.Session, clientHelloMsg *protoapi.ClientHello) error {
@@ -242,7 +242,7 @@ func (s *Server) handleClientHello(sess *session.Session, clientHelloMsg *protoa
 			},
 		}
 
-		err = s.sendProto(sess.Id(), msg)
+		err = s.SendProto(sess.Id(), msg)
 		if err != nil {
 			return err
 		}
@@ -285,7 +285,7 @@ func (s *Server) routeMessage(sess *session.Session, m *protoapi.MessageToServer
 				},
 			}
 
-			err = s.sendProto(sess.Id(), msg)
+			err = s.SendProto(sess.Id(), msg)
 			if err != nil {
 				log.Println("Send current cursor scale failed:", err)
 			}
