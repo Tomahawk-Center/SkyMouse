@@ -95,10 +95,23 @@ func main() {
 	go func() {
 		for ev := range emuEventsCh {
 			log.Printf("Event received: %v\n", ev)
-			msgToClient := &protoapi.MessageToClient{
-				Event: &protoapi.MessageToClient_ServerEvent{
-					ServerEvent: ev.Data,
-				},
+			var msgToClient *protoapi.MessageToClient
+			switch data := ev.Data.(type) {
+			case *protoapi.ServerEvent:
+				msgToClient = &protoapi.MessageToClient{
+					Event: &protoapi.MessageToClient_ServerEvent{
+						ServerEvent: data,
+					},
+				}
+			case *protoapi.CurrentVolumeAnswer:
+				msgToClient = &protoapi.MessageToClient{
+					Event: &protoapi.MessageToClient_CurrentVolumeAnswer{
+						CurrentVolumeAnswer: data,
+					},
+				}
+			default:
+				log.Printf("Unknown event type: %T\n", ev.Data)
+				continue
 			}
 			err := udpServer.SendProto(ev.SessionId, msgToClient)
 			if err != nil {

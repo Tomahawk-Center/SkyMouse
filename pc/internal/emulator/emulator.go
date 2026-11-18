@@ -7,11 +7,12 @@ import (
 
 	"github.com/Tomahawk-Center/SkyMouse/pc/pkg/protoapi"
 	"github.com/go-vgo/robotgo"
+	"google.golang.org/protobuf/proto"
 )
 
 type Event struct {
 	SessionId string
-	Data      *protoapi.ServerEvent
+	Data      proto.Message
 }
 
 type Emulator struct {
