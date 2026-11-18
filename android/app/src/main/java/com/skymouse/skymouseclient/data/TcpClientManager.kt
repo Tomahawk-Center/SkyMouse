@@ -44,6 +44,7 @@ class TcpClientManager {
 
             try {
                 val s = Socket()
+                s.tcpNoDelay = true
                 s.connect(InetSocketAddress(ip, port), 5000)
                 socket = s
 
@@ -122,15 +123,14 @@ class TcpClientManager {
                 val bytes = message.toByteArray()
                 val size = bytes.size
 
-                val header = byteArrayOf(
-                    (size shr 24).toByte(),
-                    (size shr 16).toByte(),
-                    (size shr 8).toByte(),
-                    size.toByte()
-                )
+                val packet = ByteArray(4 + size)
+                packet[0] = (size shr 24).toByte()
+                packet[1] = (size shr 16).toByte()
+                packet[2] = (size shr 8).toByte()
+                packet[3] = size.toByte()
+                System.arraycopy(bytes, 0, packet, 4, size)
 
-                os.write(header)
-                os.write(bytes)
+                os.write(packet)
                 os.flush()
             } catch (e: Exception) {
                 _connectionState.value =
