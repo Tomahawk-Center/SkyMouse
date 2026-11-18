@@ -85,7 +85,7 @@ func (e *Emulator) Handle(sessionId string, event *protoapi.EmulatorEvent) {
 	case *protoapi.EmulatorEvent_KeyboardStringEvent:
 		e.handleKeyboardString(ev.KeyboardStringEvent)
 	case *protoapi.EmulatorEvent_KeyboardTapEvent:
-		e.handleKeyboardTap(ev.KeyboardTapEvent)
+		e.handleKeyboardTap(sessionId, ev.KeyboardTapEvent)
 	}
 }
 
@@ -184,11 +184,12 @@ func (e *Emulator) handleKeyboardString(ev *protoapi.KeyboardStringEvent) {
 	}
 }
 
-func (e *Emulator) handleKeyboardTap(ev *protoapi.KeyboardTapEvent) {
+func (e *Emulator) handleKeyboardTap(sessionId string, ev *protoapi.KeyboardTapEvent) {
 	if ev == nil {
 		return
 	}
 
+	var needSendVolumeAnswer bool
 	var key string
 	switch ev.Key {
 	case protoapi.KeyboardKey_KEY_ENTER:
@@ -197,10 +198,13 @@ func (e *Emulator) handleKeyboardTap(ev *protoapi.KeyboardTapEvent) {
 		key = robotgo.Backspace
 	case protoapi.KeyboardKey_KEY_VOL_DOWN:
 		key = robotgo.AudioVolDown
+		needSendVolumeAnswer = true
 	case protoapi.KeyboardKey_KEY_VOL_UP:
 		key = robotgo.AudioVolUp
+		needSendVolumeAnswer = true
 	case protoapi.KeyboardKey_KEY_VOL_MUTE:
 		key = robotgo.AudioMute
+		needSendVolumeAnswer = true
 	case protoapi.KeyboardKey_KEY_AUDIO_PAUSE:
 		key = robotgo.AudioPause
 	case protoapi.KeyboardKey_KEY_AUDIO_NEXT:
@@ -220,5 +224,16 @@ func (e *Emulator) handleKeyboardTap(ev *protoapi.KeyboardTapEvent) {
 	}
 	if err != nil {
 		log.Printf("Keyboard click err: %v\n", err)
+	}
+
+	if needSendVolumeAnswer {
+		ev := Event{SessionId: sessionId, Data: &protoapi.CurrentVolumeAnswer{
+			Volume:  0,
+			IsMuted: false,
+		}}
+		select {
+		case e.eventsChan <- ev:
+		default:
+		}
 	}
 }
