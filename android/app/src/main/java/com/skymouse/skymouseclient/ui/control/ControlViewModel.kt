@@ -31,6 +31,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -65,6 +66,17 @@ class ControlViewModel(
 
     val isGyroActive: StateFlow<Boolean> = gyroscopeProvider.isGyroActive
 
+    private val _currentVolume = MutableStateFlow(0)
+    val currentVolume: StateFlow<Int> = _currentVolume.asStateFlow()
+
+    private val _isVolumeMuted = MutableStateFlow(false)
+    val isVolumeMuted: StateFlow<Boolean> = _isVolumeMuted.asStateFlow()
+
+    private val _isVolumeVisible = MutableStateFlow(false)
+    val isVolumeVisible: StateFlow<Boolean> = _isVolumeVisible.asStateFlow()
+
+    private var volumeHideJob: Job? = null
+
     private val pressedButtons = mutableSetOf<MouseButton>()
     private var holdVibrationJob: Job? = null
     private var isHoldingVibration = false
@@ -84,6 +96,19 @@ class ControlViewModel(
                 if (message.hasCurrentCursorScaleAnswer()) {
                     val scale = message.currentCursorScaleAnswer.currentCursorScale
                     _cursorScaleState.value = CursorScaleQueryState.CursorScale(scale)
+                }
+                if (message.hasCurrentVolumeAnswer()) {
+                    val volume = message.currentVolumeAnswer.volume
+                    val mute = message.currentVolumeAnswer.isMuted
+                    _currentVolume.value = volume
+                    _isVolumeMuted.value = mute
+                    _isVolumeVisible.value = true
+
+                    volumeHideJob?.cancel()
+                    volumeHideJob = viewModelScope.launch {
+                        delay(1500.milliseconds)
+                        _isVolumeVisible.value = false
+                    }
                 }
             }
         }
