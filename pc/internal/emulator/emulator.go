@@ -7,6 +7,7 @@ import (
 
 	"github.com/Tomahawk-Center/SkyMouse/pc/pkg/protoapi"
 	"github.com/go-vgo/robotgo"
+	"github.com/itchyny/volume-go"
 	"google.golang.org/protobuf/proto"
 )
 
@@ -252,14 +253,18 @@ func (e *Emulator) handleKeyboardTap(sessionId string, ev *protoapi.KeyboardTapE
 		log.Printf("Keyboard click err: %v\n", err)
 	}
 
-	if needSendVolumeAnswer {
-		ev := Event{SessionId: sessionId, Transport: TCP, Data: &protoapi.CurrentVolumeAnswer{
-			Volume:  0,
-			IsMuted: false,
-		}}
-		select {
-		case e.eventsChan <- ev:
-		default:
+	if needSendVolumeAnswer && ev.GetState() == protoapi.ButtonState_STATE_DOWN {
+		vol, err1 := volume.GetVolume()
+		mute, err2 := volume.GetMuted()
+		if err1 == nil && err2 == nil {
+			ev := Event{SessionId: sessionId, Transport: TCP, Data: &protoapi.CurrentVolumeAnswer{
+				Volume:  int32(vol),
+				IsMuted: mute,
+			}}
+			select {
+			case e.eventsChan <- ev:
+			default:
+			}
 		}
 	}
 }
