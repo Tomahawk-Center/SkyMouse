@@ -18,7 +18,7 @@ type Emulator struct {
 	eventsChan        chan Event
 	displaysBounds    []screenBounds
 	displaysSafeZones []screenBounds
-	isBorderHit       bool
+	borderHits        [4]bool
 }
 
 func calculateBoundsWithPadding(bounds screenBounds, padding int) (screenBounds, error) {
@@ -102,7 +102,23 @@ func (e *Emulator) handleMouse(sessionId string, ev *protoapi.MouseEvent) {
 	iNew := e.getDisplayIndex(newX, newY)
 
 	if iNew == -1 {
-		if !e.isBorderHit {
+		newHits := e.detectBorderHit(x, y, newX, newY)
+		newBorderHits := e.borderHits
+
+		for _, s := range newHits {
+			newBorderHits[s] = true
+		}
+
+		var needHaptic bool
+
+		for i, c := range e.borderHits {
+			if c == false && newBorderHits[i] == true {
+				needHaptic = true
+				break
+			}
+		}
+
+		if needHaptic {
 			ev := Event{SessionId: sessionId, Data: &protoapi.ServerEvent{
 				Type:        protoapi.HapticEventType_EVENT_EDGE_HIT,
 				TimestampMs: time.Now().UnixMilli(),
@@ -114,7 +130,7 @@ func (e *Emulator) handleMouse(sessionId string, ev *protoapi.MouseEvent) {
 			}
 		}
 
-		e.isBorderHit = true
+		e.borderHits = newBorderHits
 
 	} else if iOld != iNew {
 		ev := Event{SessionId: sessionId, Data: &protoapi.ServerEvent{
@@ -127,8 +143,10 @@ func (e *Emulator) handleMouse(sessionId string, ev *protoapi.MouseEvent) {
 		}
 	} else {
 
-		if e.isInSafeZone(iNew, x, y) {
-			e.isBorderHit = false
+		for i := range e.borderHits {
+			if e.isInSafeZoneSide(iNew, x, y, borderSide(i)) {
+				e.borderHits[i] = false
+			}
 		}
 
 	}
