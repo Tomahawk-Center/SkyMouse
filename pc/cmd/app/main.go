@@ -113,7 +113,17 @@ func main() {
 				log.Printf("Unknown event type: %T\n", ev.Data)
 				continue
 			}
-			err := udpServer.SendProto(ev.SessionId, msgToClient)
+
+			var err error
+			switch ev.Transport {
+			case emulator.TCP:
+				err = tcpServer.SendProto(ev.SessionId, msgToClient)
+			case emulator.UDP:
+				err = udpServer.SendProto(ev.SessionId, msgToClient)
+			default:
+				panic(fmt.Sprintf("unhandled transport type: %v", ev.Transport))
+			}
+
 			if err != nil {
 				log.Printf("Error sending message to client: %v\n", err)
 			}
