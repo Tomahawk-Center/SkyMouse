@@ -10,8 +10,16 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
+type TransportType string
+
+const (
+	TCP TransportType = "tcp"
+	UDP TransportType = "udp"
+)
+
 type Event struct {
 	SessionId string
+	Transport TransportType
 	Data      proto.Message
 }
 
@@ -120,7 +128,7 @@ func (e *Emulator) handleMouse(sessionId string, ev *protoapi.MouseEvent) {
 		}
 
 		if needHaptic {
-			ev := Event{SessionId: sessionId, Data: &protoapi.ServerEvent{
+			ev := Event{SessionId: sessionId, Transport: UDP, Data: &protoapi.ServerEvent{
 				Type:        protoapi.HapticEventType_EVENT_EDGE_HIT,
 				TimestampMs: time.Now().UnixMilli(),
 			}}
@@ -134,7 +142,7 @@ func (e *Emulator) handleMouse(sessionId string, ev *protoapi.MouseEvent) {
 		e.borderHits = newBorderHits
 
 	} else if iOld != iNew {
-		ev := Event{SessionId: sessionId, Data: &protoapi.ServerEvent{
+		ev := Event{SessionId: sessionId, Transport: UDP, Data: &protoapi.ServerEvent{
 			Type:        protoapi.HapticEventType_EVENT_BORDER_CROSSING,
 			TimestampMs: time.Now().UnixMilli(),
 		}}
@@ -245,7 +253,7 @@ func (e *Emulator) handleKeyboardTap(sessionId string, ev *protoapi.KeyboardTapE
 	}
 
 	if needSendVolumeAnswer {
-		ev := Event{SessionId: sessionId, Data: &protoapi.CurrentVolumeAnswer{
+		ev := Event{SessionId: sessionId, Transport: TCP, Data: &protoapi.CurrentVolumeAnswer{
 			Volume:  0,
 			IsMuted: false,
 		}}
