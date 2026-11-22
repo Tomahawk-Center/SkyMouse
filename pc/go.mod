@@ -5,7 +5,9 @@ go 1.26.4
 require (
 	github.com/go-vgo/robotgo v1.3.7
 	github.com/google/uuid v1.6.0
+	github.com/itchyny/volume-go v0.2.3
 	golang.design/x/clipboard v0.11.0
+	golang.org/x/sys v0.50.0
 	google.golang.org/protobuf v1.36.12
 	gopkg.in/yaml.v3 v3.0.1
 )
@@ -16,7 +18,6 @@ require (
 	github.com/gen2brain/shm v0.2.2 // indirect
 	github.com/go-ole/go-ole v1.3.0 // indirect
 	github.com/godbus/dbus/v5 v5.2.4 // indirect
-	github.com/itchyny/volume-go v0.2.3 // indirect
 	github.com/jezek/xgb v1.3.1 // indirect
 	github.com/jezek/xgbutil v0.0.0-20260124183602-9fd151d6a51a // indirect
 	github.com/lufia/plan9stats v0.0.0-20261101121723-be84dd9509a0 // indirect
@@ -39,5 +40,4 @@ require (
 	golang.org/x/exp/shiny v0.0.0-20261109185158-a52e3aef5920 // indirect
 	golang.org/x/image v0.48.0 // indirect
 	golang.org/x/mobile v0.0.0-20261011034528-197770444867 // indirect
-	golang.org/x/sys v0.50.0 // indirect
 )
