@@ -257,7 +257,7 @@ fun PixelVolumeTitle(
         Icon(
             imageVector = when {
                 muted || volumeLevel == 0 -> Icons.AutoMirrored.Filled.VolumeOff
-                volumeLevel < 40 -> Icons.AutoMirrored.Filled.VolumeDown
+                volumeLevel < 50 -> Icons.AutoMirrored.Filled.VolumeDown
                 else -> Icons.AutoMirrored.Filled.VolumeUp
             },
             contentDescription = null,
