@@ -77,6 +77,18 @@ func TestDetectBorderHit(t *testing.T) {
 			newX: -1, newY: 1080,
 			want: []borderSide{leftSide, bottomSide},
 		},
+		{
+			name: "incorrect initial cursor position",
+			x:    -100, y: -100,
+			newX: 100, newY: 100,
+			want: []borderSide{},
+		},
+		{
+			name: "incorrect initial and new cursor position",
+			x:    -100, y: -100,
+			newX: -100, newY: -100,
+			want: []borderSide{},
+		},
 	}
 
 	for _, tt := range tests {
