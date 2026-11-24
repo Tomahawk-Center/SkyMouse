@@ -9,15 +9,6 @@ const (
 	bottomSide
 )
 
-type corner uint8
-
-const (
-	leftTopCorner corner = iota
-	rightTopCorner
-	rightBottomCorner
-	leftBottomCorner
-)
-
 func (e *Emulator) isInSafeZoneSide(displayIndex, x, y int, side borderSide) bool {
 	dsz := e.displaysSafeZones[displayIndex]
 	switch side {
