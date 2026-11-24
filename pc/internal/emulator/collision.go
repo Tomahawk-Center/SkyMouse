@@ -38,7 +38,7 @@ func (e *Emulator) detectBorderHit(x, y, newX, newY int) []borderSide {
 	var sides []borderSide
 	iOld := e.getDisplayIndex(x, y)
 	iNew := e.getDisplayIndex(newX, newY)
-	if iNew != -1 && iNew != iOld {
+	if iNew != -1 && iNew != iOld || iOld == -1 { // cursor will go to another display or old display is -1
 		return sides
 	}
 
